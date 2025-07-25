@@ -54,87 +54,7 @@
 
         <hr class="cart-drawer-divider" />
 
-        <div class="cart-drawer-item d-flex position-relative">
-          <div class="position-relative">
-            <a href="./product1_simple.html">
-              <img
-                loading="lazy"
-                class="cart-drawer-item__img"
-                src="./images/cart-item-2.jpg"
-                alt=""
-              />
-            </a>
-          </div>
-          <div class="cart-drawer-item__info flex-grow-1">
-            <h6 class="cart-drawer-item__title fw-normal">
-              <a href="./product1_simple.html">Kirby T-Shirt</a>
-            </h6>
-            <p class="cart-drawer-item__option text-secondary">Color: Black</p>
-            <p class="cart-drawer-item__option text-secondary">Size: XS</p>
-            <div class="d-flex align-items-center justify-content-between mt-1">
-              <div class="qty-control position-relative">
-                <input
-                  type="number"
-                  name="quantity"
-                  value="4"
-                  min="1"
-                  class="qty-control__number border-0 text-center"
-                />
-                <div class="qty-control__reduce text-start">-</div>
-                <div class="qty-control__increase text-end">+</div>
-              </div>
-              <!-- .qty-control -->
-              <span class="cart-drawer-item__price money price">$89</span>
-            </div>
-          </div>
 
-          <button
-            class="btn-close-xs position-absolute top-0 end-0 js-cart-item-remove"
-          ></button>
-        </div>
-        <!-- /.cart-drawer-item d-flex -->
-
-        <hr class="cart-drawer-divider" />
-
-        <div class="cart-drawer-item d-flex position-relative">
-          <div class="position-relative">
-            <a href="./product1_simple.html">
-              <img
-                loading="lazy"
-                class="cart-drawer-item__img"
-                src="./images/cart-item-3.jpg"
-                alt=""
-              />
-            </a>
-          </div>
-          <div class="cart-drawer-item__info flex-grow-1">
-            <h6 class="cart-drawer-item__title fw-normal">
-              <a href="./product1_simple.html">Cableknit Shawl</a>
-            </h6>
-            <p class="cart-drawer-item__option text-secondary">Color: Green</p>
-            <p class="cart-drawer-item__option text-secondary">Size: L</p>
-            <div class="d-flex align-items-center justify-content-between mt-1">
-              <div class="qty-control position-relative">
-                <input
-                  type="number"
-                  name="quantity"
-                  value="3"
-                  min="1"
-                  class="qty-control__number border-0 text-center"
-                />
-                <div class="qty-control__reduce text-start">-</div>
-                <div class="qty-control__increase text-end">+</div>
-              </div>
-              <!-- .qty-control -->
-              <span class="cart-drawer-item__price money price">$129</span>
-            </div>
-          </div>
-
-          <button
-            class="btn-close-xs position-absolute top-0 end-0 js-cart-item-remove"
-          ></button>
-        </div>
-        <!-- /.cart-drawer-item d-flex -->
       </div>
       <!-- /.aside-content -->
 
@@ -142,7 +62,10 @@
         <hr class="cart-drawer-divider" />
         <div class="d-flex justify-content-between">
           <h6 class="fs-base fw-medium">SUBTOTAL:</h6>
-          <span class="cart-subtotal fw-medium">$176.00</span>
+          <span class="cart-subtotal fw-medium">
+          <!-- SUBTOTAL GOES HERE  -->
+
+          </span>
         </div>
         <!-- /.d-flex justify-content-between -->
         <a href="./shop_cart.html" class="btn btn-light mt-3 d-block"

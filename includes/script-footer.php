@@ -6,6 +6,8 @@
     <!-- <script src="js/plugins/sticky.min.js"></script> -->
     <script src="js/plugins/swiper.min.js"></script>
     <script src="js/plugins/countdown.js"></script>
+     <script src="js/plugins/jquery.fancybox.js"></script>
+
 
     <!-- Footer Scripts -->
     <script src="js/theme.js"></script>

@@ -38,7 +38,7 @@
                     <strong>Women</strong> Collection
                   </h3>
                   <a
-                    href="./shop1.html"
+                    href="./shop.php"
                     class="btn-link default-underline text-uppercase fw-medium"
                     >Shop Now</a
                   >
@@ -66,7 +66,7 @@
                     <strong>Men</strong> Collection
                   </h3>
                   <a
-                    href="./shop1.html"
+                    href="./shop.php"
                     class="btn-link default-underline text-uppercase fw-medium"
                     >Shop Now</a
                   >
@@ -93,7 +93,7 @@
                           <strong>Kids</strong> Collection
                         </h3>
                         <a
-                          href="./shop1.html"
+                          href="./shop.php"
                           class="btn-link default-underline text-uppercase fw-medium"
                           >Shop Now</a
                         >
@@ -121,7 +121,7 @@
                           Surprise someone with the gift they<br />really want.
                         </p>
                         <a
-                          href="./shop1.html"
+                          href="./shop.php"
                           class="btn-link default-underline text-uppercase fw-medium"
                           >Shop Now</a
                         >
@@ -169,7 +169,7 @@
               <strong>Spring</strong> Collection
             </h3>
             <a
-              href="./shop1.html"
+              href="./shop.php"
               class="btn-link default-underline text-uppercase fw-medium mt-3"
               >Shop Now</a
             >
@@ -233,7 +233,7 @@
                 </h6>
                 <h3 class="text-white mb-3">Women's T-Shirts</h3>
                 <a
-                  href="./shop1.html"
+                  href="./shop.php"
                   class="btn-link default-underline text-uppercase text-white fw-medium"
                   >Shop Now</a
                 >
@@ -257,7 +257,7 @@
                 <h6 class="text-uppercase fw-medium mb-3">Starting At $39</h6>
                 <h3 class="mb-3">Men's Sportswear</h3>
                 <a
-                  href="./shop1.html"
+                  href="./shop.php"
                   class="btn-link default-underline text-uppercase fw-medium"
                   >Shop Now</a
                 >

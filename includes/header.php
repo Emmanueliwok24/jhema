@@ -3,7 +3,7 @@
       <div class="container">
         <div class="header-desk header-desk_type_1">
           <div class="logo">
-            <a href="./index.html">
+            <a href="././">
               <img
                 src="./images/logo.svg"
                 alt="jhema"
@@ -16,12 +16,12 @@
           <nav class="navigation">
             <ul class="navigation__list list-unstyled d-flex">
               <li class="navigation__item">
-                <a href="#" class="navigation__link">Home</a>
+                <a href="./" class="navigation__link">Home</a>
 
                 <!-- /.box-menu -->
               </li>
               <li class="navigation__item">
-                <a href="./shop.html" class="navigation__link">Shop</a>
+                <a href="./shop.php" class="navigation__link">Shop</a>
 
               </li>
               <li class="navigation__item">
@@ -99,7 +99,7 @@
                       <ul class="sub-menu__list list-unstyled">
                         <li class="sub-menu__item">
                           <a
-                            href="./shop2.html"
+                            href="./shop.php"
                             class="menu-link menu-link_us-s"
                             >New Arrivals</a
                           >
@@ -111,7 +111,7 @@
                         </li>
                         <li class="sub-menu__item">
                           <a
-                            href="./shop3.html"
+                            href="./shop.php"
                             class="menu-link menu-link_us-s"
                             >Accessories</a
                           >

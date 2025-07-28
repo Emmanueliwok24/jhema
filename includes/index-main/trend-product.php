@@ -71,7 +71,7 @@
               <div class="col-6 col-md-4 col-lg-3">
                 <div class="product-card mb-3 mb-md-4 mb-xxl-5">
                   <div class="pc__img-wrapper">
-                    <a href="./product1_simple.html">
+                    <a href="./product.php">
                       <img
                         loading="lazy"
                         src="./images/products/product_1.jpg"
@@ -101,7 +101,7 @@
                   <div class="pc__info position-relative">
                     <p class="pc__category">Dresses</p>
                     <h6 class="pc__title">
-                      <a href="./product1_simple.html"
+                      <a href="./product.php"
                         >Cropped Faux Leather Jacket</a
                       >
                     </h6>
@@ -174,7 +174,7 @@
             <div class="text-center mt-2">
               <a
                 class="btn-link btn-link_lg default-underline text-uppercase fw-medium"
-                href="./shop1.html"
+                href="./shop.php"
                 >Discover More</a
               >
             </div>
@@ -191,7 +191,7 @@
               <div class="col-6 col-md-4 col-lg-3">
                 <div class="product-card mb-3 mb-md-4 mb-xxl-5">
                   <div class="pc__img-wrapper">
-                    <a href="./product1_simple.html">
+                    <a href="./product.php">
                       <img
                         loading="lazy"
                         src="./images/products/product_3.jpg"
@@ -221,7 +221,7 @@
                   <div class="pc__info position-relative">
                     <p class="pc__category">Dresses</p>
                     <h6 class="pc__title">
-                      <a href="./product1_simple.html">Kirby T-Shirt</a>
+                      <a href="./product.php">Kirby T-Shirt</a>
                     </h6>
                     <div class="product-card__price d-flex">
                       <span class="money price">$17</span>
@@ -268,7 +268,7 @@
               <div class="col-6 col-md-4 col-lg-3">
                 <div class="product-card mb-3 mb-md-4 mb-xxl-5">
                   <div class="pc__img-wrapper">
-                    <a href="./product1_simple.html">
+                    <a href="./product.php">
                       <img
                         loading="lazy"
                         src="./images/products/product_5.jpg"
@@ -298,7 +298,7 @@
                   <div class="pc__info position-relative">
                     <p class="pc__category">Dresses</p>
                     <h6 class="pc__title">
-                      <a href="./product1_simple.html">Colorful Jacket</a>
+                      <a href="./product.php">Colorful Jacket</a>
                     </h6>
                     <div class="product-card__price d-flex">
                       <span class="money price">$29</span>
@@ -328,7 +328,7 @@
             <div class="text-center mt-2">
               <a
                 class="btn-link btn-link_lg default-underline text-uppercase fw-medium"
-                href="./shop1.html"
+                href="./shop.php"
                 >Discover More</a
               >
             </div>
@@ -345,7 +345,7 @@
               <div class="col-6 col-md-4 col-lg-3">
                 <div class="product-card mb-3 mb-md-4 mb-xxl-5">
                   <div class="pc__img-wrapper">
-                    <a href="./product1_simple.html">
+                    <a href="./product.php">
                       <img
                         loading="lazy"
                         src="./images/products/product_7.jpg"
@@ -375,7 +375,7 @@
                   <div class="pc__info position-relative">
                     <p class="pc__category">Dresses</p>
                     <h6 class="pc__title">
-                      <a href="./product1_simple.html">Cotton Jersey T-Shirt</a>
+                      <a href="./product.php">Cotton Jersey T-Shirt</a>
                     </h6>
                     <div class="product-card__price d-flex">
                       <span class="money price">$17</span>
@@ -402,7 +402,7 @@
               <div class="col-6 col-md-4 col-lg-3">
                 <div class="product-card mb-3 mb-md-4 mb-xxl-5">
                   <div class="pc__img-wrapper">
-                    <a href="./product1_simple.html">
+                    <a href="./product.php">
                       <img
                         loading="lazy"
                         src="./images/products/product_8.jpg"
@@ -432,7 +432,7 @@
                   <div class="pc__info position-relative">
                     <p class="pc__category">Dresses</p>
                     <h6 class="pc__title">
-                      <a href="./product1_simple.html">Zessi Dresses</a>
+                      <a href="./product.php">Zessi Dresses</a>
                     </h6>
                     <div class="product-card__price d-flex">
                       <span class="money price price-old">$129</span>
@@ -462,7 +462,7 @@
             <div class="text-center mt-2">
               <a
                 class="btn-link btn-link_lg default-underline text-uppercase fw-medium"
-                href="./shop1.html"
+                href="./shop.php"
                 >See All Products</a
               >
             </div>

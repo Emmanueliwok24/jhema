@@ -17,7 +17,7 @@
         </a>
 
         <div class="logo">
-          <a href="./index.html">
+          <a href="./">
             <img
               src="./images/logo.svg"
               alt="jhema"
@@ -100,14 +100,14 @@
             <ul class="navigation__list list-unstyled position-relative">
               <li class="navigation__item">
                 <a
-                  href="#"
+                  href="./"
                   class="navigation__link js-nav-right d-flex align-items-center"
                   >Home</a
                 >
               </li>
               <li class="navigation__item">
                 <a
-                  href="./shop.html"
+                  href="./shop.php"
                   class="navigation__link js-nav-right d-flex align-items-center"
                   >Shop<svg
                     class="ms-auto"

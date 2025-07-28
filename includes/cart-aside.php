@@ -14,7 +14,7 @@
       <div class="aside-content cart-drawer-items-list">
         <div class="cart-drawer-item d-flex position-relative">
           <div class="position-relative">
-            <a href="./product1_simple.html">
+            <a href="./product.php">
               <img
                 loading="lazy"
                 class="cart-drawer-item__img"
@@ -25,7 +25,7 @@
           </div>
           <div class="cart-drawer-item__info flex-grow-1">
             <h6 class="cart-drawer-item__title fw-normal">
-              <a href="./product1_simple.html">Zessi Dresses</a>
+              <a href="./product.php">Zessi Dresses</a>
             </h6>
             <p class="cart-drawer-item__option text-secondary">Color: Yellow</p>
             <p class="cart-drawer-item__option text-secondary">Size: L</p>

@@ -33,7 +33,7 @@
                   and much more!
                 </p>
                 <form
-                  action="./index.html"
+                  action="././"
                   class="footer-newsletter__form position-relative bg-body"
                 >
                   <input

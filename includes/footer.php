@@ -4,7 +4,7 @@
         <div class="row row-cols-lg-5 row-cols-2">
           <div class="footer-column footer-store-info col-12 mb-4 mb-lg-0">
             <div class="logo">
-              <a href="./index.html">
+              <a href="././">
                 <img
                   src="./images/logo.svg"
                   alt="jhema"
@@ -164,7 +164,7 @@
                 >
               </li>
               <li class="sub-menu__item">
-                <a href="./shop1.html" class="menu-link menu-link_us-s"
+                <a href="./shop.php" class="menu-link menu-link_us-s"
                   >Shop All</a
                 >
               </li>
@@ -216,7 +216,7 @@
               much more!
             </p>
             <form
-              action="./index.html"
+              action="././"
               class="footer-newsletter__form position-relative bg-body"
             >
               <input

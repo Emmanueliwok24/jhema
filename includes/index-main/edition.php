@@ -47,7 +47,7 @@
             <div class="swiper-wrapper">
               <div class="swiper-slide product-card">
                 <div class="pc__img-wrapper">
-                  <a href="./product1_simple.html">
+                  <a href="./product.php">
                     <img
                       loading="lazy"
                       src="./images/home/demo1/product-0-1.jpg"
@@ -69,7 +69,7 @@
                 <div class="pc__info position-relative">
                   <p class="pc__category">Dresses</p>
                   <h6 class="pc__title">
-                    <a href="./product1_simple.html">Hub Accent Mirror</a>
+                    <a href="./product.php">Hub Accent Mirror</a>
                   </h6>
                   <div class="product-card__price d-flex">
                     <span class="money price">$17</span>
@@ -92,7 +92,7 @@
                 </div>
               </div>
 
-          
+
             </div>
             <!-- /.swiper-wrapper -->
           </div>

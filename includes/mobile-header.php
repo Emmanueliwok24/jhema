@@ -47,13 +47,19 @@
             >3</span
           >
         </a>
+
       </div>
+      <section>
+              <?php include("scroll_categories.php"); ?>
+
+      </section>
+
       <!-- /.container -->
 
       <nav
         class="header-mobile__navigation navigation d-flex flex-column w-100 position-absolute top-100 bg-body overflow-auto"
       >
-        <div class="container">
+        <div class="container ">
           <form
             action="search.php"
             method="GET"

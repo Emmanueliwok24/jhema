@@ -17353,7 +17353,7 @@ textarea.form-control.is-invalid {
 }
 
 .logo__image {
-  max-width: 100%;
+  max-width: 50%;
   max-height: 120px;
 }
 
@@ -17757,6 +17757,7 @@ textarea.form-control.is-invalid {
   .header-mobile {
     display: none;
   }
+  
 }
 
 .header-mobile_sticky {

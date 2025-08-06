@@ -11,5 +11,7 @@
 
     <!-- Footer Scripts -->
     <script src="js/theme.js"></script>
+
+    
   </body>
 </php>

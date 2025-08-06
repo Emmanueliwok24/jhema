@@ -55,7 +55,7 @@
       >
         <div class="container">
           <form
-            action="search.html"
+            action="search.php"
             method="GET"
             class="search-field position-relative mt-4 mb-3"
           >
@@ -105,42 +105,35 @@
                   >Home</a
                 >
               </li>
+               <li class="navigation__item">
+              <a href="#" class="navigation__link js-nav-right d-flex align-items-center">Shop<svg class="ms-auto" width="7" height="11" viewbox="0 0 7 11" xmlns="http://www.w3.org/2000/svg"><use href="#icon_next_sm"></use></svg></a>
+              <div class="sub-menu position-absolute top-0 start-100 w-100 d-none">
+                <a href="#" class="navigation__link js-nav-left d-flex align-items-center border-bottom mb-3"><svg class="me-2" width="7" height="11" viewbox="0 0 7 11" xmlns="http://www.w3.org/2000/svg"><use href="#icon_prev_sm"></use></svg>Shop</a>
+                <div class="sub-menu__wrapper">
+                  <a href="#" class="navigation__link js-nav-right d-flex align-items-center">Shop<svg class="ms-auto" width="7" height="11" viewbox="0 0 7 11" xmlns="http://www.w3.org/2000/svg"><use href="#icon_next_sm"></use></svg></a>
+                  <div class="sub-menu__wrapper position-absolute top-0 start-100 w-100 d-none">
+                    <a href="#" class="navigation__link js-nav-left d-flex align-items-center border-bottom mb-2"><svg class="me-2" width="7" height="11" viewbox="0 0 7 11" xmlns="http://www.w3.org/2000/svg"><use href="#icon_prev_sm"></use></svg>Shop List</a>
+                    <ul class="sub-menu__list list-unstyled">
+                      <li class="sub-menu__item"><a href="./shop.php" class="menu-link menu-link_us-s">Products </a></li>
+
+                    </ul>
+                  </div><!-- /.sub-menu__wrapper -->
+
+
+
+                </div><!-- /.sub-menu__wrapper -->
+              </div><!-- /.sub-menu -->
+            </li>
+
+
+
+
               <li class="navigation__item">
-                <a
-                  href="./shop.php"
-                  class="navigation__link js-nav-right d-flex align-items-center"
-                  >Shop<svg
-                    class="ms-auto"
-                    width="7"
-                    height="11"
-                    viewBox="0 0 7 11"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <use href="#icon_next_sm" /></svg
-                ></a>
+                <a href="./about.php" class="navigation__link">About</a>
               </li>
 
               <li class="navigation__item">
-                <a
-                  href="./blog.html"
-                  class="navigation__link js-nav-right d-flex align-items-center"
-                  >Blog<svg
-                    class="ms-auto"
-                    width="7"
-                    height="11"
-                    viewBox="0 0 7 11"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <use href="#icon_next_sm" /></svg
-                ></a>
-              </li>
-
-              <li class="navigation__item">
-                <a href="./about.html" class="navigation__link">About</a>
-              </li>
-
-              <li class="navigation__item">
-                <a href="./contact.html" class="navigation__link">Contact</a>
+                <a href="./contact.php" class="navigation__link">Contact</a>
               </li>
             </ul>
             <!-- /.navigation__list -->

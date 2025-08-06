@@ -20,21 +20,58 @@
 
                 <!-- /.box-menu -->
               </li>
-              <li class="navigation__item">
-                <a href="./shop.php" class="navigation__link">Shop</a>
+             <li class="navigation__item">
+              <a href="#" class="navigation__link">Shop</a>
+              <div class="mega-menu">
+                <div class="container d-flex">
+                  <div class="col pe-4">
+                    <a href="#" class="sub-menu__title">Shop List</a>
+                    <ul class="sub-menu__list list-unstyled">
+                      <li class="sub-menu__item"><a href="./shop.php" class="menu-link menu-link_us-s">Shop </a></li>
 
+                    </ul>
+                  </div>
+                  <div class="col pe-4">
+                    <a href="#" class="sub-menu__title">Shop List</a>
+                    <ul class="sub-menu__list list-unstyled">
+                      <li class="sub-menu__item"><a href="./shop.php" class="menu-link menu-link_us-s">Shop </a></li>
+
+                    </ul>
+                  </div>
+                  <div class="col pe-4">
+                    <a href="#" class="sub-menu__title">Shop List</a>
+                    <ul class="sub-menu__list list-unstyled">
+                      <li class="sub-menu__item"><a href="./shop.php" class="menu-link menu-link_us-s">Shop </a></li>
+
+                    </ul>
+                  </div>
+
+
+
+                  <div class="mega-menu__media col">
+                    <div class="position-relative">
+                      <img loading="lazy" class="mega-menu__img" src="./images/mega-menu-item.jpg" alt="New Horizons">
+                      <div class="mega-menu__media-content content_abs content_left content_bottom">
+                        <h3>NEW</h3>
+                        <h3 class="mb-0">HORIZONS</h3>
+                        <a href="shop1.php" class="btn-link default-underline fw-medium">SHOP NOW</a>
+                      </div>
+                    </div>
+                  </div>
+                </div><!-- /.container d-flex -->
+              </div>
+            </li>
+
+
+
+              <li class="navigation__item">
+                <a href="./about.php" class="navigation__link">About</a>
               </li>
               <li class="navigation__item">
-                <a href="./blog.html" class="navigation__link">Blog</a>
-
-                <!-- /.box-menu -->
-              </li>
-
-              <li class="navigation__item">
-                <a href="./about.html" class="navigation__link">About</a>
+                <a href="./contact.php" class="navigation__link">Contact</a>
               </li>
               <li class="navigation__item">
-                <a href="./contact.html" class="navigation__link">Contact</a>
+                <a href="./faq.php" class="navigation__link">FAQ</a>
               </li>
             </ul>
             <!-- /.navigation__list -->
@@ -61,7 +98,7 @@
 
               <div class="search-popup js-hidden-content">
                 <form
-                  action="./search_result.html"
+                  action="./search_result.php"
                   method="GET"
                   class="search-field container"
                 >
@@ -156,7 +193,7 @@
               </a>
             </div>
 
-            <a class="header-tools__item" href="./account_wishlist.html">
+            <a class="header-tools__item" href="./account_wishlist.php">
               <svg
                 width="20"
                 height="20"
@@ -211,5 +248,73 @@
         <!-- /.header-desk header-desk_type_1 -->
       </div>
       <!-- /.container -->
+
+
     </header>
     <!-- End Header Type 1 -->
+
+
+          <section class="brands-carousel  border-bottom container" style="margin-top:clamp(10px, 16%, 100px);height: 50px;">
+      <div class="position-relative">
+        <div class="swiper-container  js-swiper-slider" data-settings='{
+            "autoplay": {
+              "delay": 5000
+            },
+            "slidesPerView": 5,
+            "slidesPerGroup": 1,
+            "effect": "none",
+            "loop": true,
+            "breakpoints": {
+              "320": {
+                "slidesPerView": 5,
+                "slidesPerGroup": 2,
+                "spaceBetween": 14
+              },
+              "768": {
+                "slidesPerView": 5,
+                "slidesPerGroup": 3,
+                "spaceBetween": 24
+              },
+              "992": {
+                "slidesPerView": 7,
+                "slidesPerGroup": 1,
+                "spaceBetween": 30,
+                "pagination": false
+              },
+              "1200": {
+                "slidesPerView": 15,
+                "slidesPerGroup": 1,
+                "spaceBetween": 30,
+                "pagination": false
+              }
+            }
+          }'>
+          <div class="swiper-wrapper">
+
+            <div class="swiper-slide w-auto">
+              <div><a href="#" class="menu-link menu-link_us-s menu-link_active">New In</a></div>
+            </div>
+            <div class="swiper-slide w-auto">
+              <div><a href="#" class="menu-link menu-link_us-s">Jacketsdd dddd</a></div>
+            </div>
+            <div class="swiper-slide w-auto">
+              <div><a href="#" class="menu-link menu-link_us-s">Hoodies</a></div>
+            </div>
+            <div class="swiper-slide w-auto">
+              <div><a href="#" class="menu-link menu-link_us-s">Women</a></div>
+            </div>
+            <div class="swiper-slide w-auto ">
+              <div><a href="#" class="menu-link menu-link_us-s">Trousers</a></div>
+            </div>
+            <div class="swiper-slide w-auto ">
+              <div><a href="#" class="menu-link menu-link_us-s">Accessories</a></div>
+            </div>
+            <div class="swiper-slide  w-auto ">
+              <div><a href="#" class="menu-link menu-link_us-s">Shoes</a></div>
+            </div>
+
+          </div><!-- /.swiper-wrapper -->
+        </div><!-- /.swiper-container js-swiper-slider -->
+      </div><!-- /.position-relative -->
+
+    </section><!-- /.products-carousel container -->

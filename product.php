@@ -3,7 +3,7 @@
 <?php include("includes/mobile-header.php"); ?>
 <?php include("includes/header.php"); ?>
 
-  <main>
+  <main class="p-0">
     <div class="mb-md-1 pb-md-3"></div>
     <section class="product-single container">
       <div class="row">
@@ -102,7 +102,7 @@
                 <label>Color</label>
                 <div class="swatch-list">
                   <input type="radio" name="color" id="swatch-11">
-                  <label class="swatch swatch-color js-swatch" for="swatch-11" aria-label="Black" data-bs-toggle="tooltip" data-bs-placement="top" title="Black" style="color: #222"></label>
+                  <label class="swatch swatch-color js-swatch" for="swatch-11" aria-label="Black" data-bs-toggle="tooltip" data-bs-placement="top" title="Black" style="color: #222"> </label>
                   <input type="radio" name="color" id="swatch-12" checked="">
                   <label class="swatch swatch-color js-swatch" for="swatch-12" aria-label="Red" data-bs-toggle="tooltip" data-bs-placement="top" title="Red" style="color: #C93A3E"></label>
                   <input type="radio" name="color" id="swatch-13">

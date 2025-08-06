@@ -115,27 +115,27 @@
             <h5 class="sub-menu__title text-uppercase">Company</h5>
             <ul class="sub-menu__list list-unstyled">
               <li class="sub-menu__item">
-                <a href="./about.html" class="menu-link menu-link_us-s"
+                <a href="./about.php" class="menu-link menu-link_us-s"
                   >About Us</a
                 >
               </li>
               <li class="sub-menu__item">
-                <a href="./about.html" class="menu-link menu-link_us-s"
+                <a href="./about.php" class="menu-link menu-link_us-s"
                   >Careers</a
                 >
               </li>
               <li class="sub-menu__item">
-                <a href="./about.html" class="menu-link menu-link_us-s"
+                <a href="./about.php" class="menu-link menu-link_us-s"
                   >Affiliates</a
                 >
               </li>
               <li class="sub-menu__item">
-                <a href="./blog_list1.html" class="menu-link menu-link_us-s"
+                <a href="./blog_list1.php" class="menu-link menu-link_us-s"
                   >Blog</a
                 >
               </li>
               <li class="sub-menu__item">
-                <a href="./contact.html" class="menu-link menu-link_us-s"
+                <a href="./contact.php" class="menu-link menu-link_us-s"
                   >Contact Us</a
                 >
               </li>
@@ -146,20 +146,20 @@
             <h5 class="sub-menu__title text-uppercase">Shop</h5>
             <ul class="sub-menu__list list-unstyled">
               <li class="sub-menu__item">
-                <a href="./shop2.html" class="menu-link menu-link_us-s"
+                <a href="./shop2.php" class="menu-link menu-link_us-s"
                   >New Arrivals</a
                 >
               </li>
               <li class="sub-menu__item">
-                <a href="./shop3.html" class="menu-link menu-link_us-s"
+                <a href="./shop3.php" class="menu-link menu-link_us-s"
                   >Accessories</a
                 >
               </li>
               <li class="sub-menu__item">
-                <a href="./shop4.html" class="menu-link menu-link_us-s">Men</a>
+                <a href="./shop4.php" class="menu-link menu-link_us-s">Men</a>
               </li>
               <li class="sub-menu__item">
-                <a href="./shop5.html" class="menu-link menu-link_us-s"
+                <a href="./shop5.php" class="menu-link menu-link_us-s"
                   >Women</a
                 >
               </li>
@@ -175,34 +175,34 @@
             <h5 class="sub-menu__title text-uppercase">Help</h5>
             <ul class="sub-menu__list list-unstyled">
               <li class="sub-menu__item">
-                <a href="./about.html" class="menu-link menu-link_us-s"
+                <a href="./about.php" class="menu-link menu-link_us-s"
                   >Customer Service</a
                 >
               </li>
               <li class="sub-menu__item">
                 <a
-                  href="./account_dashboard.html"
+                  href="./account_dashboard.php"
                   class="menu-link menu-link_us-s"
                   >My Account</a
                 >
               </li>
               <li class="sub-menu__item">
-                <a href="./store_location.html" class="menu-link menu-link_us-s"
+                <a href="./store_location.php" class="menu-link menu-link_us-s"
                   >Find a Store</a
                 >
               </li>
               <li class="sub-menu__item">
-                <a href="./terms.html" class="menu-link menu-link_us-s"
+                <a href="./terms.php" class="menu-link menu-link_us-s"
                   >Legal & Privacy</a
                 >
               </li>
               <li class="sub-menu__item">
-                <a href="./contact.html" class="menu-link menu-link_us-s"
+                <a href="./contact.php" class="menu-link menu-link_us-s"
                   >Contact</a
                 >
               </li>
               <li class="sub-menu__item">
-                <a href="./about.html" class="menu-link menu-link_us-s"
+                <a href="./about.php" class="menu-link menu-link_us-s"
                   >Gift Card</a
                 >
               </li>

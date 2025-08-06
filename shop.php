@@ -7,7 +7,7 @@
 
 
 
- <main>
+ <main class="p-0">
     <section class="shop-main container d-flex pt-4 pt-xl-5">
      <!-- shop sidebar -->
 

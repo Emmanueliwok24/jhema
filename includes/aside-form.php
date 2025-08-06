@@ -12,7 +12,7 @@
           <!-- /.aside-header -->
 
           <form
-            action="./login_register.html"
+            action="./login_register.php"
             method="POST"
             class="aside-content"
           >
@@ -59,7 +59,7 @@
                   >Remember me</label
                 >
               </div>
-              <a href="./reset_password.html" class="btn-text ms-auto"
+              <a href="./reset_password.php" class="btn-text ms-auto"
                 >Lost password?</a
               >
             </div>
@@ -71,7 +71,7 @@
             <div class="customer-option mt-4 text-center">
               <span class="text-secondary">No account yet?</span>
               <a
-                href="./login_register.html#register-tab"
+                href="./login_register.php#register-tab"
                 class="btn-text js-show-register"
                 >Create Account</a
               >
@@ -90,7 +90,7 @@
           <!-- /.aside-header -->
 
           <form
-            action="./login_register.html"
+            action="./login_register.php"
             method="POST"
             class="aside-content"
           >

@@ -7,7 +7,7 @@
 
 
 
-<main>
+<main class="p-0">
   <!-- slide Show -->
       <?php include("includes/index-main/slide-show.php"); ?>
 

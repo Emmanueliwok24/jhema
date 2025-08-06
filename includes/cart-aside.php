@@ -68,10 +68,10 @@
           </span>
         </div>
         <!-- /.d-flex justify-content-between -->
-        <a href="./shop_cart.html" class="btn btn-light mt-3 d-block"
+        <a href="./shop_cart.php" class="btn btn-light mt-3 d-block"
           >View Cart</a
         >
-        <a href="./shop_checkout.html" class="btn btn-primary mt-3 d-block"
+        <a href="./shop_checkout.php" class="btn btn-primary mt-3 d-block"
           >Checkout</a
         >
       </div>

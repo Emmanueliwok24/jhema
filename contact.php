@@ -27,12 +27,12 @@
           <div class="col-lg-6">
             <h3 class="mb-4">Store in London</h3>
             <p class="mb-4">1418 River Drive, Suite 35 Cottonhall, CA 9622<br>United Kingdom</p>
-            <p class="mb-4">sale@uomo.com<br>+44 20 7123 4567</p>
+            <p class="mb-4">sale@jhema.com<br>+44 20 7123 4567</p>
           </div>
           <div class="col-lg-6">
             <h3 class="mb-4">Store in Istanbul</h3>
             <p class="mb-4">1418 River Drive, Suite 35 Cottonhall, CA 9622<br>Turky</p>
-            <p class="mb-4">sale@uomo.com<br>+90 212 555 1212</p>
+            <p class="mb-4">sale@jhema.com<br>+90 212 555 1212</p>
           </div>
         </div>
         <div class="contact-us__form">

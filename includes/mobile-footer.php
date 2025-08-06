@@ -23,7 +23,7 @@
 
         <div class="col-4">
           <a
-            href="/"
+            href="./shop.php"
             class="footer-mobile__link d-flex flex-column align-items-center"
           >
             <svg

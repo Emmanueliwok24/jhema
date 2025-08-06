@@ -135,6 +135,9 @@
               <li class="navigation__item">
                 <a href="./contact.php" class="navigation__link">Contact</a>
               </li>
+              <li class="navigation__item">
+                <a href="./faq.php" class="navigation__link">FAQ</a>
+              </li>
             </ul>
             <!-- /.navigation__list -->
           </div>

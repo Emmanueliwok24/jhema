@@ -5,9 +5,6 @@
 
 
 
-
-
-
   <main class="p-0">
     <div class="mb-4 pb-4"></div>
     <section class="shop-checkout container">

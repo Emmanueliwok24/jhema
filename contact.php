@@ -8,21 +8,20 @@
 
 
 
- <main class="p-0">
-    <div class="mb-4 pb-4"></div>
-    <section class="contact-us container">
-      <div class="mw-930">
-        <h2 class="page-title">CONTACT US</h2>
-      </div>
-    </section>
+ <main class=" position-relative">
+  <?php include("scroll_categories.php"); ?>
 
-    <section class="google-map mb-5">
-      <h2 class="d-none">Contact US</h2>
+    <div class="mb-4 pb-4"></div>
+
+  <section class="contact-us container  ">
+            <h2 class="page-title">CONTACT US</h2>
+        </section>
+    <section class="google-map mb-5 ">
       <div style="width: 100%"><iframe width="100%" height="600" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://maps.google.com/maps?width=100%25&amp;height=600&amp;hl=en&amp;q=1%20Grafton%20Street,%20Dublin,%20Ireland+(My%20Business%20Name)&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed"><a href="https://www.mapsdirections.info/fr/calculer-la-population-sur-une-carte">calculer la population sur la carte</a></iframe></div>
     </section>
 
     <section class="contact-us container">
-      <div class="mw-930">
+
         <div class="row mb-5">
           <div class="col-lg-6">
             <h3 class="mb-4">Store in London</h3>

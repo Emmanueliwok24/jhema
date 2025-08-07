@@ -8,7 +8,9 @@
 
 
 
-   <main class="p-0">
+   <main class="position-relative">
+      <?php include("scroll_categories.php"); ?>
+
       <div class="mb-4 pb-4"></div>
       <section class="shop-checkout container">
         <h2 class="page-title">Cart</h2>
@@ -111,7 +113,7 @@
                     </a>
                   </td>
                 </tr>
-        
+
               </tbody>
             </table>
             <div class="cart-table-footer">

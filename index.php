@@ -7,7 +7,9 @@
 
 
 
-<main class="p-0">
+<main class=" position-relative">
+   <?php include("scroll_categories.php"); ?>
+
   <!-- slide Show -->
       <?php include("includes/index-main/slide-show.php"); ?>
 

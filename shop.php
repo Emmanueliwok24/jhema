@@ -7,18 +7,21 @@
 
 
 
- <main class="p-0">
-    <section class="shop-main container d-flex pt-4 pt-xl-5">
+ <main class=" position-relative">
+   <?php include("scroll_categories.php"); ?>
+    <div class="mb-md-1 pb-xl-5"></div>
+
+   <section class="shop-main container d-flex  ">
      <!-- shop sidebar -->
 
      <?php include("includes/shop/sidebar.php"); ?>
 
-      <div class="shop-list flex-grow-1">
-      <!-- slide show -->
-    <?php include("includes/shop/slideshow.php"); ?>
+     <div class="shop-list flex-grow-1">
+       <!-- slide show -->
+       <?php include("includes/shop/slideshow.php"); ?>
 
 
-        <div class="mb-3 pb-2 pb-xl-3"></div>
+       <div class="mb-3 pb-2 pb-xl-3"></div>
 
         <div class="d-flex justify-content-between mb-4 pb-md-2">
           <div class="breadcrumb mb-0 d-none d-md-block flex-grow-1">

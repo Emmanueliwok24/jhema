@@ -6,10 +6,10 @@
 
         <div class="pt-4 pt-lg-0"></div>
 
-        <div class="accordion" id="categories-list">
+        <div  id="categories-list">
           <div class="accordion-item mb-4 pb-3">
-            <h5 class="accordion-header" id="accordion-heading-11">
-              <button class="accordion-button p-0 border-0 fs-5 text-uppercase" type="button" data-bs-toggle="collapse" data-bs-target="#accordion-filter-1" aria-expanded="true" aria-controls="accordion-filter-1">
+            <h5 class="accordion-header " id="accordion-heading-11">
+              <button class="accordion-button   p-0 border-0 fs-5 text-uppercase" type="button" data-bs-toggle="collapse" data-bs-target="#accordion-filter-1" aria-expanded="true" aria-controls="accordion-filter-1" >
                 Product Categories
                 <svg class="accordion-button__icon type2" viewbox="0 0 10 6" xmlns="http://www.w3.org/2000/svg">
                   <g aria-hidden="true" stroke="none" fill-rule="evenodd">
@@ -58,7 +58,7 @@
         </div><!-- /.accordion-item -->
 
 
-        <div class="accordion" id="color-filters">
+        <div  id="color-filters">
           <div class="accordion-item mb-4 pb-3">
             <h5 class="accordion-header" id="accordion-heading-1">
               <button class="accordion-button p-0 border-0 fs-5 text-uppercase" type="button" data-bs-toggle="collapse" data-bs-target="#accordion-filter-2" aria-expanded="true" aria-controls="accordion-filter-2">
@@ -82,7 +82,7 @@
         </div><!-- /.accordion -->
 
 
-        <div class="accordion" id="size-filters">
+        <div  id="size-filters">
           <div class="accordion-item mb-4 pb-3">
             <h5 class="accordion-header" id="accordion-heading-size">
               <button class="accordion-button p-0 border-0 fs-5 text-uppercase" type="button" data-bs-toggle="collapse" data-bs-target="#accordion-filter-size" aria-expanded="true" aria-controls="accordion-filter-size">
@@ -110,10 +110,10 @@
         </div><!-- /.accordion -->
 
 
-      
 
 
-        <div class="accordion" id="price-filters">
+
+        <div  id="price-filters">
           <div class="accordion-item mb-4">
             <h5 class="accordion-header mb-2" id="accordion-heading-price">
               <button class="accordion-button p-0 border-0 fs-5 text-uppercase" type="button" data-bs-toggle="collapse" data-bs-target="#accordion-filter-price" aria-expanded="true" aria-controls="accordion-filter-price">

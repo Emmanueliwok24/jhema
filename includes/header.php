@@ -22,7 +22,7 @@
               </li>
              <li class="navigation__item">
               <a href="#" class="navigation__link">Shop</a>
-              <div class="mega-menu">
+              <div class="mega-menu position-position-absolute" style="z-index:99999 !important;">
                 <div class="container d-flex">
                   <div class="col pe-4">
                     <a href="#" class="sub-menu__title">Shop List</a>
@@ -249,7 +249,6 @@
       </div>
       <!-- /.container -->
 
-<?php include("scroll_categories.php"); ?>
     </header>
     <!-- End Header Type 1 -->
 

@@ -7,7 +7,9 @@
 
 
 
-  <main>
+  <main class="position-relative">
+      <?php include("scroll_categories.php"); ?>
+
     <div class="mb-4 pb-4"></div>
     <section class="login-register container">
       <h2 class="d-none">Login & Register</h2>

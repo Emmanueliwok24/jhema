@@ -8,7 +8,8 @@
 
 
 
-  <main class="p-0">
+  <main class="position-relative">
+    <?php include("scroll_categories.php"); ?>
     <div class="mb-4 pb-4"></div>
     <section class="shop-checkout container">
       <h2 class="page-title">Order Received</h2>
@@ -113,6 +114,9 @@
             </table>
           </div>
         </div>
+
+              <a class="btn btn-primary btn-checkout" href="./shop_order_tracking.php">Track Order</a>
+
       </div>
     </section>
   </main>

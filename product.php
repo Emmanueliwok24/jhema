@@ -3,7 +3,9 @@
 <?php include("includes/mobile-header.php"); ?>
 <?php include("includes/header.php"); ?>
 
-  <main class="p-0">
+  <main class="position-relative">
+      <?php include("scroll_categories.php"); ?>
+
     <div class="mb-md-1 pb-md-3"></div>
     <section class="product-single container">
       <div class="row">

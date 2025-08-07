@@ -3,13 +3,15 @@
 <?php include("includes/mobile-header.php"); ?>
 <?php include("includes/header.php"); ?>
 
-<main class="p-0">
+<main class=" position-relative">
+
+  <?php include("scroll_categories.php"); ?>
   <div class="mb-5 pb-4"></div>
-  <section class="container mw-930 lh-30">
+  <section class="container mw-930 lh-30 pt-lg-5">
     <h2 class="section-title text-uppercase fw-bold mb-5">FREQUENTLY ASKED QUESTIONS</h2>
-    
+
     <h3 class="mb-4">Orders</h3>
-    <div id="faq_accordion" class="faq-accordion accordion mb-5">
+    <div id="faq_accordion" class="faq-accordion mb-5">
       <div class="accordion-item">
         <h5 class="accordion-header" id="faq-accordion-heading-1">
           <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq-accordion-collapse-1" aria-expanded="true" aria-controls="faq-accordion-collapse-1">
@@ -23,7 +25,7 @@
           </div>
         </div>
       </div>
-      
+
       <div class="accordion-item">
         <h5 class="accordion-header" id="faq-accordion-heading-2">
           <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq-accordion-collapse-2" aria-expanded="false" aria-controls="faq-accordion-collapse-2">
@@ -37,7 +39,7 @@
           </div>
         </div>
       </div>
-      
+
       <div class="accordion-item">
         <h5 class="accordion-header" id="faq-accordion-heading-3">
           <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq-accordion-collapse-3" aria-expanded="false" aria-controls="faq-accordion-collapse-3">
@@ -52,9 +54,9 @@
         </div>
       </div>
     </div>
-    
+
     <h3 class="mb-4">Shipping</h3>
-    <div id="faq_accordion_2" class="faq-accordion accordion mb-5">
+    <div id="faq_accordion_2" class="faq-accordion  mb-5">
       <div class="accordion-item">
         <h5 class="accordion-header" id="faq-accordion-heading-2-1">
           <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq-accordion-collapse-2-1" aria-expanded="true" aria-controls="faq-accordion-collapse-2-1">
@@ -68,7 +70,7 @@
           </div>
         </div>
       </div>
-      
+
       <div class="accordion-item">
         <h5 class="accordion-header" id="faq-accordion-heading-2-2">
           <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq-accordion-collapse-2-2" aria-expanded="false" aria-controls="faq-accordion-collapse-2-2">
@@ -82,7 +84,7 @@
           </div>
         </div>
       </div>
-      
+
       <div class="accordion-item">
         <h5 class="accordion-header" id="faq-accordion-heading-2-3">
           <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq-accordion-collapse-2-3" aria-expanded="false" aria-controls="faq-accordion-collapse-2-3">
@@ -97,9 +99,9 @@
         </div>
       </div>
     </div>
-    
+
     <h3 class="mb-4">Payment</h3>
-    <div id="faq_accordion_3" class="faq-accordion accordion mb-5">
+    <div id="faq_accordion_3" class="faq-accordion  mb-5">
       <div class="accordion-item">
         <h5 class="accordion-header" id="faq-accordion-heading-3-1">
           <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq-accordion-collapse-3-1" aria-expanded="true" aria-controls="faq-accordion-collapse-3-1">
@@ -113,7 +115,7 @@
           </div>
         </div>
       </div>
-      
+
       <div class="accordion-item">
         <h5 class="accordion-header" id="faq-accordion-heading-3-2">
           <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq-accordion-collapse-3-2" aria-expanded="false" aria-controls="faq-accordion-collapse-3-2">
@@ -127,7 +129,7 @@
           </div>
         </div>
       </div>
-      
+
       <div class="accordion-item">
         <h5 class="accordion-header" id="faq-accordion-heading-3-3">
           <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq-accordion-collapse-3-3" aria-expanded="false" aria-controls="faq-accordion-collapse-3-3">
@@ -142,9 +144,9 @@
         </div>
       </div>
     </div>
-    
+
     <h3 class="mb-4">Returns & Exchanges</h3>
-    <div id="faq_accordion_4" class="faq-accordion accordion mb-5">
+    <div id="faq_accordion_4" class="faq-accordion  mb-5">
       <div class="accordion-item">
         <h5 class="accordion-header" id="faq-accordion-heading-4-1">
           <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq-accordion-collapse-4-1" aria-expanded="true" aria-controls="faq-accordion-collapse-4-1">
@@ -158,7 +160,7 @@
           </div>
         </div>
       </div>
-      
+
       <div class="accordion-item">
         <h5 class="accordion-header" id="faq-accordion-heading-4-2">
           <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq-accordion-collapse-4-2" aria-expanded="false" aria-controls="faq-accordion-collapse-4-2">
@@ -173,9 +175,9 @@
         </div>
       </div>
     </div>
-    
+
     <h3 class="mb-4">Product Care</h3>
-    <div id="faq_accordion_5" class="faq-accordion accordion mb-5">
+    <div id="faq_accordion_5" class="faq-accordion  mb-5">
       <div class="accordion-item">
         <h5 class="accordion-header" id="faq-accordion-heading-5-1">
           <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq-accordion-collapse-5-1" aria-expanded="true" aria-controls="faq-accordion-collapse-5-1">
@@ -190,9 +192,9 @@
         </div>
       </div>
     </div>
-    
+
     <h3 class="mb-4">Authenticity</h3>
-    <div id="faq_accordion_6" class="faq-accordion accordion mb-5">
+    <div id="faq_accordion_6" class="faq-accordion  mb-5">
       <div class="accordion-item">
         <h5 class="accordion-header" id="faq-accordion-heading-6-1">
           <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq-accordion-collapse-6-1" aria-expanded="true" aria-controls="faq-accordion-collapse-6-1">

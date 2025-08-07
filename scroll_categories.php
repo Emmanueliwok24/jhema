@@ -4,14 +4,18 @@
   .marquee-wrapper {
     overflow: hidden;
     background-color: #fff;
-    position: relative;
-    z-index: 1050;
+    position: sticky;
+    width: 100%;
+    z-index: 8;
+    border-top:.5px solid #1b1b1b40;
+    border-bottom:.5px solid #1b1b1b40;
   }
 
   .marquee-scroll {
     display: inline-block;
     white-space: nowrap;
-    animation: scroll-left 80s linear infinite;
+    overflow:hidden;
+    animation: scroll-left 100s linear infinite;
   }
 
   @keyframes scroll-left {
@@ -41,17 +45,22 @@
     border-color: #1b1b1b;
   }
 
-  @media (max-width: 576px) {
+  @media screen and (max-width: 976px) {
     .category-item {
       font-size: 0.85rem;
       padding: 6px 14px;
       margin-right: 10px;
     }
+ .marquee-wrapper{
+      position:static;
+    }
+
   }
+
 </style>
 
 <!-- Smooth Marquee-Style Category Bar -->
-<div class="marquee-wrapper py-2">
+<div class="marquee-wrapper py-2 w-100 " style="top: 0; ">
   <div class="marquee-scroll">
     <!-- Repeat twice for seamless infinite scroll -->
     <span>
@@ -76,7 +85,7 @@
       <a href="#" class="category-item">Essentials</a>
       <a href="#" class="category-item">Gifts</a>
     </span>
-    <span>
+     <span >
       <!-- Duplicate for infinite effect -->
       <a href="#" class="category-item">All</a>
       <a href="#" class="category-item">Shoes</a>
@@ -99,5 +108,6 @@
       <a href="#" class="category-item">Essentials</a>
       <a href="#" class="category-item">Gifts</a>
     </span>
+
   </div>
 </div>

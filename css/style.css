@@ -1629,9 +1629,11 @@ progress {
   width: 100%;
   border-radius: 0;
   overflow-anchor: none;
-  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
-    border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out,
-    border-radius 0.15s ease;
+  transition: color 0.15s ease-in-out, backgroun  d-color 0.15s ease-in-out,    border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out,    border-radius 0.15s ease;
+  -webkit-transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,    border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out,    border-radius 0.15s ease;
+  -moz-transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,    border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out,    border-radius 0.15s ease;
+  -ms-transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,    border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out,    border-radius 0.15s ease;
+  -o-transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,    border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out,    border-radius 0.15s ease;
 }
 @media (prefers-reduced-motion: reduce) {
   .accordion-button {
@@ -7200,7 +7202,7 @@ progress {
   }
 
   .pt-xl-5 {
-    padding-top: 3rem !important;
+    padding-top: 5rem !important;
   }
 
   .pe-xl-0 {
@@ -17335,8 +17337,8 @@ textarea.form-control.is-invalid {
 }
 
 .logo__image {
-  max-width: 50%;
-  max-height: 120px;
+  max-width: 40%;
+
 }
 .header-tools {
   margin-right: -0.5rem;
@@ -17738,7 +17740,7 @@ textarea.form-control.is-invalid {
   .header-mobile {
     display: none;
   }
-  
+
 }
 
 .header-mobile_sticky {

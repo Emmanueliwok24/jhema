@@ -13572,33 +13572,15 @@ fieldset:disabled .btn {
 
 .swatch-color {
   display: block;
-  position: relative;
-  width: 1.75rem;
-  height: 1.75rem;
-  margin-right: 0.75rem;
-  margin-bottom: 0.75rem;
-  border-radius: 50%;
+  padding:0 5px ;
+  margin-right:10px;
+  margin-bottom:10px
 }
-.swatch-color:after {
-  display: block;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 1rem;
-  height: 1rem;
-  margin-top: -0.5rem;
-  margin-left: -0.5rem;
-  border-radius: 100%;
-  background-color: currentColor;
-  color: inherit;
-  content: "";
-}
+
 .swatch-color.swatch_active {
   border: 2px solid #222222;
 }
-.hover-container .swatch-color {
-  margin: 0;
-}
+
 
 .swatch-size.swatch_active {
   background-color: #e4e4e4;
@@ -17353,10 +17335,9 @@ textarea.form-control.is-invalid {
 }
 
 .logo__image {
-  max-width: 100%;
+  max-width: 50%;
   max-height: 120px;
 }
-
 .header-tools {
   margin-right: -0.5rem;
 }

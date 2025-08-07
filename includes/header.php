@@ -249,72 +249,7 @@
       </div>
       <!-- /.container -->
 
-
+<?php include("scroll_categories.php"); ?>
     </header>
     <!-- End Header Type 1 -->
 
-
-          <section class="brands-carousel  border-bottom container" style="margin-top:clamp(10px, 16%, 100px);height: 50px;">
-      <div class="position-relative">
-        <div class="swiper-container  js-swiper-slider" data-settings='{
-            "autoplay": {
-              "delay": 5000
-            },
-            "slidesPerView": 5,
-            "slidesPerGroup": 1,
-            "effect": "none",
-            "loop": true,
-            "breakpoints": {
-              "320": {
-                "slidesPerView": 5,
-                "slidesPerGroup": 2,
-                "spaceBetween": 14
-              },
-              "768": {
-                "slidesPerView": 5,
-                "slidesPerGroup": 3,
-                "spaceBetween": 24
-              },
-              "992": {
-                "slidesPerView": 7,
-                "slidesPerGroup": 1,
-                "spaceBetween": 30,
-                "pagination": false
-              },
-              "1200": {
-                "slidesPerView": 15,
-                "slidesPerGroup": 1,
-                "spaceBetween": 30,
-                "pagination": false
-              }
-            }
-          }'>
-          <div class="swiper-wrapper">
-
-            <div class="swiper-slide w-auto">
-              <div><a href="#" class="menu-link menu-link_us-s menu-link_active">New In</a></div>
-            </div>
-            <div class="swiper-slide w-auto">
-              <div><a href="#" class="menu-link menu-link_us-s">Jacketsdd dddd</a></div>
-            </div>
-            <div class="swiper-slide w-auto">
-              <div><a href="#" class="menu-link menu-link_us-s">Hoodies</a></div>
-            </div>
-            <div class="swiper-slide w-auto">
-              <div><a href="#" class="menu-link menu-link_us-s">Women</a></div>
-            </div>
-            <div class="swiper-slide w-auto ">
-              <div><a href="#" class="menu-link menu-link_us-s">Trousers</a></div>
-            </div>
-            <div class="swiper-slide w-auto ">
-              <div><a href="#" class="menu-link menu-link_us-s">Accessories</a></div>
-            </div>
-            <div class="swiper-slide  w-auto ">
-              <div><a href="#" class="menu-link menu-link_us-s">Shoes</a></div>
-            </div>
-
-          </div><!-- /.swiper-wrapper -->
-        </div><!-- /.swiper-container js-swiper-slider -->
-      </div><!-- /.position-relative -->
-
-    </section><!-- /.products-carousel container -->

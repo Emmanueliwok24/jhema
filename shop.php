@@ -51,7 +51,10 @@
 
             <div class="shop-filter d-flex align-items-center order-0 order-md-3 d-lg-none">
               <button class="btn-link btn-link_f d-flex align-items-center ps-0 js-open-aside" data-aside="shopFilter">
-                <svg class="d-inline-block align-middle me-2" width="14" height="10" viewbox="0 0 14 10" fill="none" xmlns="http://www.w3.org/2000/svg"><use href="#icon_filter"></use></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-filter me-2" viewBox="0 0 16 16">
+                  <path d="M6 10.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5m-2-3a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5m-2-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5"/>
+                </svg>
+
               <span class="text-uppercase fw-medium d-inline-block align-middle">Filter</span>
               </button>
             </div><!-- /.col-size d-flex align-items-center ms-auto ms-md-3 -->
@@ -67,9 +70,7 @@
                     <div class="swiper-slide">
                       <a href="product.php"><img loading="lazy" src="./images/products/product_1.jpg" width="330" height="400" alt="Cropped Faux leather Jacket" class="pc__img"></a>
                     </div><!-- /.pc__img-wrapper -->
-                    <div class="swiper-slide">
-                      <a href="product.php"><img loading="lazy" src="./images/products/product_1-1.jpg" width="330" height="400" alt="Cropped Faux leather Jacket" class="pc__img"></a>
-                    </div><!-- /.pc__img-wrapper -->
+
                   </div>
                   <span class="pc__img-prev"><svg width="7" height="11" viewbox="0 0 7 11" xmlns="http://www.w3.org/2000/svg"><use href="#icon_prev_sm"></use></svg></span>
                   <span class="pc__img-next"><svg width="7" height="11" viewbox="0 0 7 11" xmlns="http://www.w3.org/2000/svg"><use href="#icon_next_sm"></use></svg></span>

@@ -14,28 +14,11 @@
                 <div class="swiper-wrapper">
                   <div class="swiper-slide product-single__image-item">
                     <img loading="lazy" class="h-auto" src="./images/products/product_0.jpg" width="788" height="788" alt="">
-                    <a data-fancybox="gallery" href="./images/products/product_0.jpg" data-bs-toggle="tooltip" data-bs-placement="left" title="Zoom">
-                      <svg width="16" height="16" viewbox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><use href="#icon_zoom"></use></svg>
-                    </a>
+
+
                   </div>
-                  <div class="swiper-slide product-single__image-item">
-                    <img loading="lazy" class="h-auto" src="./images/products/product_0-1.jpg" width="788" height="788" alt="">
-                    <a data-fancybox="gallery" href="./images/products/product_0-1.jpg" data-bs-toggle="tooltip" data-bs-placement="left" title="Zoom">
-                      <svg width="16" height="16" viewbox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><use href="#icon_zoom"></use></svg>
-                    </a>
-                  </div>
-                  <div class="swiper-slide product-single__image-item">
-                    <img loading="lazy" class="h-auto" src="./images/products/product_0-2.jpg" width="788" height="788" alt="">
-                    <a data-fancybox="gallery" href="./images/products/product_0-2.jpg" data-bs-toggle="tooltip" data-bs-placement="left" title="Zoom">
-                      <svg width="16" height="16" viewbox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><use href="#icon_zoom"></use></svg>
-                    </a>
-                  </div>
-                  <div class="swiper-slide product-single__image-item">
-                    <img loading="lazy" class="h-auto" src="./images/products/product_0-3.jpg" width="788" height="788" alt="">
-                    <a data-fancybox="gallery" href="./images/products/product_0-3.jpg" data-bs-toggle="tooltip" data-bs-placement="left" title="Zoom">
-                      <svg width="16" height="16" viewbox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><use href="#icon_zoom"></use></svg>
-                    </a>
-                  </div>
+                 <!-- ADD more swipe -->
+
                 </div>
                 <div class="swiper-button-prev"><svg width="7" height="11" viewbox="0 0 7 11" xmlns="http://www.w3.org/2000/svg"><use href="#icon_prev_sm"></use></svg></div>
                 <div class="swiper-button-next"><svg width="7" height="11" viewbox="0 0 7 11" xmlns="http://www.w3.org/2000/svg"><use href="#icon_next_sm"></use></svg></div>
@@ -45,9 +28,7 @@
               <div class="swiper-container">
                 <div class="swiper-wrapper">
                   <div class="swiper-slide product-single__image-item"><img loading="lazy" class="h-auto" src="./images/products/product_0.jpg" width="104" height="104" alt=""></div>
-                  <div class="swiper-slide product-single__image-item"><img loading="lazy" class="h-auto" src="./images/products/product_0-1.jpg" width="104" height="104" alt=""></div>
-                  <div class="swiper-slide product-single__image-item"><img loading="lazy" class="h-auto" src="./images/products/product_0-2.jpg" width="104" height="104" alt=""></div>
-                  <div class="swiper-slide product-single__image-item"><img loading="lazy" class="h-auto" src="./images/products/product_0-3.jpg" width="104" height="104" alt=""></div>
+                  <!-- Add more swipes -->
                 </div>
               </div>
             </div>
@@ -98,15 +79,14 @@
                 </div>
                 <a href="#" class="sizeguide-link" data-bs-toggle="modal" data-bs-target="#sizeGuide">Size Guide</a>
               </div>
-              <div class="product-swatch color-swatches">
+              <form name="addtocart-form" method="post">
+            <div class="product-single__swatches">
+              <div class="product-swatch text-swatches">
                 <label>Color</label>
                 <div class="swatch-list">
-                  <input type="radio" name="color" id="swatch-11">
-                  <label class="swatch swatch-color js-swatch" for="swatch-11" aria-label="Black" data-bs-toggle="tooltip" data-bs-placement="top" title="Black" style="color: #222"> </label>
-                  <input type="radio" name="color" id="swatch-12" checked="">
-                  <label class="swatch swatch-color js-swatch" for="swatch-12" aria-label="Red" data-bs-toggle="tooltip" data-bs-placement="top" title="Red" style="color: #C93A3E"></label>
-                  <input type="radio" name="color" id="swatch-13">
-                  <label class="swatch swatch-color js-swatch" for="swatch-13" aria-label="Grey" data-bs-toggle="tooltip" data-bs-placement="top" title="Grey" style="color: #E4E4E4"></label>
+                  <input type="radio" name="" id="Black">
+                  <label class="swatch js-swatch" for="black" aria-label="Extra Small" data-bs-toggle="tooltip" data-bs-placement="top" title="Extra Small">Black</label>
+
                 </div>
               </div>
             </div>

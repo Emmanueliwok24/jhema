@@ -65,21 +65,8 @@
           </div>
           <form name="addtocart-form" method="post">
             <div class="product-single__swatches">
-              <div class="product-swatch text-swatches">
-                <label>Sizes</label>
-                <div class="swatch-list">
-                  <input type="radio" name="size" id="swatch-1">
-                  <label class="swatch js-swatch" for="swatch-1" aria-label="Extra Small" data-bs-toggle="tooltip" data-bs-placement="top" title="Extra Small">XS</label>
-                  <input type="radio" name="size" id="swatch-2" checked="">
-                  <label class="swatch js-swatch" for="swatch-2" aria-label="Small" data-bs-toggle="tooltip" data-bs-placement="top" title="Small">S</label>
-                  <input type="radio" name="size" id="swatch-3">
-                  <label class="swatch js-swatch" for="swatch-3" aria-label="Middle" data-bs-toggle="tooltip" data-bs-placement="top" title="Middle">M</label>
-                  <input type="radio" name="size" id="swatch-4">
-                  <label class="swatch js-swatch" for="swatch-4" aria-label="Large" data-bs-toggle="tooltip" data-bs-placement="top" title="Large">L</label>
-                  <input type="radio" name="size" id="swatch-5">
-                  <label class="swatch js-swatch" for="swatch-5" aria-label="Extra Large" data-bs-toggle="tooltip" data-bs-placement="top" title="Extra Large">XL</label>
-                </div>
-                <a href="#" class="sizeguide-link" data-bs-toggle="modal" data-bs-target="#sizeGuide">Size Guide</a>
+              <div class="product-swatch text-swatches p-0 ">
+             <?php include("includes/sizes.php"); ?>
               </div>
               <form name="addtocart-form" method="post">
             <div class="product-single__swatches">

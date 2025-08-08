@@ -17337,7 +17337,7 @@ textarea.form-control.is-invalid {
 }
 
 .logo__image {
-  max-width: 40%;
+  max-width: 100px;
 
 }
 .header-tools {

@@ -3,10 +3,6 @@
 <?php include("includes/mobile-header.php"); ?>
 <?php include("includes/header.php"); ?>
 
-
-
-
-
  <main class=" position-relative">
    <?php include("scroll_categories.php"); ?>
     <div class="mb-md-1 pb-xl-5"></div>
@@ -31,17 +27,7 @@
           </div><!-- /.breadcrumb -->
 
           <div class="shop-acs d-flex align-items-center  justify-content-between justify-content-md-end flex-grow-1">
-            <select class="shop-acs__select form-select w-auto border-0 py-0 order-1 order-md-0" aria-label="Sort Items" name="total-number">
-              <option selected="">Default Sorting</option>
-              <option value="1">Featured</option>
-              <option value="2">Best selling</option>
-              <option value="3">Alphabetically, A-Z</option>
-              <option value="3">Alphabetically, Z-A</option>
-              <option value="3">Price, low to high</option>
-              <option value="3">Price, high to low</option>
-              <option value="3">Date, old to new</option>
-              <option value="3">Date, new to old</option>
-            </select>
+            <h5 class="text-uppercase text-muted mt-2">ALL</h5>
 
             <div class="shop-asc__seprator mx-3 bg-light d-none d-md-block order-md-0"></div>
 
@@ -66,7 +52,7 @@
 
         <div class="products-grid row row-cols-2 row-cols-md-3" id="products-grid">
           <div class="product-card-wrapper">
-            <div class="product-card mb-3 mb-md-4 mb-xxl-5">
+            <div class="product-card  mb-3 mb-md-4 mb-xxl-5">
               <div class="pc__img-wrapper">
                 <div class="swiper-container background-img js-swiper-slider" data-settings='{"resizeObserver": true}'>
                   <div class="swiper-wrapper">
@@ -81,7 +67,7 @@
                 <button class="pc__atc btn anim_appear-bottom btn position-absolute border-0 text-uppercase fw-medium js-add-cart js-open-aside" data-aside="cartDrawer" title="Add To Cart">Add To Cart</button>
               </div>
 
-              <div class="pc__info position-relative">
+              <div class="pc__info position-relative px-2">
                 <p class="pc__category">Dresses</p>
                 <h6 class="pc__title"><a href="product.php">Cropped Faux Leather Jacket</a></h6>
                 <div class="product-card__price d-flex">
@@ -127,6 +113,12 @@
       </div>
     </section><!-- /.shop-main container -->
 </main>
+
+
+
+
+
+
   <div class="mb-5 pb-xl-5"></div>
 
 <!-- footer -->
@@ -155,4 +147,3 @@
 
 <!-- script footer -->
 <?php include("includes/script-footer.php"); ?>
-

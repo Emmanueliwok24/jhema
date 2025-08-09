@@ -1,4 +1,4 @@
- <div class="shop-sidebar side-sticky bg-body" id="shopFilter">
+ <div class="shop-sidebar border-end pe-lg-2 side-sticky bg-body" id="shopFilter">
         <div class="aside-header d-flex d-lg-none align-items-center">
           <h3 class="text-uppercase fs-6 mb-0">Filter By</h3>
           <button class="btn-close-lg js-close-aside btn-close-aside ms-auto"></button>
@@ -20,38 +20,22 @@
             </h5>
             <div id="accordion-filter-1" class="accordion-collapse collapse show border-0" aria-labelledby="accordion-heading-11" data-bs-parent="#categories-list">
               <div class="accordion-body px-0 pb-0 pt-3">
-                <ul class="list list-inline mb-0">
-                  <li class="list-item">
-                    <a href="#" class="menu-link py-1">Dresses</a>
-                  </li>
-                  <li class="list-item">
-                    <a href="#" class="menu-link py-1">Shorts</a>
-                  </li>
-                  <li class="list-item">
-                    <a href="#" class="menu-link py-1">Sweatshirts</a>
-                  </li>
-                  <li class="list-item">
-                    <a href="#" class="menu-link py-1">Swimwear</a>
-                  </li>
-                  <li class="list-item">
-                    <a href="#" class="menu-link py-1">Jackets</a>
-                  </li>
-                  <li class="list-item">
-                    <a href="#" class="menu-link py-1">T-Shirts & Tops</a>
-                  </li>
-                  <li class="list-item">
-                    <a href="#" class="menu-link py-1">Jeans</a>
-                  </li>
-                  <li class="list-item">
-                    <a href="#" class="menu-link py-1">Trousers</a>
-                  </li>
-                  <li class="list-item">
-                    <a href="#" class="menu-link py-1">Men</a>
-                  </li>
-                  <li class="list-item">
-                    <a href="#" class="menu-link py-1">Jumpers & Cardigans</a>
-                  </li>
-                </ul>
+                 <div class="list-group list-group-flush">
+                <a href="./" class="list-group-item list-group-item-action border-0 p-2 filter-btn active" data-filter="all">All</a>
+                <a href="./" class="list-group-item list-group-item-action border-0 p-2 filter-btn" data-filter="accessories">Accessories</a>
+                <a href="./" class="list-group-item list-group-item-action border-0 p-2 filter-btn" data-filter="dresses">Dresses</a>
+                <a href="./" class="list-group-item list-group-item-action border-0 p-2 filter-btn" data-filter="jumpsuits">Jumpsuits</a>
+                <a href="./" class="list-group-item list-group-item-action border-0 p-2 filter-btn" data-filter="pants">Pants</a>
+                <a href="./" class="list-group-item list-group-item-action border-0 p-2 filter-btn" data-filter="combo-sets">Pattern & Plain Combo Sets</a>
+                <a href="./" class="list-group-item list-group-item-action border-0 p-2 filter-btn" data-filter="plain-combo">Plain Colour Combo Sets</a>
+                <a href="./" class="list-group-item list-group-item-action border-0 p-2 filter-btn" data-filter="matching-sets">Plain Matching Sets</a>
+                <a href="./" class="list-group-item list-group-item-action border-0 p-2 filter-btn" data-filter="playsuits">Playsuits</a>
+                <a href="./" class="list-group-item list-group-item-action border-0 p-2 filter-btn" data-filter="print-matching">Print Matching Sets</a>
+                <a href="./" class="list-group-item list-group-item-action border-0 p-2 filter-btn" data-filter="shirts">Shirts</a>
+                <a href="./" class="list-group-item list-group-item-action border-0 p-2 filter-btn" data-filter="shoes">Shoes</a>
+                <a href="./" class="list-group-item list-group-item-action border-0 p-2 filter-btn" data-filter="skirts">Skirts</a>
+                <a href="./" class="list-group-item list-group-item-action border-0 p-2 filter-btn" data-filter="tops">Tops</a>
+              </div>
               </div>
             </div>
           </div><!-- /.accordion-item -->
@@ -72,8 +56,8 @@
             </h5>
             <div id="accordion-filter-2" class="accordion-collapse collapse show border-0" aria-labelledby="accordion-heading-1" data-bs-parent="#color-filters">
               <div class="accordion-body px-0 pb-0">
-                <div class="d-flex flex-wrap">
-                  <a href="#" class="swatch-color js-filter"  >Black</a>
+                <div class="d-flex flex-wrap ">
+                  <a href="#" class=" list-group-item active   ">Black</a>
 
                 </div>
               </div>
@@ -96,13 +80,13 @@
             </h5>
             <div id="accordion-filter-size" class="accordion-collapse collapse show border-0" aria-labelledby="accordion-heading-size" data-bs-parent="#size-filters">
               <div class="accordion-body px-0 pb-0">
-                <div class="d-flex flex-wrap">
-                  <a href="#" class="swatch-size btn btn-sm btn-outline-light mb-3 me-3 js-filter">XS</a>
-                  <a href="#" class="swatch-size btn btn-sm btn-outline-light mb-3 me-3 js-filter">S</a>
-                  <a href="#" class="swatch-size btn btn-sm btn-outline-light mb-3 me-3 js-filter">M</a>
-                  <a href="#" class="swatch-size btn btn-sm btn-outline-light mb-3 me-3 js-filter">L</a>
-                  <a href="#" class="swatch-size btn btn-sm btn-outline-light mb-3 me-3 js-filter">XL</a>
-                  <a href="#" class="swatch-size btn btn-sm btn-outline-light mb-3 me-3 js-filter">XXL</a>
+                <div class="d-flex flex-wrap ">
+                  <a href="#" class="swatch-size list-group-item mb-3 me-3 js-filter">XS</a>
+                  <a href="#" class="swatch-size list-group-item mb-3 me-3 js-filter">S</a>
+                  <a href="#" class="swatch-size list-group-item mb-3 me-3 js-filter">M</a>
+                  <a href="#" class="swatch-size list-group-item mb-3 me-3 js-filter">L</a>
+                  <a href="#" class="swatch-size list-group-item mb-3 me-3 js-filter">XL</a>
+                  <a href="#" class="swatch-size list-group-item mb-3 me-3 js-filter">XXL</a>
                 </div>
               </div>
             </div>
@@ -141,3 +125,5 @@
           </div><!-- /.accordion-item -->
         </div><!-- /.accordion -->
       </div><!-- /.shop-sidebar -->
+
+

@@ -9,6 +9,7 @@
     background-color: black !important;
     color: white !important;
   }
+  
 </style>
 
 <div class="w-100  rounded shadow-sm">

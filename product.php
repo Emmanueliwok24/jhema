@@ -3,6 +3,8 @@
 <?php include("includes/mobile-header.php"); ?>
 <?php include("includes/header.php"); ?>
 
+
+
   <main class="position-relative">
       <?php include("scroll_categories.php"); ?>
 
@@ -58,37 +60,83 @@
             <span class="reviews-note text-lowercase text-secondary ms-1">8k+ reviews</span>
           </div>
           <div class="product-single__price">
-            <span class="current-price">$449</span>
+            <span class="current-price" id="productPrice">$449</span>
+            <!-- Currency Display -->
+          <div class="form-group">
+            <select id="displayCurrency" class="form-select" style="font-size: 0.875rem;">
+              <option value="NGN">NGN</option>
+              <option value="USD">USD</option>
+              <option value="EUR">EUR</option>
+            </select>
           </div>
+          </div>
+
           <div class="product-single__short-desc">
             <p>Phasellus sed volutpat orci. Fusce eget lore mauris vehicula elementum gravida nec dui. Aenean aliquam varius ipsum, non ultricies tellus sodales eu. Donec dignissim viverra nunc, ut aliquet magna posuere eget.</p>
           </div>
-          <form name="addtocart-form" method="post">
-            <div class="product-single__swatches">
-              <div class="product-swatch text-swatches p-0 ">
-             <?php include("includes/sizes.php"); ?>
-              </div>
-              <form name="addtocart-form" method="post">
-            <div class="product-single__swatches">
-              <div class="product-swatch text-swatches">
-                <label>Color</label>
-                <div class="swatch-list">
-                  <input type="radio" name="" id="Black">
-                  <label class="swatch js-swatch" for="black" aria-label="Extra Small" data-bs-toggle="tooltip" data-bs-placement="top" title="Extra Small">Black</label>
 
-                </div>
-              </div>
+
+          <!-- CART FORM AND COLOR/SIZE SELECTION -->
+          <form>
+            <!-- Product Details -->
+
+
+ <!-- Main Product Section -->
+
+      <div class="">
+
+
+
+
+
+
+          <div class="d-flex justify-content-between">
+            <div  class="">20 Left</div>
+            <a href="#" class="sizeguide-link text-decoration-underline" data-bs-toggle="modal" data-bs-target="#sizeGuide">Size Guide</a>
+          </div>
+
+          <!-- Available Sizes -->
+          <div class="sizes-section my-2">
+            <div class="section-header">
+              <h3 class="section-title">Available Sizes</h3>
+
             </div>
-            <div class="product-single__addtocart">
-              <div class="qty-control position-relative">
-                <input type="number" name="quantity" value="1" min="1" class="qty-control__number text-center">
-                <div class="qty-control__reduce">-</div>
-                <div class="qty-control__increase">+</div>
-              </div><!-- .qty-control -->
-              <button type="submit" class="btn btn-primary btn-addtocart js-open-aside" data-aside="cartDrawer">Add to Cart</button>
+            <div class="sizes-grid">
+              <button type="button" class="size-btn active" data-size="M">M</button>
+              <button type="button" class="size-btn" data-size="S">S</button>
+              <button type="button" class="size-btn" data-size="L">L</button>
             </div>
-          </form>
-          <div class="product-single__addtolinks">
+          </div>
+
+          <!-- Available Colors -->
+          <div class="colors-section my-3">
+            <h3 class="section-title">Available Colors</h3>
+            <div class="colors-grid">
+              <button type="button" class="color-btn active" data-color="blue" data-price="2000" data-image="src/assets/blue-polo-shirt.jpg">
+                <div class="color-swatch blue"></div>
+                <span>Blue</span>
+              </button>
+              <button type="button" class="color-btn" data-color="yellow" data-price="2200" data-image="src/assets/yellow-polo-shirt.jpg">
+                <div class="color-swatch yellow"></div>
+                <span>Yellow</span>
+              </button>
+              <button type="button" class="color-btn" data-color="black" data-price="2400" data-image="src/assets/black-polo-shirt.jpg">
+                <div class="color-swatch black"></div>
+                <span>Black</span>
+              </button>
+            </div>
+          </div>
+<!-- ADD to cart section -->
+<div class="product-single__addtocart">
+      <div class="qty-control position-relative">
+        <input type="number" name="quantity" value="1" min="1" class="qty-control__number text-center">
+        <div class="qty-control__reduce">-</div>
+        <div class="qty-control__increase">+</div>
+      </div><!-- .qty-control -->
+      <button type="submit" class="btn btn-primary btn-addtocart js-open-aside" data-aside="cartDrawer">Add to Cart</button></div>
+
+            </div>
+<div class="product-single__addtolinks">
             <a href="#" class="menu-link menu-link_us-s add-to-wishlist"><svg width="16" height="16" viewbox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><use href="#icon_heart"></use></svg><span>Add to Wishlist</span></a>
             <share-button class="share-button">
               <button class="menu-link menu-link_us-s to-share border-0 bg-transparent d-flex align-items-center">
@@ -128,8 +176,29 @@
               <span>biker, black, bomber, leather</span>
             </div>
           </div>
+
         </div>
       </div>
+
+
+        </div>
+      </div>
+
+
+
+
+
+
+
+
+
+              <!-- cart and checkout -->
+
+
+          </form>
+
+
+
       <div class="product-single__details-tab">
         <ul class="nav nav-tabs" id="myTab" role="tablist">
           <li class="nav-item" role="presentation">
@@ -142,6 +211,11 @@
             <a class="nav-link nav-link_underscore" id="tab-reviews-tab" data-bs-toggle="tab" href="#tab-reviews" role="tab" aria-controls="tab-reviews" aria-selected="false">Reviews (2)</a>
           </li>
         </ul>
+
+
+
+
+
         <div class="tab-content">
           <div class="tab-pane fade show active" id="tab-description" role="tabpanel" aria-labelledby="tab-description-tab">
             <div class="product-single__description">
@@ -291,12 +365,16 @@
       </div>
     </section>
 
+
+
     <!-- Related Product section -->
     <?php include("includes/product/related-product.php"); ?>
 
+    <?php include("includes/product/size-guide.php"); ?>
   </main>
 
   <div class="mb-5 pb-xl-5"></div>
+  <!-- size guide MODAL -->
 
 <!-- footer -->
 <?php include("includes/footer.php"); ?>
@@ -330,3 +408,193 @@
 
 <!-- script footer -->
 <?php include("includes/script-footer.php"); ?>
+
+
+<script>
+  // Product data
+const productData = {
+  blue: {
+    price: 2000,
+    image: 'src/assets/blue-polo-shirt.jpg',
+    name: 'Blue'
+  },
+  yellow: {
+    price: 2200,
+    image: 'src/assets/yellow-polo-shirt.jpg',
+    name: 'Yellow'
+  },
+  black: {
+    price: 2400,
+    image: 'src/assets/black-polo-shirt.jpg',
+    name: 'Black'
+  }
+};
+
+// Currency conversion rates (example rates)
+const currencyRates = {
+  NGN: 1,
+  USD: 0.0012,
+  EUR: 0.0011
+};
+
+// Current state
+let currentState = {
+  selectedColor: 'blue',
+  selectedSize: 'M',
+  currency: 'NGN'
+};
+
+// DOM elements
+const productImage = document.getElementById('productImage');
+const productPrice = document.getElementById('productPrice');
+const currencySelect = document.getElementById('currencySelect');
+const displayCurrency = document.getElementById('displayCurrency');
+const addToCartBtn = document.getElementById('addToCartBtn');
+const toast = document.getElementById('toast');
+
+// Initialize the page
+function init() {
+  updatePrice();
+  setupEventListeners();
+}
+
+// Setup event listeners
+function setupEventListeners() {
+  // Color selection
+  const colorButtons = document.querySelectorAll('.color-btn');
+  colorButtons.forEach(btn => {
+    btn.addEventListener('click', () => selectColor(btn));
+  });
+
+  // Size selection
+  const sizeButtons = document.querySelectorAll('.size-btn');
+  sizeButtons.forEach(btn => {
+    btn.addEventListener('click', () => selectSize(btn));
+  });
+
+  // Currency selection
+  currencySelect.addEventListener('change', (e) => {
+    currentState.currency = e.target.value;
+    displayCurrency.value = e.target.value;
+    updatePrice();
+  });
+
+  displayCurrency.addEventListener('change', (e) => {
+    currentState.currency = e.target.value;
+    currencySelect.value = e.target.value;
+    updatePrice();
+  });
+
+  // Add to cart
+  addToCartBtn.addEventListener('click', addToCart);
+}
+
+// Select color
+function selectColor(button) {
+  // Remove active class from all color buttons
+  document.querySelectorAll('.color-btn').forEach(btn => {
+    btn.classList.remove('active');
+  });
+
+  // Add active class to clicked button
+  button.classList.add('active');
+
+  // Update current state
+  const color = button.dataset.color;
+  currentState.selectedColor = color;
+
+  // Update product image
+  productImage.src = productData[color].image;
+  productImage.alt = `${productData[color].name} Bloomfield Floral Midi Shirt`;
+
+  // Update price
+  updatePrice();
+}
+
+// Select size
+function selectSize(button) {
+  // Remove active class from all size buttons
+  document.querySelectorAll('.size-btn').forEach(btn => {
+    btn.classList.remove('active');
+  });
+
+  // Add active class to clicked button
+  button.classList.add('active');
+
+  // Update current state
+  currentState.selectedSize = button.dataset.size;
+}
+
+// Format currency
+function formatCurrency(amount, currency) {
+  const convertedAmount = amount * currencyRates[currency];
+
+  const currencySymbols = {
+    NGN: '₦',
+    USD: '$',
+    EUR: '€'
+  };
+
+  const symbol = currencySymbols[currency] || currency;
+
+  return `${symbol}${convertedAmount.toLocaleString('en-US', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  })}`;
+}
+
+// Update price display
+function updatePrice() {
+  const selectedProduct = productData[currentState.selectedColor];
+  const formattedPrice = formatCurrency(selectedProduct.price, currentState.currency);
+  productPrice.textContent = formattedPrice;
+}
+
+// Add to cart function
+function addToCart() {
+  const selectedProduct = productData[currentState.selectedColor];
+  const message = `${selectedProduct.name} Bloomfield Floral Midi Shirt (${currentState.selectedSize}) added to your cart.`;
+
+  showToast('Added to Cart', message);
+}
+
+// Show toast notification
+function showToast(title, message) {
+  const toastTitle = toast.querySelector('.toast-title');
+  const toastMessage = toast.querySelector('.toast-message');
+
+  toastTitle.textContent = title;
+  toastMessage.textContent = message;
+
+  // Show toast
+  toast.classList.remove('hidden');
+
+  // Hide toast after 3 seconds
+  setTimeout(() => {
+    toast.classList.add('slide-out');
+    setTimeout(() => {
+      toast.classList.add('hidden');
+      toast.classList.remove('slide-out');
+    }, 300);
+  }, 3000);
+}
+
+// Category button functionality
+document.querySelectorAll('.category-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    // Remove active state from all categories
+    document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+    // Add active state to clicked category
+    btn.classList.add('active');
+
+    if (btn.textContent.includes('Add Product')) {
+      showToast('Add Product', 'Redirect to add product page');
+    } else {
+      showToast('Category Selected', `Browsing ${btn.textContent} category`);
+    }
+  });
+});
+
+// Initialize when DOM is loaded
+document.addEventListener('DOMContentLoaded', init);
+</script>

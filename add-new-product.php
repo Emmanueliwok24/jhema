@@ -55,7 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // main image
     $image_path = null;
     try {
-        $image_path = upload_image($_FILES['image_file'] ?? null, __DIR__ . '/../uploads');
+        $image_path = upload_image($_FILES['image_file'] ?? null, __DIR__ . '/./uploads');
     } catch (RuntimeException $e) {
         $errors[] = $e->getMessage();
     }
@@ -117,7 +117,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $vImg = extract_nested_file($_FILES['size_rows'] ?? [], $i, 'image');
                     $vPath = null;
                     if ($vImg && ($vImg['error'] === UPLOAD_ERR_OK)) {
-                        try { $vPath = upload_image($vImg, __DIR__ . '/../uploads'); } catch (RuntimeException $e) { $errors[] = $e->getMessage(); }
+                        try { $vPath = upload_image($vImg, __DIR__ . '/./uploads'); } catch (RuntimeException $e) { $errors[] = $e->getMessage(); }
                     }
                     $ins->execute([$product_id, $size, $price, $stock, $vPath]);
                 }
@@ -136,7 +136,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $vImg = extract_nested_file($_FILES['color_rows'] ?? [], $i, 'image');
                     $vPath = null;
                     if ($vImg && ($vImg['error'] === UPLOAD_ERR_OK)) {
-                        try { $vPath = upload_image($vImg, __DIR__ . '/../uploads'); } catch (RuntimeException $e) { $errors[] = $e->getMessage(); }
+                        try { $vPath = upload_image($vImg, __DIR__ . '/./uploads'); } catch (RuntimeException $e) { $errors[] = $e->getMessage(); }
                     }
                     $ins->execute([$product_id, $color, $price, $stock, $vPath]);
                 }
@@ -156,7 +156,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $vImg = extract_nested_file($_FILES['combo_rows'] ?? [], $i, 'image');
                     $vPath = null;
                     if ($vImg && ($vImg['error'] === UPLOAD_ERR_OK)) {
-                        try { $vPath = upload_image($vImg, __DIR__ . '/../uploads'); } catch (RuntimeException $e) { $errors[] = $e->getMessage(); }
+                        try { $vPath = upload_image($vImg, __DIR__ . '/./uploads'); } catch (RuntimeException $e) { $errors[] = $e->getMessage(); }
                     }
                     $ins->execute([$product_id, $size, $color, $price, $stock, $vPath]);
                 }

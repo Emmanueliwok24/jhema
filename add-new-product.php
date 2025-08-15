@@ -306,7 +306,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
               <h2 class="h5 fw-bold mb-0">Size-only price overrides</h2>
               <button class="btn btn-ghost" type="button" onclick="addSizeRow()">+ Add Size</button>
             </div>
-            <div class="table-responsive">
+            <div class="table-responsive text-truncate" >
               <table class="table align-middle mb-0" id="sizeTable">
                 <thead>
                   <tr>
@@ -328,7 +328,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
               <h2 class="h5 fw-bold mb-0">Color-only price overrides</h2>
               <button class="btn btn-ghost" type="button" onclick="addColorRow()">+ Add Color</button>
             </div>
-            <div class="table-responsive">
+            <div class="table-responsive text-truncate">
               <table class="table align-middle mb-0" id="colorTable">
                 <thead>
                   <tr>
@@ -350,7 +350,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
               <h2 class="h5 fw-bold mb-0">Size + Color combo overrides</h2>
               <button class="btn btn-ghost" type="button" onclick="addComboRow()">+ Add Combo</button>
             </div>
-            <div class="table-responsive">
+            <div class="table-responsive text-truncate">
               <table class="table align-middle mb-0" id="comboTable">
                 <thead>
                   <tr>
@@ -378,7 +378,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           <div class="card ">
             <h2 class="h5 fw-bold mb-3">Media</h2>
             <div class="mb-3">
-              <img id="preview" class="img-preview" alt="Preview" />
+              <img id="preview" class="img-preview w-100" alt="Preview" />
             </div>
             <label class="form-label">Product Image</label>
             <input type="file" name="image_file" class="form-control" accept="image/*" onchange="previewMain(this)">
@@ -447,7 +447,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       const price = input({ name: `size_rows[${sizeIdx}][price]`, type:'number', step:'0.01', placeholder:'0.00' });
       const stock = input({ name: `size_rows[${sizeIdx}][stock]`, type:'number', step:'1', value:'0' });
 
-      const img = document.createElement('img'); img.className = 'thumb me-2'; img.alt = 'thumb';
+      const img = document.createElement('img'); img.className = 'thumb me-2'; img.alt = 'thumb'; img.style.width = '50px'; img.style.height = '50px;';
       const file = document.createElement('input'); file.type = 'file'; file.name = `size_rows[${sizeIdx}][image]`; file.accept = 'image/*'; file.className = 'form-control';
       file.onchange = () => thumbPreview(file, img);
 
@@ -474,7 +474,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       const price = input({ name: `color_rows[${colorIdx}][price]`, type:'number', step:'0.01', placeholder:'0.00' });
       const stock = input({ name: `color_rows[${colorIdx}][stock]`, type:'number', step:'1', value:'0' });
 
-      const img = document.createElement('img'); img.className = 'thumb me-2'; img.alt = 'thumb';
+      const img = document.createElement('img'); img.className = 'thumb me-2'; img.alt = 'thumb'; img.style.width = '50px'; img.style.height = '50px;';
       const file = document.createElement('input'); file.type = 'file'; file.name = `color_rows[${colorIdx}][image]`; file.accept = 'image/*'; file.className = 'form-control';
       file.onchange = () => thumbPreview(file, img);
 
@@ -502,7 +502,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       const price = input({ name: `combo_rows[${comboIdx}][price]`, type:'number', step:'0.01', placeholder:'0.00' });
       const stock = input({ name: `combo_rows[${comboIdx}][stock]`, type:'number', step:'1', value:'0' });
 
-      const img = document.createElement('img'); img.className = 'thumb me-2'; img.alt = 'thumb';
+      const img = document.createElement('img'); img.className = 'thumb me-2'; img.alt = 'thumb'; img.style.width = '50px'; img.style.height = '50px;';
       const file = document.createElement('input'); file.type = 'file'; file.name = `combo_rows[${comboIdx}][image]`; file.accept = 'image/*'; file.className = 'form-control';
       file.onchange = () => thumbPreview(file, img);
 

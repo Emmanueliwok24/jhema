@@ -110,7 +110,7 @@
 
               <div class="pc__info position-relative px-2">
                 <p class="pc__category"><?= htmlspecialchars($p['cat_name'] ?? '') ?></p>
-                <h6 class="pc__title"><a href="product.php"><?= htmlspecialchars($p['name']) ?></a></h6>
+                <h6 class="pc__title"><a href="product.php?slug=<?= urlencode($p['slug']) ?>&cur=<?= urlencode($display) ?>"><?= htmlspecialchars($p['name']) ?></a></h6>
                 <P> <?= htmlspecialchars($p['sku']) ?></P>
                 <div class="product-card__price d-flex">
                   <span class="money price"><?= $symbol . price_display($converted) ?></span>

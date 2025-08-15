@@ -1,5 +1,5 @@
   <!-- Header Type 1 -->
-    <header id="header" class="header header_sticky">
+    <header id="header"  class="header header_sticky">
       <div class="container">
         <div class="header-desk header-desk_type_1">
           <div class="logo">

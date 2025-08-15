@@ -2040,7 +2040,7 @@ button:focus {
 }
 body {
   font-size: 14px;
-  overflow-x: hidden;
+  overflow-x: hidden ;
   font-family: "Jost", sans-serif;
   color: #4a5568;
 }

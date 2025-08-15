@@ -280,7 +280,6 @@
              <?php include("includes/index-main/edition.php"); ?>
 <!-- /.edition -->
 
-      <div class="mb-4 pb-4 pb-xl-5 mb-xl-5"></div>
 
       <section class="service-promotion container mb-md-4 pb-md-4 mb-xl-5">
         <div class="row">

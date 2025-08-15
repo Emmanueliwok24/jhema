@@ -1,4 +1,4 @@
- <div class="shop-sidebar border-end pe-lg-2 side-sticky bg-body" id="shopFilter">
+ <div class="shop-sidebar side-sticky bg-body "id="shopFilter">
         <div class="aside-header d-flex d-lg-none align-items-center">
           <h3 class="text-uppercase fs-6 mb-0">Filter By</h3>
           <button class="btn-close-lg js-close-aside btn-close-aside ms-auto"></button>
@@ -21,26 +21,76 @@
             <div id="accordion-filter-1" class="accordion-collapse collapse show border-0" aria-labelledby="accordion-heading-11" data-bs-parent="#categories-list">
               <div class="accordion-body px-0 pb-0 pt-3">
                  <div class="list-group list-group-flush">
-                <a href="./" class="list-group-item list-group-item-action border-0 p-2 filter-btn active" data-filter="all">All</a>
-                <a href="./" class="list-group-item list-group-item-action border-0 p-2 filter-btn" data-filter="accessories">Accessories</a>
-                <a href="./" class="list-group-item list-group-item-action border-0 p-2 filter-btn" data-filter="dresses">Dresses</a>
-                <a href="./" class="list-group-item list-group-item-action border-0 p-2 filter-btn" data-filter="jumpsuits">Jumpsuits</a>
-                <a href="./" class="list-group-item list-group-item-action border-0 p-2 filter-btn" data-filter="pants">Pants</a>
-                <a href="./" class="list-group-item list-group-item-action border-0 p-2 filter-btn" data-filter="combo-sets">Pattern & Plain Combo Sets</a>
-                <a href="./" class="list-group-item list-group-item-action border-0 p-2 filter-btn" data-filter="plain-combo">Plain Colour Combo Sets</a>
-                <a href="./" class="list-group-item list-group-item-action border-0 p-2 filter-btn" data-filter="matching-sets">Plain Matching Sets</a>
-                <a href="./" class="list-group-item list-group-item-action border-0 p-2 filter-btn" data-filter="playsuits">Playsuits</a>
-                <a href="./" class="list-group-item list-group-item-action border-0 p-2 filter-btn" data-filter="print-matching">Print Matching Sets</a>
-                <a href="./" class="list-group-item list-group-item-action border-0 p-2 filter-btn" data-filter="shirts">Shirts</a>
-                <a href="./" class="list-group-item list-group-item-action border-0 p-2 filter-btn" data-filter="shoes">Shoes</a>
-                <a href="./" class="list-group-item list-group-item-action border-0 p-2 filter-btn" data-filter="skirts">Skirts</a>
-                <a href="./" class="list-group-item list-group-item-action border-0 p-2 filter-btn" data-filter="tops">Tops</a>
+
+
+            <a class="<?= !$category_slug ? 'active' : '' ?> list-group-item list-group-item-action border-0 p-2 filter-btn" href="shop.php?cur=<?= urlencode($display) ?>">All</a>
+          <?php foreach ($menu as $m): ?>
+            <a class="<?= ($category_slug===$m['slug']) ? 'active' : '' ?> list-group-item list-group-item-action border-0 p-2 filter-btn"
+               href="shop.php?cat=<?= urlencode($m['slug']) ?>&cur=<?= urlencode($display) ?>">
+              <?= htmlspecialchars($m['name']) ?>
+            </a>
+          <?php endforeach; ?>
               </div>
               </div>
             </div>
           </div><!-- /.accordion-item -->
         </div><!-- /.accordion-item -->
 
+
+           <?php
+        // Find the currently selected category to display its attributes
+        $current = null;
+        foreach ($menu as $m) if ($category_slug && $m['slug']===$category_slug) $current = $m;
+        // If none selected, show a helpful hint and also allow quick access to a “global view” of attribute picks per cat below
+      ?>
+
+      <?php if ($current): ?>
+        <?php $allowed = $current['allowed']; ?>
+        <?php if (!empty($allowed['occasion'])): ?>
+          <div class="sidegroup">
+            <h4>Occasion</h4>
+            <div class="chips">
+              <?php foreach ($allowed['occasion'] as $o): ?>
+                <a class="chip" href="shop.php?cat=<?= urlencode($current['slug']) ?>&occasion=<?= urlencode($o['value']) ?>&length=<?= urlencode($length ?? '') ?>&style=<?= urlencode($style ?? '') ?>&cur=<?= urlencode($display) ?>">
+                  <?= htmlspecialchars($o['value']) ?>
+                </a>
+              <?php endforeach; ?>
+            </div>
+          </div>
+        <?php endif; ?>
+
+        <?php if (!empty($allowed['length'])): ?>
+          <div class="sidegroup">
+            <h4>Length</h4>
+            <div class="chips">
+              <?php foreach ($allowed['length'] as $l): ?>
+                <a class="chip" href="shop.php?cat=<?= urlencode($current['slug']) ?>&length=<?= urlencode($l['value']) ?>&occasion=<?= urlencode($occasion ?? '') ?>&style=<?= urlencode($style ?? '') ?>&cur=<?= urlencode($display) ?>">
+                  <?= htmlspecialchars($l['value']) ?>
+                </a>
+              <?php endforeach; ?>
+            </div>
+          </div>
+        <?php endif; ?>
+
+        <?php if (!empty($allowed['style'])): ?>
+          <div class="sidegroup">
+            <h4>Style</h4>
+            <div class="chips">
+              <?php foreach ($allowed['style'] as $s): ?>
+                <a class="chip" href="shop.php?cat=<?= urlencode($current['slug']) ?>&style=<?= urlencode($s['value']) ?>&occasion=<?= urlencode($occasion ?? '') ?>&length=<?= urlencode($length ?? '') ?>&cur=<?= urlencode($display) ?>">
+                  <?= htmlspecialchars($s['value']) ?>
+                </a>
+              <?php endforeach; ?>
+            </div>
+          </div>
+        <?php endif; ?>
+
+      <?php else: ?>
+        <div class="sidegroup">
+          <h4>Tips</h4>
+          <div class="sidehint">Pick a category first to see all its Occasions / Lengths / Styles here.</div>
+        </div>
+      <?php endif; ?>
 
         <div  id="color-filters">
           <div class="accordion-item mb-4 pb-3">

@@ -1,3 +1,83 @@
+<?php
+require_once __DIR__ . '/../includes/config.php';
+require_once __DIR__ . '/../includes/functions.php';
+
+list($currencies, $baseCode) = get_currencies($pdo);
+$display = isset($_GET['cur']) ? strtoupper($_GET['cur']) : $baseCode;
+
+$curMap = [];
+foreach ($currencies as $c) $curMap[$c['code']] = $c;
+if (!isset($curMap[$display])) $display = $baseCode;
+
+$cats = fetch_categories($pdo);
+
+/** Build menu: for each category, show allowed Occasion / Length / Style */
+$menu = [];
+foreach ($cats as $cat) {
+    $allowed = fetch_attributes_by_category($pdo, (int)$cat['id']);
+    $menu[] = [
+        'id' => $cat['id'],
+        'name' => $cat['name'],
+        'slug' => $cat['slug'],
+        'allowed' => $allowed
+    ];
+}
+
+function convert_price($amount, $fromCode, $toCode, $curMap) {
+    if ($fromCode === $toCode) return $amount;
+    $toBase = $amount * (float)$curMap[$fromCode]['rate_to_base'];
+    return $toBase / (float)$curMap[$toCode]['rate_to_base'];
+}
+
+$category_slug = $_GET['cat'] ?? null;
+$occasion = $_GET['occasion'] ?? null;
+$length   = $_GET['length'] ?? null;
+$style    = $_GET['style'] ?? null;
+
+$where = [];
+$params = [];
+$joinAttr = '';
+
+if ($category_slug) {
+    $where[] = 'c.slug = ?';
+    $params[] = $category_slug;
+}
+
+$attrFilters = [];
+if ($occasion) $attrFilters[] = ['type'=>'occasion','value'=>$occasion];
+if ($length)   $attrFilters[] = ['type'=>'length','value'=>$length];
+if ($style)    $attrFilters[] = ['type'=>'style','value'=>$style];
+
+if ($attrFilters) {
+    $i = 0;
+    foreach ($attrFilters as $f) {
+        $i++;
+        $joinAttr .= "
+          JOIN product_attributes pa{$i} ON pa{$i}.product_id = p.id
+          JOIN attributes a{$i} ON a{$i}.id = pa{$i}.attribute_id
+          JOIN attribute_types t{$i} ON t{$i}.id = a{$i}.type_id AND t{$i}.code = ?
+        ";
+        $where[] = "a{$i}.value = ?";
+        $params[] = $f['type'];
+        $params[] = $f['value'];
+    }
+}
+
+$sql = "
+SELECT p.id, p.name, p.slug, p.sku, p.base_price, p.base_currency_code, p.image_path, c.name as cat_name
+FROM products p
+LEFT JOIN categories c ON c.id = p.category_id
+$joinAttr
+" . ($where ? "WHERE " . implode(' AND ', $where) : "") . "
+ORDER BY p.id DESC
+";
+
+$stmt = $pdo->prepare($sql);
+$stmt->execute($params);
+$products = $stmt->fetchAll();
+?>
+
+
 <!DOCTYPE html>
 <html dir="ltr" lang="zxx">
   <head>

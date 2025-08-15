@@ -253,48 +253,7 @@
       <div class="footer-bottom container">
         <div class="d-block d-md-flex align-items-center">
           <span class="footer-copyright me-auto">©2023 jhema</span>
-          <div class="footer-settings d-block d-md-flex align-items-center">
-            <div class="d-flex align-items-center">
-              <label for="footerSettingsLanguage" class="me-2 text-secondary"
-                >Language</label
-              >
-              <select
-                id="footerSettingsLanguage"
-                class="form-select form-select-sm bg-transparent"
-                aria-label="Default select example"
-                name="store-language"
-              >
-                <option class="footer-select__option" selected>
-                  United Kingdom | English
-                </option>
-                <option class="footer-select__option" value="1">
-                  United States | English
-                </option>
-                <option class="footer-select__option" value="2">German</option>
-                <option class="footer-select__option" value="3">French</option>
-                <option class="footer-select__option" value="4">Swedish</option>
-              </select>
-            </div>
-
-            <div class="d-flex align-items-center">
-              <label
-                for="footerSettingsCurrency"
-                class="ms-md-3 me-2 text-secondary"
-                >Currency</label
-              >
-              <select
-                id="footerSettingsCurrency"
-                class="form-select form-select-sm bg-transparent"
-                aria-label="Default select example"
-                name="store-language"
-              >
-                <option selected>$ USD</option>
-                <option value="1">£ GBP</option>
-                <option value="2">€ EURO</option>
-              </select>
-            </div>
-          </div>
-          <!-- /.footer-settings -->
+         
         </div>
         <!-- /.d-flex -->
       </div>

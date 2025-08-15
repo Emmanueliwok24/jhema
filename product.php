@@ -1,8 +1,175 @@
-﻿<?php include("includes/head.php"); ?>
+﻿<?php
+require_once __DIR__ . '/includes/config.php';
+require_once __DIR__ . '/includes/functions.php';
+
+$slug = $_GET['slug'] ?? '';
+if ($slug === '') { header('Location: index.php'); exit; }
+
+/* Currencies */
+list($currencies, $baseCode) = get_currencies($pdo);
+$curMap = []; foreach ($currencies as $c) $curMap[$c['code']] = $c;
+
+$display = isset($_GET['cur']) ? strtoupper($_GET['cur']) : $baseCode;
+if (!isset($curMap[$display])) $display = $baseCode;
+
+/* Product */
+$stmt = $pdo->prepare("
+  SELECT p.*, c.name AS cat_name, c.slug AS cat_slug
+  FROM products p
+  LEFT JOIN categories c ON c.id = p.category_id
+  WHERE p.slug = ?
+");
+$stmt->execute([$slug]);
+$product = $stmt->fetch();
+if (!$product) { header('Location: index.php'); exit; }
+$product_id = (int)$product['id'];
+
+/* Product attributes (JHEMA chips) */
+$attrStmt = $pdo->prepare("
+  SELECT at.code, a.value
+  FROM product_attributes pa
+  JOIN attributes a ON a.id = pa.attribute_id
+  JOIN attribute_types at ON at.id = a.type_id
+  WHERE pa.product_id = ?
+  ORDER BY at.code, a.value
+");
+$attrStmt->execute([$product_id]);
+$attrRows = $attrStmt->fetchAll(PDO::FETCH_ASSOC);
+$attrByType = ['occasion'=>[], 'length'=>[], 'style'=>[]];
+foreach ($attrRows as $r) { $attrByType[$r['code']][] = $r['value']; }
+
+/* Variants (with image_path) */
+$stmt = $pdo->prepare("
+  SELECT size, color, price_override, stock, image_path
+  FROM product_variants
+  WHERE product_id = ?
+");
+$stmt->execute([$product_id]);
+$variants = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+/* Unique sizes/colors */
+$sizes = []; $colors = [];
+foreach ($variants as $v) {
+  if (!empty($v['size']))  $sizes[$v['size']]  = true;
+  if (!empty($v['color'])) $colors[$v['color']] = true;
+}
+$sizes  = array_values(array_keys($sizes));
+$colors = array_values(array_keys($colors));
+
+/* Price/stock/image map: keys "size|color", "size|", "|color" */
+$map = [];
+foreach ($variants as $v) {
+  $k = ($v['size'] ?? '') . '|' . ($v['color'] ?? '');
+  $map[$k] = [
+    'price' => (float)$v['price_override'],
+    'stock' => isset($v['stock']) ? (int)$v['stock'] : null,
+    'image' => $v['image_path'] ?: null
+  ];
+}
+
+/* Main image & swatch thumbnails */
+$mainImage = $product['image_path'] ?: null;
+
+/* Build representative image per size/color for swatches */
+$sizeThumbs = [];
+foreach ($sizes as $s) {
+  $img = $map["{$s}|"]['image'] ?? null;
+  if (!$img) {
+    foreach ($colors as $c) {
+      if (!empty($map["{$s}|{$c}"]['image'])) { $img = $map["{$s}|{$c}"]['image']; break; }
+    }
+  }
+  $sizeThumbs[$s] = $img ?: $mainImage;
+}
+
+$colorThumbs = [];
+foreach ($colors as $c) {
+  $img = $map["|{$c}"]['image'] ?? null;
+  if (!$img) {
+    foreach ($sizes as $s) {
+      if (!empty($map["{$s}|{$c}"]['image'])) { $img = $map["{$s}|{$c}"]['image']; break; }
+    }
+  }
+  $colorThumbs[$c] = $img ?: $mainImage;
+}
+
+/* Thumb rail: main + any unique variant images */
+$thumbs = [];
+if ($mainImage) $thumbs[$mainImage] = true;
+foreach ($map as $info) {
+  if (!empty($info['image'])) $thumbs[$info['image']] = true;
+}
+$thumbList = array_keys($thumbs);
+
+/* JS payloads */
+$jsMap        = json_encode($map, JSON_UNESCAPED_UNICODE);
+$jsBasePrice  = (float)$product['base_price'];
+$jsDisplay    = $display;
+$jsBaseCode   = $product['base_currency_code'];
+$jsMainImage  = $mainImage ?: '';
+
+$rates = []; $symbols = [];
+foreach ($currencies as $c) { $rates[$c['code']] = (float)$c['rate_to_base']; $symbols[$c['code']] = $c['symbol']; }
+$jsRates   = json_encode($rates, JSON_UNESCAPED_UNICODE);
+$jsSymbols = json_encode($symbols, JSON_UNESCAPED_UNICODE);
+$jsThumbs  = json_encode($thumbList, JSON_UNESCAPED_UNICODE);
+
+/* Optional default size chart (CM) */
+$sizeChart = [
+  ['label'=>'XS','bust'=>80,'waist'=>62,'hips'=>86],
+  ['label'=>'S', 'bust'=>84,'waist'=>66,'hips'=>90],
+  ['label'=>'M', 'bust'=>88,'waist'=>70,'hips'=>94],
+  ['label'=>'L', 'bust'=>94,'waist'=>76,'hips'=>100],
+  ['label'=>'XL','bust'=>100,'waist'=>82,'hips'=>106],
+  ['label'=>'XXL','bust'=>106,'waist'=>88,'hips'=>112],
+];
+$jsSizeChart = json_encode($sizeChart, JSON_UNESCAPED_UNICODE);
+
+/* Has dimensions? */
+$hasSizes  = !empty($sizes);
+$hasColors = !empty($colors);
+?>
+
+
+
+<?php include("includes/head.php"); ?>
 <?php include("includes/svg.php"); ?>
 <?php include("includes/mobile-header.php"); ?>
 <?php include("includes/header.php"); ?>
 
+  <style>
+    :root{ --lux-bg:#f6f3ee; --lux-card:#fff; --lux-ink:#0f0f0f; --lux-sub:#5b5b5b; --lux-line:#e7e1d8; }
+    body{color:var(--lux-ink);-webkit-font-smoothing:antialiased}
+    .lux-card{background:var(--lux-card);border:1px solid var(--lux-line);border-radius:18px;box-shadow:0 6px 24px rgba(17,17,17,.04)}
+    .lux-hr{border-top:1px solid var(--lux-line);opacity:1}
+    .lux-brand{letter-spacing:.06em;text-transform:uppercase;font-weight:700}
+    .btn-ghost{background:#fff;color:#111;border:1px solid var(--lux-line);border-radius:9999px}
+    .btn-lux{background:#111;color:#fff;border:1px solid #111;border-radius:9999px}
+    .btn-lux:hover{background:#000}
+    .muted{color:var(--lux-sub)}
+    .price{font-size:2rem;font-weight:800}
+    .imgbox{background:#faf7f2;border:1px solid var(--lux-line);border-radius:16px;display:flex;align-items:center;justify-content:center;aspect-ratio:1/1}
+    .imgbox img{max-width:100%;max-height:100%;object-fit:contain}
+    .thumbrail img{width:72px;height:72px;object-fit:cover;border-radius:12px;border:1px solid var(--lux-line);cursor:pointer;background:#fff}
+    .thumbrail .active{outline:2px solid #111}
+    .swatch-grid{display:flex;flex-wrap:wrap;gap:.75rem}
+    .swatch{
+      display:flex; align-items:center; gap:.5rem; padding:.4rem .55rem;
+      border:1px solid var(--lux-line); border-radius:9999px; background:#fff;
+      cursor:pointer; transition: box-shadow .12s ease, border-color .12s ease; user-select:none;
+    }
+    .swatch:hover{box-shadow:0 6px 18px rgba(17,17,17,.06)}
+    .swatch.active{border-color:#111; box-shadow:0 0 0 2px rgba(17,17,17,.08) inset}
+    .swatch.disabled{opacity:.45;filter:grayscale(30%);pointer-events:none}
+    .swatch .thumb{width:34px;height:34px;border-radius:8px;border:1px solid var(--lux-line);background:#fff;object-fit:cover;flex-shrink:0}
+    .swatch .label{font-weight:600;letter-spacing:.02em}
+    .chips{display:flex;gap:8px;flex-wrap:wrap}
+    .chip{background:#f1f1f1;border-radius:9999px;padding:4px 10px;font-size:.8rem}
+    .pill{display:inline-block;padding:.35rem .75rem;border:1px solid var(--lux-line);border-radius:9999px}
+    .chart-table thead th{background:#faf7f2;border-bottom:1px solid var(--lux-line);text-transform:uppercase;font-size:.78rem;letter-spacing:.06em;color:#3a3a3a}
+    .chart-table td, .chart-table th{border-color:var(--lux-line)}
+    .unit-toggle .btn{border-radius:9999px}
+  </style>
 
 
   <main class="position-relative">
@@ -17,23 +184,31 @@
               <div class="swiper-container">
                 <div class="swiper-wrapper">
                   <div class="swiper-slide product-single__image-item">
-                    <img loading="lazy" class="h-auto" src="./images/products/product_0.jpg" width="788" height="788" alt="">
-
+                     <?php if ($mainImage): ?>
+                      <img id="mainImage" loading="lazy" class="h-auto" src="<?= htmlspecialchars($mainImage) ?>" width="788" height="788" alt="<?= htmlspecialchars($product['name']) ?>">
+                      <?php else: ?>
+                         <div class="text-center text-secondary">No Image</div>
+            <?php endif; ?>
 
                   </div>
                  <!-- ADD more swipe -->
 
                 </div>
-                <div class="swiper-button-prev"><svg width="7" height="11" viewbox="0 0 7 11" xmlns="http://www.w3.org/2000/svg"><use href="#icon_prev_sm"></use></svg></div>
-                <div class="swiper-button-next"><svg width="7" height="11" viewbox="0 0 7 11" xmlns="http://www.w3.org/2000/svg"><use href="#icon_next_sm"></use></svg></div>
+
               </div>
             </div>
             <div class="product-single__thumbnail">
               <div class="swiper-container">
-                <div class="swiper-wrapper">
-                  <div class="swiper-slide product-single__image-item"><img loading="lazy" class="h-auto" src="./images/products/product_0.jpg" width="104" height="104" alt=""></div>
+                <?php if ($thumbList): ?>
+
+
                   <!-- Add more swipes -->
-                </div>
+              <div class="thumbrail border" id="thumbRail">
+              <?php foreach ($thumbList as $i => $src): ?>
+                <img loading="lazy" class="h-auto" <?= $i===0?'class="active"':'' ?> src="<?= htmlspecialchars($src) ?>" data-src="<?= htmlspecialchars($src) ?>" height="104" alt="thumb">
+              <?php endforeach; ?>
+            </div>
+          <?php endif; ?>
               </div>
             </div>
           </div>
@@ -48,31 +223,47 @@
 
 
           </div>
-          <h1 class="product-single__name">Lightweight Puffer Jacket With a Hood</h1>
-          <div class="product-single__rating">
-            <div class="reviews-group d-flex">
-              <svg class="review-star" viewbox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><use href="#icon_star"></use></svg>
-              <svg class="review-star" viewbox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><use href="#icon_star"></use></svg>
-              <svg class="review-star" viewbox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><use href="#icon_star"></use></svg>
-              <svg class="review-star" viewbox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><use href="#icon_star"></use></svg>
-              <svg class="review-star" viewbox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><use href="#icon_star"></use></svg>
+          <div class="muted mb-1"><?= htmlspecialchars($product['cat_name'] ?? '') ?></div>
+
+          <h1 class="product-single__name"><?= htmlspecialchars($product['name'] ?? '') ?></h1>
+          <div class="muted">SKU: <?= htmlspecialchars($product['sku']) ?></div>
+
+
+
+
+
+          <div class="row g-3 mt-3">
+            <div class="col-md-6">
+              <label class="form-label">Display Currency</label>
+              <select id="curSelect" class="form-select">
+                <?php foreach ($currencies as $c): ?>
+                  <option value="<?= htmlspecialchars($c['code']) ?>" <?= $display===$c['code']?'selected':'' ?>>
+                    <?= htmlspecialchars($c['code']) ?>
+                  </option>
+                <?php endforeach; ?>
+              </select>
             </div>
-            <span class="reviews-note text-lowercase text-secondary ms-1">8k+ reviews</span>
-          </div>
-          <div class="product-single__price">
-            <span class="current-price" id="productPrice">$449</span>
-            <!-- Currency Display -->
-          <div class="form-group">
-            <select id="displayCurrency" class="form-select" style="font-size: 0.875rem;">
-              <option value="NGN">NGN</option>
-              <option value="USD">USD</option>
-              <option value="EUR">EUR</option>
-            </select>
-          </div>
+            <div class="col-md-6 d-flex align-items-end">
+              <div>
+                <div id="mainPrice" class="price"></div>
+                <div class="muted small">Auto-updates with selection & currency.</div>
+              </div>
+            </div>
           </div>
 
           <div class="product-single__short-desc">
-            <p>Phasellus sed volutpat orci. Fusce eget lore mauris vehicula elementum gravida nec dui. Aenean aliquam varius ipsum, non ultricies tellus sodales eu. Donec dignissim viverra nunc, ut aliquet magna posuere eget.</p>
+
+
+                              <!-- JHEMA chips -->
+          <?php if ($attrByType['occasion']): ?>
+            <div class="mt-2"><strong>Occasion:</strong> <span class="chips"><?php foreach ($attrByType['occasion'] as $v) echo '<span class="chip">'.htmlspecialchars($v).'</span>'; ?></span></div>
+          <?php endif; ?>
+          <?php if ($attrByType['length']): ?>
+            <div class="mt-1"><strong>Length:</strong> <span class="chips"><?php foreach ($attrByType['length'] as $v) echo '<span class="chip">'.htmlspecialchars($v).'</span>'; ?></span></div>
+          <?php endif; ?>
+          <?php if ($attrByType['style']): ?>
+            <div class="mt-1"><strong>Style:</strong> <span class="chips"><?php foreach ($attrByType['style'] as $v) echo '<span class="chip">'.htmlspecialchars($v).'</span>'; ?></span></div>
+          <?php endif; ?>
           </div>
 
 
@@ -80,8 +271,8 @@
           <form>
             <!-- Product Details -->
 
+          <hr class="lux-hr my-4">
 
- <!-- Main Product Section -->
 
       <div class="">
 
@@ -90,41 +281,44 @@
 
 
 
-          <div class="d-flex justify-content-between">
-            <div  class="">20 Left</div>
-            <a href="#" class="sizeguide-link text-decoration-underline" data-bs-toggle="modal" data-bs-target="#sizeGuide">Size Guide</a>
-          </div>
+
 
           <!-- Available Sizes -->
-          <div class="sizes-section my-2">
-            <div class="section-header">
-              <h3 class="section-title">Available Sizes</h3>
+                    <?php $hasSizesBool = !empty($sizes); $hasColorsBool = !empty($colors); ?>
 
+          <?php if ($hasSizesBool): ?>
+            <div class="mb-3">
+              <div class="d-flex align-items-center justify-content-between mb-2">
+                <label class="form-label mb-0">Available Sizes</label>
+
+                <button type="button" class="btn btn-sizeguide-link text-decoration-underline" data-bs-toggle="modal" data-bs-target="#sizeGuide">Size Guide</button>
+              </div>
+              <div id="sizeGrid" class="swatch-grid">
+                <?php foreach ($sizes as $s): $img = $sizeThumbs[$s] ?? $mainImage; ?>
+                  <div class="swatch" data-size="<?= htmlspecialchars($s) ?>" data-image="<?= htmlspecialchars($img ?? '') ?>" role="button" aria-pressed="false">
+                    <?php if ($img): ?><img class="thumb" src="<?= htmlspecialchars($img) ?>" alt="<?= htmlspecialchars($s) ?>"><?php endif; ?>
+                    <span class="label"><?= htmlspecialchars($s) ?></span>
+                  </div>
+                <?php endforeach; ?>
+              </div>
             </div>
-            <div class="sizes-grid">
-              <button type="button" class="size-btn active" data-size="M">M</button>
-              <button type="button" class="size-btn" data-size="S">S</button>
-              <button type="button" class="size-btn" data-size="L">L</button>
-            </div>
-          </div>
+          <?php endif; ?>
 
           <!-- Available Colors -->
           <div class="colors-section my-3">
-            <h3 class="section-title">Available Colors</h3>
-            <div class="colors-grid">
-              <button type="button" class="color-btn active" data-color="blue" data-price="2000" data-image="src/assets/blue-polo-shirt.jpg">
-                <div class="color-swatch blue"></div>
-                <span>Blue</span>
-              </button>
-              <button type="button" class="color-btn" data-color="yellow" data-price="2200" data-image="src/assets/yellow-polo-shirt.jpg">
-                <div class="color-swatch yellow"></div>
-                <span>Yellow</span>
-              </button>
-              <button type="button" class="color-btn" data-color="black" data-price="2400" data-image="src/assets/black-polo-shirt.jpg">
-                <div class="color-swatch black"></div>
-                <span>Black</span>
-              </button>
+            <?php if ($hasColorsBool): ?>
+              <div class="mb-3">
+                <label class="form-label mb-2 section-title">Available Colors</label>
+              <div id="colorGrid" class="swatch-grid">
+                <?php foreach ($colors as $c): $img = $colorThumbs[$c] ?? $mainImage; ?>
+                  <div class="swatch" data-color="<?= htmlspecialchars($c) ?>" data-image="<?= htmlspecialchars($img ?? '') ?>" role="button" aria-pressed="false">
+                    <?php if ($img): ?><img class="thumb" src="<?= htmlspecialchars($img) ?>" alt="<?= htmlspecialchars($c) ?>" ><?php endif; ?>
+                    <span class="label"><?= htmlspecialchars($c) ?></span>
+                  </div>
+                <?php endforeach; ?>
+              </div>
             </div>
+          <?php endif; ?>
           </div>
 <!-- ADD to cart section -->
 <div class="product-single__addtocart">
@@ -136,7 +330,7 @@
       <button type="submit" class="btn btn-primary btn-addtocart js-open-aside" data-aside="cartDrawer">Add to Cart</button></div>
 
             </div>
-<div class="product-single__addtolinks">
+            <div class="product-single__addtolinks">
             <a href="#" class="menu-link menu-link_us-s add-to-wishlist"><svg width="16" height="16" viewbox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><use href="#icon_heart"></use></svg><span>Add to Wishlist</span></a>
             <share-button class="share-button">
               <button class="menu-link menu-link_us-s to-share border-0 bg-transparent d-flex align-items-center">
@@ -410,191 +604,171 @@
 <?php include("includes/script-footer.php"); ?>
 
 
-<script>
-  // Product data
-const productData = {
-  blue: {
-    price: 2000,
-    image: 'src/assets/blue-polo-shirt.jpg',
-    name: 'Blue'
-  },
-  yellow: {
-    price: 2200,
-    image: 'src/assets/yellow-polo-shirt.jpg',
-    name: 'Yellow'
-  },
-  black: {
-    price: 2400,
-    image: 'src/assets/black-polo-shirt.jpg',
-    name: 'Black'
-  }
-};
+  <script>
+    // ===== Server data =====
+    const priceMap   = <?= $jsMap ?: '{}' ?>;       // base currency
+    const basePrice  = <?= json_encode($jsBasePrice) ?>;
+    const rates      = <?= $jsRates ?>;             // code -> rate_to_base
+    const symbols    = <?= $jsSymbols ?>;           // code -> symbol
+    let baseCode     = <?= json_encode($jsBaseCode) ?>;
+    let displayCode  = <?= json_encode($jsDisplay) ?>;
+    const mainFallback = <?= json_encode($jsMainImage) ?>;
+    const chartRows  = <?= $jsSizeChart ?>;         // CM by default
+    const thumbs     = <?= $jsThumbs ?>;
 
-// Currency conversion rates (example rates)
-const currencyRates = {
-  NGN: 1,
-  USD: 0.0012,
-  EUR: 0.0011
-};
+    const HAS_SIZES  = <?= $hasSizes ? 'true' : 'false' ?>;
+    const HAS_COLORS = <?= $hasColors ? 'true' : 'false' ?>;
 
-// Current state
-let currentState = {
-  selectedColor: 'blue',
-  selectedSize: 'M',
-  currency: 'NGN'
-};
+    // ===== Elements =====
+    const mainImg    = document.getElementById('mainImage');
+    const mainPrice  = document.getElementById('mainPrice');
+    const stockNote  = document.getElementById('stockNote');
+    const curSel     = document.getElementById('curSelect');
+    const sizeGrid   = document.getElementById('sizeGrid');
+    const colorGrid  = document.getElementById('colorGrid');
+    const thumbRail  = document.getElementById('thumbRail');
 
-// DOM elements
-const productImage = document.getElementById('productImage');
-const productPrice = document.getElementById('productPrice');
-const currencySelect = document.getElementById('currencySelect');
-const displayCurrency = document.getElementById('displayCurrency');
-const addToCartBtn = document.getElementById('addToCartBtn');
-const toast = document.getElementById('toast');
+    const chartTableBody = document.querySelector('#chartTable tbody');
 
-// Initialize the page
-function init() {
-  updatePrice();
-  setupEventListeners();
-}
+    let selectedSize  = '';
+    let selectedColor = '';
 
-// Setup event listeners
-function setupEventListeners() {
-  // Color selection
-  const colorButtons = document.querySelectorAll('.color-btn');
-  colorButtons.forEach(btn => {
-    btn.addEventListener('click', () => selectColor(btn));
-  });
-
-  // Size selection
-  const sizeButtons = document.querySelectorAll('.size-btn');
-  sizeButtons.forEach(btn => {
-    btn.addEventListener('click', () => selectSize(btn));
-  });
-
-  // Currency selection
-  currencySelect.addEventListener('change', (e) => {
-    currentState.currency = e.target.value;
-    displayCurrency.value = e.target.value;
-    updatePrice();
-  });
-
-  displayCurrency.addEventListener('change', (e) => {
-    currentState.currency = e.target.value;
-    currencySelect.value = e.target.value;
-    updatePrice();
-  });
-
-  // Add to cart
-  addToCartBtn.addEventListener('click', addToCart);
-}
-
-// Select color
-function selectColor(button) {
-  // Remove active class from all color buttons
-  document.querySelectorAll('.color-btn').forEach(btn => {
-    btn.classList.remove('active');
-  });
-
-  // Add active class to clicked button
-  button.classList.add('active');
-
-  // Update current state
-  const color = button.dataset.color;
-  currentState.selectedColor = color;
-
-  // Update product image
-  productImage.src = productData[color].image;
-  productImage.alt = `${productData[color].name} Bloomfield Floral Midi Shirt`;
-
-  // Update price
-  updatePrice();
-}
-
-// Select size
-function selectSize(button) {
-  // Remove active class from all size buttons
-  document.querySelectorAll('.size-btn').forEach(btn => {
-    btn.classList.remove('active');
-  });
-
-  // Add active class to clicked button
-  button.classList.add('active');
-
-  // Update current state
-  currentState.selectedSize = button.dataset.size;
-}
-
-// Format currency
-function formatCurrency(amount, currency) {
-  const convertedAmount = amount * currencyRates[currency];
-
-  const currencySymbols = {
-    NGN: '₦',
-    USD: '$',
-    EUR: '€'
-  };
-
-  const symbol = currencySymbols[currency] || currency;
-
-  return `${symbol}${convertedAmount.toLocaleString('en-US', {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2
-  })}`;
-}
-
-// Update price display
-function updatePrice() {
-  const selectedProduct = productData[currentState.selectedColor];
-  const formattedPrice = formatCurrency(selectedProduct.price, currentState.currency);
-  productPrice.textContent = formattedPrice;
-}
-
-// Add to cart function
-function addToCart() {
-  const selectedProduct = productData[currentState.selectedColor];
-  const message = `${selectedProduct.name} Bloomfield Floral Midi Shirt (${currentState.selectedSize}) added to your cart.`;
-
-  showToast('Added to Cart', message);
-}
-
-// Show toast notification
-function showToast(title, message) {
-  const toastTitle = toast.querySelector('.toast-title');
-  const toastMessage = toast.querySelector('.toast-message');
-
-  toastTitle.textContent = title;
-  toastMessage.textContent = message;
-
-  // Show toast
-  toast.classList.remove('hidden');
-
-  // Hide toast after 3 seconds
-  setTimeout(() => {
-    toast.classList.add('slide-out');
-    setTimeout(() => {
-      toast.classList.add('hidden');
-      toast.classList.remove('slide-out');
-    }, 300);
-  }, 3000);
-}
-
-// Category button functionality
-document.querySelectorAll('.category-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    // Remove active state from all categories
-    document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
-    // Add active state to clicked category
-    btn.classList.add('active');
-
-    if (btn.textContent.includes('Add Product')) {
-      showToast('Add Product', 'Redirect to add product page');
-    } else {
-      showToast('Category Selected', `Browsing ${btn.textContent} category`);
+    // ===== Helpers =====
+    const fmt = n => new Intl.NumberFormat('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}).format(n);
+    function convert(amount, fromCode, toCode){
+      if (fromCode === toCode) return amount;
+      const base = amount * (rates[fromCode] ?? 1);    // to base
+      return base / (rates[toCode] ?? 1);              // base -> to
     }
-  });
-});
 
-// Initialize when DOM is loaded
-document.addEventListener('DOMContentLoaded', init);
-</script>
+    function comboValid(sz, col){
+      if (!HAS_SIZES && HAS_COLORS) return !!priceMap[`|${col}`];
+      if (HAS_SIZES && !HAS_COLORS) return !!priceMap[`${sz}|`];
+      return !!(priceMap[`${sz}|${col}`] || priceMap[`${sz}|`] || priceMap[`|${col}`]);
+    }
+
+    function refreshDisables(){
+      if (sizeGrid){
+        sizeGrid.querySelectorAll('.swatch').forEach(s => {
+          const sz = s.dataset.size || '';
+          const ok = !HAS_COLORS ? !!priceMap[`${sz}|`] : (selectedColor ? comboValid(sz, selectedColor) : true);
+          s.classList.toggle('disabled', !ok);
+          s.setAttribute('aria-disabled', !ok ? 'true' : 'false');
+        });
+      }
+      if (colorGrid){
+        colorGrid.querySelectorAll('.swatch').forEach(s => {
+          const col = s.dataset.color || '';
+          const ok = !HAS_SIZES ? !!priceMap[`|${col}`] : (selectedSize ? comboValid(selectedSize, col) : true);
+          s.classList.toggle('disabled', !ok);
+          s.setAttribute('aria-disabled', !ok ? 'true' : 'false');
+        });
+      }
+    }
+
+    function resolveVariant(){
+      let k = `${selectedSize}|${selectedColor}`;
+      if (priceMap[k]) return priceMap[k];
+      k = `${selectedSize}|`; if (selectedSize && priceMap[k]) return priceMap[k];
+      k = `|${selectedColor}`; if (selectedColor && priceMap[k]) return priceMap[k];
+      return { price: basePrice, stock: null, image: null };
+    }
+
+    function setActive(container, el){
+      if (!container) return;
+      container.querySelectorAll('.swatch').forEach(s => { s.classList.remove('active'); s.setAttribute('aria-pressed','false'); });
+      if (el){ el.classList.add('active'); el.setAttribute('aria-pressed','true'); }
+    }
+    function clearActive(container){
+      if (!container) return;
+      container.querySelectorAll('.swatch').forEach(s => { s.classList.remove('active'); s.setAttribute('aria-pressed','false'); });
+    }
+
+    function updateUI(){
+      const { price, stock, image } = resolveVariant();
+      const disp = convert(price, baseCode, displayCode);
+      const sym  = symbols[displayCode] || '';
+      mainPrice.textContent = `${sym}${fmt(disp)}`;
+      stockNote.textContent = (stock !== null && stock !== undefined) ? `Stock for selection: ${stock}` : '';
+      const target = image || mainFallback || '';
+      if (mainImg) {
+        if (target) mainImg.src = target;
+        else mainImg.removeAttribute('src');
+      }
+      refreshDisables();
+    }
+
+    // Size swatches
+    sizeGrid?.addEventListener('click', e => {
+      const sw = e.target.closest('.swatch');
+      if (!sw || sw.classList.contains('disabled')) return;
+      const val = sw.dataset.size || '';
+      if (sw.classList.contains('active')) {
+        selectedSize = '';
+        clearActive(sizeGrid);
+        refreshDisables();
+        updateUI();
+        return;
+      }
+      selectedSize = val;
+      setActive(sizeGrid, sw);
+      if (sw.dataset.image && mainImg) mainImg.src = sw.dataset.image;
+      updateUI();
+    });
+
+    // Color swatches
+    colorGrid?.addEventListener('click', e => {
+      const sw = e.target.closest('.swatch');
+      if (!sw || sw.classList.contains('disabled')) return;
+      const val = sw.dataset.color || '';
+      if (sw.classList.contains('active')) {
+        selectedColor = '';
+        clearActive(colorGrid);
+        refreshDisables();
+        updateUI();
+        return;
+      }
+      selectedColor = val;
+      setActive(colorGrid, sw);
+      if (sw.dataset.image && mainImg) mainImg.src = sw.dataset.image;
+      updateUI();
+    });
+
+    // Currency
+    curSel?.addEventListener('change', () => {
+      displayCode = curSel.value;
+      updateUI();
+      const url = new URL(window.location.href);
+      url.searchParams.set('cur', displayCode);
+      window.history.replaceState({}, '', url);
+    });
+
+    // Thumb rail
+    thumbRail?.addEventListener('click', (e) => {
+      const img = e.target.closest('img[data-src]');
+      if (!img) return;
+      thumbRail.querySelectorAll('img').forEach(i => i.classList.remove('active'));
+      img.classList.add('active');
+      if (mainImg) mainImg.src = img.dataset.src;
+    });
+
+    // Size chart (CM)
+    function renderChartCM(){
+      chartTableBody.innerHTML = '';
+      chartRows.forEach(row => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td><strong>${row.label}</strong></td>
+          <td>${Math.round(row.bust)} CM</td>
+          <td>${Math.round(row.waist)} CM</td>
+          <td>${Math.round(row.hips)} CM</td>
+        `;
+        chartTableBody.appendChild(tr);
+      });
+    }
+
+    // Init
+    renderChartCM();
+    refreshDisables();
+    updateUI();
+  </script>

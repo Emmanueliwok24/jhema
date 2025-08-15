@@ -10,164 +10,81 @@
           id="collections-tab"
           role="tablist"
         >
-          <li class="nav-item" role="presentation">
-            <a
-              class="nav-link nav-link_underscore active"
-              id="collections-tab-1-trigger"
-              data-bs-toggle="tab"
-              href="#collections-tab-1"
-              role="tab"
-              aria-controls="collections-tab-1"
-              aria-selected="true"
-              >All</a
-            >
-          </li>
-          <li class="nav-item" role="presentation">
-            <a
-              class="nav-link nav-link_underscore"
+
+           <?php foreach ($menu as $m): ?>
+      <div class="dropdown">
+        <a   class="nav-link nav-link_underscore"
               id="collections-tab-2-trigger"
               data-bs-toggle="tab"
-              href="#collections-tab-2"
+              href="index.php?slug=<?= urlencode($p['slug']) ?>&cur=<?= urlencode($display) ?>"
               role="tab"
-              aria-controls="collections-tab-2"
-              aria-selected="true"
-              >New Arrivals</a
-            >
-          </li>
-          <li class="nav-item" role="presentation">
-            <a
-              class="nav-link nav-link_underscore"
-              id="collections-tab-3-trigger"
-              data-bs-toggle="tab"
-              href="#collections-tab-3"
-              role="tab"
-              aria-controls="collections-tab-3"
-              aria-selected="true"
-              >Best Seller</a
-            >
-          </li>
-          <li class="nav-item" role="presentation">
-            <a
-              class="nav-link nav-link_underscore"
-              id="collections-tab-4-trigger"
-              data-bs-toggle="tab"
-              href="#collections-tab-4"
-              role="tab"
-              aria-controls="collections-tab-4"
-              aria-selected="true"
-              >Top Rated</a
-            >
-          </li>
+              aria-controls="<?= urlencode($p['slug']) ?>&cur=<?= urlencode($display) ?>"
+              aria-selected="true"><?= htmlspecialchars($m['name']) ?></a>
+        <!-- Keep your small hover menu but we’ll also show all attributes in sidebar -->
+
+      </div>
+    <?php endforeach; ?>
+
         </ul>
 
         <div class="tab-content pt-2" id="collections-tab-content">
-          <div
-            class="tab-pane fade show active"
-            id="collections-tab-1"
-            role="tabpanel"
-            aria-labelledby="collections-tab-1-trigger"
-          >
+
+          <div class="tab-pane fade show active"
+            id="index.php?slug=<?=urlencode($p['slug']) ?>&cur=<?= urlencode($display) ?>"
+            role="<?= urlencode($p['slug']) ?>&cur=<?= urlencode($display) ?>"
+            aria-labelledby="collections-tab-1-trigger">
             <div class="row">
-              <div class="col-6 col-md-4 col-lg-3">
-                <div class="product-card mb-3 mb-md-4 mb-xxl-5">
-                  <div class="pc__img-wrapper">
-                    <a href="./product.php">
-                      <img
-                        loading="lazy"
-                        src="./images/products/product_1.jpg"
-                        width="330"
-                        height="400"
-                        alt="Cropped Faux leather Jacket"
-                        class="pc__img"
-                      />
-                      <img
-                        loading="lazy"
-                        src="./images/products/product_1-1.jpg"
-                        width="330"
-                        height="400"
-                        alt="Cropped Faux leather Jacket"
-                        class="pc__img pc__img-second"
-                      />
-                    </a>
-                    <button
-                      class="pc__atc btn anim_appear-bottom btn position-absolute border-0 text-uppercase fw-medium js-add-cart js-open-aside"
-                      data-aside="cartDrawer"
-                      title="Add To Cart"
-                    >
-                      Add To Cart
-                    </button>
-                  </div>
+              <div class="products-grid row row-cols-2 row-cols-md-4">
+        <?php foreach ($products as $p):
+          $converted = convert_price((float)$p['base_price'], $p['base_currency_code'], $display, $curMap);
+          $symbol = $curMap[$display]['symbol'];
+        ?>
+          <div class="product-card-wrapper">
+            <div class="product-card  mb-3 mb-md-4 mb-xxl-5">
+              <div class="pc__img-wrapper">
+                <div class="swiper-container background-img js-swiper-slider" data-settings='{"resizeObserver": true}'>
+                  <div class="swiper-wrapper">
+                    <div class="swiper-slid">
 
-                  <div class="pc__info position-relative">
-                    <p class="pc__category">Dresses</p>
-                    <h6 class="pc__title">
-                      <a href="./product.php"
-                        >Cropped Faux Leather Jacket</a
-                      >
-                    </h6>
-                    <div class="product-card__price d-flex">
-                      <span class="money price">$29</span>
-                    </div>
-                    <div class="product-card__review d-flex align-items-center">
-                      <div class="reviews-group d-flex">
-                        <svg
-                          class="review-star"
-                          viewBox="0 0 9 9"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <use href="#icon_star" />
-                        </svg>
-                        <svg
-                          class="review-star"
-                          viewBox="0 0 9 9"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <use href="#icon_star" />
-                        </svg>
-                        <svg
-                          class="review-star"
-                          viewBox="0 0 9 9"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <use href="#icon_star" />
-                        </svg>
-                        <svg
-                          class="review-star"
-                          viewBox="0 0 9 9"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <use href="#icon_star" />
-                        </svg>
-                        <svg
-                          class="review-star"
-                          viewBox="0 0 9 9"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <use href="#icon_star" />
-                        </svg>
-                      </div>
-                      <span
-                        class="reviews-note text-lowercase text-secondary ms-1"
-                        >8k+ reviews</span
-                      >
-                    </div>
+                      <a href="product.php?slug=<?= urlencode($p['slug']) ?>&cur=<?= urlencode($display) ?>">
+                        <?php if (!empty($p['image_path'])): ?>
+                          <img  src="<?= htmlspecialchars($p['image_path']) ?>" alt="<?= htmlspecialchars($p['name']) ?>" width="330" height="400"  class="pc__img">
+                           <?php else: ?><span class="muted">No Image</span><?php endif; ?>
+                      </a>
+                    </div><!-- /.pc__img-wrapper -->
 
-                    <button
-                      class="pc__btn-wl position-absolute top-0 end-0 bg-transparent border-0 js-add-wishlist"
-                      title="Add To Wishlist"
-                    >
-                      <svg
-                        width="16"
-                        height="16"
-                        viewBox="0 0 20 20"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <use href="#icon_heart" />
-                      </svg>
-                    </button>
                   </div>
+                  <span class="pc__img-prev"><svg width="7" height="11" viewbox="0 0 7 11" xmlns="http://www.w3.org/2000/svg"><use href="#icon_prev_sm"></use></svg></span>
+                  <span class="pc__img-next"><svg width="7" height="11" viewbox="0 0 7 11" xmlns="http://www.w3.org/2000/svg"><use href="#icon_next_sm"></use></svg></span>
                 </div>
+                <button class="pc__atc btn anim_appear-bottom btn position-absolute border-0 text-uppercase fw-medium js-add-cart js-open-aside" data-aside="cartDrawer" title="Add To Cart">Add To Cart</button>
+              </div>
+
+              <div class="pc__info position-relative px-2">
+                <p class="pc__category"><?= htmlspecialchars($p['cat_name'] ?? '') ?></p>
+                <h6 class="pc__title"><a href="product.php"><?= htmlspecialchars($p['name']) ?></a></h6>
+                <P> <?= htmlspecialchars($p['sku']) ?></P>
+                <div class="product-card__price d-flex">
+                  <span class="money price"><?= $symbol . price_display($converted) ?></span>
+                </div>
+                <div class="product-card__review d-flex align-items-center">
+                  <div class="reviews-group d-flex">
+                    <svg class="review-star" viewbox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><use href="#icon_star"></use></svg>
+                    <svg class="review-star" viewbox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><use href="#icon_star"></use></svg>
+                    <svg class="review-star" viewbox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><use href="#icon_star"></use></svg>
+                    <svg class="review-star" viewbox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><use href="#icon_star"></use></svg>
+                    <svg class="review-star" viewbox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><use href="#icon_star"></use></svg>
+                  </div>
+                  <span class="reviews-note text-lowercase text-secondary ms-1">8k+ reviews</span>
+                </div>
+
+                <button class="pc__btn-wl position-absolute top-0 end-0 bg-transparent border-0 js-add-wishlist" title="Add To Wishlist">
+                  <svg width="16" height="16" viewbox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><use href="#icon_heart"></use></svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        <?php endforeach; ?>
               </div>
             </div>
             <!-- /.row -->
@@ -179,294 +96,9 @@
               >
             </div>
           </div>
+
           <!-- /.tab-pane fade show-->
 
-          <div
-            class="tab-pane fade show"
-            id="collections-tab-2"
-            role="tabpanel"
-            aria-labelledby="collections-tab-2-trigger"
-          >
-            <div class="row">
-              <div class="col-6 col-md-4 col-lg-3">
-                <div class="product-card mb-3 mb-md-4 mb-xxl-5">
-                  <div class="pc__img-wrapper">
-                    <a href="./product.php">
-                      <img
-                        loading="lazy"
-                        src="./images/products/product_3.jpg"
-                        width="330"
-                        height="400"
-                        alt="Cropped Faux leather Jacket"
-                        class="pc__img"
-                      />
-                      <img
-                        loading="lazy"
-                        src="./images/products/product_3-1.jpg"
-                        width="330"
-                        height="400"
-                        alt="Cropped Faux leather Jacket"
-                        class="pc__img pc__img-second"
-                      />
-                    </a>
-                    <button
-                      class="pc__atc btn anim_appear-bottom btn position-absolute border-0 text-uppercase fw-medium js-add-cart js-open-aside"
-                      data-aside="cartDrawer"
-                      title="Add To Cart"
-                    >
-                      Add To Cart
-                    </button>
-                  </div>
-
-                  <div class="pc__info position-relative">
-                    <p class="pc__category">Dresses</p>
-                    <h6 class="pc__title">
-                      <a href="./product.php">Kirby T-Shirt</a>
-                    </h6>
-                    <div class="product-card__price d-flex">
-                      <span class="money price">$17</span>
-                    </div>
-
-                    <button
-                      class="pc__btn-wl position-absolute top-0 end-0 bg-transparent border-0 js-add-wishlist"
-                      title="Add To Wishlist"
-                    >
-                      <svg
-                        width="16"
-                        height="16"
-                        viewBox="0 0 20 20"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <use href="#icon_heart" />
-                      </svg>
-                    </button>
-                  </div>
-                </div>
-              </div>
-
-
-            </div>
-            <!-- /.row -->
-            <div class="text-center mt-2">
-              <a
-                class="btn-link btn-link_lg default-underline default-underline text-uppercase fw-medium"
-                href="#"
-                >See All Products</a
-              >
-            </div>
-          </div>
-          <!-- /.tab-pane fade show-->
-
-          <div
-            class="tab-pane fade show"
-            id="collections-tab-3"
-            role="tabpanel"
-            aria-labelledby="collections-tab-3-trigger"
-          >
-            <div class="row">
-              <div class="col-6 col-md-4 col-lg-3">
-                <div class="product-card mb-3 mb-md-4 mb-xxl-5">
-                  <div class="pc__img-wrapper">
-                    <a href="./product.php">
-                      <img
-                        loading="lazy"
-                        src="./images/products/product_5.jpg"
-                        width="330"
-                        height="400"
-                        alt="Cropped Faux leather Jacket"
-                        class="pc__img"
-                      />
-                      <img
-                        loading="lazy"
-                        src="./images/products/product_5-1.jpg"
-                        width="330"
-                        height="400"
-                        alt="Cropped Faux leather Jacket"
-                        class="pc__img pc__img-second"
-                      />
-                    </a>
-                    <button
-                      class="pc__atc btn anim_appear-bottom btn position-absolute border-0 text-uppercase fw-medium js-add-cart js-open-aside"
-                      data-aside="cartDrawer"
-                      title="Add To Cart"
-                    >
-                      Add To Cart
-                    </button>
-                  </div>
-
-                  <div class="pc__info position-relative">
-                    <p class="pc__category">Dresses</p>
-                    <h6 class="pc__title">
-                      <a href="./product.php">Colorful Jacket</a>
-                    </h6>
-                    <div class="product-card__price d-flex">
-                      <span class="money price">$29</span>
-                    </div>
-
-                    <button
-                      class="pc__btn-wl position-absolute top-0 end-0 bg-transparent border-0 js-add-wishlist"
-                      title="Add To Wishlist"
-                    >
-                      <svg
-                        width="16"
-                        height="16"
-                        viewBox="0 0 20 20"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <use href="#icon_heart" />
-                      </svg>
-                    </button>
-                  </div>
-                </div>
-              </div>
-
-
-            </div>
-            <!-- /.row -->
-            <div class="text-center mt-2">
-              <a
-                class="btn-link btn-link_lg default-underline text-uppercase fw-medium"
-                href="./shop.php"
-                >Discover More</a
-              >
-            </div>
-          </div>
-          <!-- /.tab-pane fade show-->
-
-          <div
-            class="tab-pane fade show"
-            id="collections-tab-4"
-            role="tabpanel"
-            aria-labelledby="collections-tab-4-trigger"
-          >
-            <div class="row">
-              <div class="col-6 col-md-4 col-lg-3">
-                <div class="product-card mb-3 mb-md-4 mb-xxl-5">
-                  <div class="pc__img-wrapper">
-                    <a href="./product.php">
-                      <img
-                        loading="lazy"
-                        src="./images/products/product_7.jpg"
-                        width="330"
-                        height="400"
-                        alt="Cropped Faux leather Jacket"
-                        class="pc__img"
-                      />
-                      <img
-                        loading="lazy"
-                        src="./images/products/product_7-1.jpg"
-                        width="330"
-                        height="400"
-                        alt="Cropped Faux leather Jacket"
-                        class="pc__img pc__img-second"
-                      />
-                    </a>
-                    <button
-                      class="pc__atc btn anim_appear-bottom btn position-absolute border-0 text-uppercase fw-medium js-add-cart js-open-aside"
-                      data-aside="cartDrawer"
-                      title="Add To Cart"
-                    >
-                      Add To Cart
-                    </button>
-                  </div>
-
-                  <div class="pc__info position-relative">
-                    <p class="pc__category">Dresses</p>
-                    <h6 class="pc__title">
-                      <a href="./product.php">Cotton Jersey T-Shirt</a>
-                    </h6>
-                    <div class="product-card__price d-flex">
-                      <span class="money price">$17</span>
-                    </div>
-
-                    <button
-                      class="pc__btn-wl position-absolute top-0 end-0 bg-transparent border-0 js-add-wishlist"
-                      title="Add To Wishlist"
-                    >
-                      <svg
-                        width="16"
-                        height="16"
-                        viewBox="0 0 20 20"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <use href="#icon_heart" />
-                      </svg>
-                    </button>
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-6 col-md-4 col-lg-3">
-                <div class="product-card mb-3 mb-md-4 mb-xxl-5">
-                  <div class="pc__img-wrapper">
-                    <a href="./product.php">
-                      <img
-                        loading="lazy"
-                        src="./images/products/product_8.jpg"
-                        width="330"
-                        height="400"
-                        alt="Cropped Faux leather Jacket"
-                        class="pc__img"
-                      />
-                      <img
-                        loading="lazy"
-                        src="./images/products/product_8-1.jpg"
-                        width="330"
-                        height="400"
-                        alt="Cropped Faux leather Jacket"
-                        class="pc__img pc__img-second"
-                      />
-                    </a>
-                    <button
-                      class="pc__atc btn anim_appear-bottom btn position-absolute border-0 text-uppercase fw-medium js-add-cart js-open-aside"
-                      data-aside="cartDrawer"
-                      title="Add To Cart"
-                    >
-                      Add To Cart
-                    </button>
-                  </div>
-
-                  <div class="pc__info position-relative">
-                    <p class="pc__category">Dresses</p>
-                    <h6 class="pc__title">
-                      <a href="./product.php">Zessi Dresses</a>
-                    </h6>
-                    <div class="product-card__price d-flex">
-                      <span class="money price price-old">$129</span>
-                      <span class="money price price-sale">$99</span>
-                    </div>
-
-                    <button
-                      class="pc__btn-wl position-absolute top-0 end-0 bg-transparent border-0 js-add-wishlist"
-                      title="Add To Wishlist"
-                    >
-                      <svg
-                        width="16"
-                        height="16"
-                        viewBox="0 0 20 20"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <use href="#icon_heart" />
-                      </svg>
-                    </button>
-                  </div>
-                </div>
-              </div>
-
-            </div>
-            <!-- /.row -->
-            <div class="text-center mt-2">
-              <a
-                class="btn-link btn-link_lg default-underline text-uppercase fw-medium"
-                href="./shop.php"
-                >See All Products</a
-              >
-            </div>
-          </div>
           <!-- /.tab-pane fade show-->
         </div>
         <!-- /.tab-content pt-2 -->

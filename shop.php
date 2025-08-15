@@ -1,4 +1,5 @@
-﻿<?php include("includes/head.php"); ?>
+﻿
+<?php include("includes/head.php"); ?>
 <?php include("includes/svg.php"); ?>
 <?php include("includes/mobile-header.php"); ?>
 <?php include("includes/header.php"); ?>
@@ -7,7 +8,7 @@
    <?php include("scroll_categories.php"); ?>
     <div class="mb-md-1 pb-xl-5"></div>
 
-   <section class="shop-main container d-flex  ">
+   <section class="shop-main container d-flex   ">
      <!-- shop sidebar -->
 
      <?php include("includes/shop/sidebar.php"); ?>
@@ -15,9 +16,39 @@
      <div class="shop-list flex-grow-1">
        <!-- slide show -->
        <?php include("includes/shop/slideshow.php"); ?>
+        <!-- Active filter pills (unchanged behavior) -->
+      <div class="filters">
+        <?php if ($category_slug): ?>
+          <span class="pill ">
+            Category: <strong><?= htmlspecialchars(ucwords(str_replace('-', ' ', $category_slug))) ?></strong>
+            <a class="x" href="shop.php?cur=<?= urlencode($display) ?>" title="Clear">×</a>
+          </span>
+        <?php endif; ?>
+        <?php if ($occasion): ?>
+          <span class="pill">
+            Occasion: <strong><?= htmlspecialchars($occasion) ?></strong>
+            <a class="x" href="shop.php?cat=<?= urlencode($category_slug ?? '') ?>&length=<?= urlencode($length ?? '') ?>&style=<?= urlencode($style ?? '') ?>&cur=<?= urlencode($display) ?>" title="Clear">×</a>
+          </span>
+        <?php endif; ?>
+        <?php if ($length): ?>
+          <span class="pill">
+            Length: <strong><?= htmlspecialchars($length) ?></strong>
+            <a class="x" href="shop.php?cat=<?= urlencode($category_slug ?? '') ?>&occasion=<?= urlencode($occasion ?? '') ?>&style=<?= urlencode($style ?? '') ?>&cur=<?= urlencode($display) ?>" title="Clear">×</a>
+          </span>
+        <?php endif; ?>
+        <?php if ($style): ?>
+          <span class="pill">
+            Style: <strong><?= htmlspecialchars($style) ?></strong>
+            <a class="x" href="shop.php?cat=<?= urlencode($category_slug ?? '') ?>&occasion=<?= urlencode($occasion ?? '') ?>&length=<?= urlencode($length ?? '') ?>&cur=<?= urlencode($display) ?>" title="Clear">×</a>
+          </span>
+        <?php endif; ?>
 
-
+        <?php if ($category_slug || $occasion || $length || $style): ?>
+          <a class="pill" href="shop.php?cur=<?= urlencode($display) ?>">Clear all</a>
+        <?php endif; ?>
+      </div>
        <div class="mb-3 pb-2 pb-xl-3"></div>
+
 
         <div class="d-flex justify-content-between mb-4 pb-md-2">
           <div class="breadcrumb mb-0 d-none d-md-block flex-grow-1">
@@ -51,13 +82,23 @@
         </div><!-- /.d-flex justify-content-between -->
 
         <div class="products-grid row row-cols-2 row-cols-md-3" id="products-grid">
+
+          <?php foreach ($products as $p):
+          $converted = convert_price((float)$p['base_price'], $p['base_currency_code'], $display, $curMap);
+          $symbol = $curMap[$display]['symbol'];
+        ?>
           <div class="product-card-wrapper">
             <div class="product-card  mb-3 mb-md-4 mb-xxl-5">
               <div class="pc__img-wrapper">
                 <div class="swiper-container background-img js-swiper-slider" data-settings='{"resizeObserver": true}'>
                   <div class="swiper-wrapper">
                     <div class="swiper-slide">
-                      <a href="product.php"><img loading="lazy" src="./images/products/product_1.jpg" width="330" height="400" alt="Cropped Faux leather Jacket" class="pc__img"></a>
+
+                      <a href="product.php?slug=<?= urlencode($p['slug']) ?>&cur=<?= urlencode($display) ?>">
+                        <?php if (!empty($p['image_path'])): ?>
+                          <img  src="<?= htmlspecialchars($p['image_path']) ?>" alt="<?= htmlspecialchars($p['name']) ?>" width="330" height="400"  class="pc__img">
+                           <?php else: ?><span class="muted">No Image</span><?php endif; ?>
+                      </a>
                     </div><!-- /.pc__img-wrapper -->
 
                   </div>
@@ -68,10 +109,11 @@
               </div>
 
               <div class="pc__info position-relative px-2">
-                <p class="pc__category">Dresses</p>
-                <h6 class="pc__title"><a href="product.php">Cropped Faux Leather Jacket</a></h6>
+                <p class="pc__category"><?= htmlspecialchars($p['cat_name'] ?? '') ?></p>
+                <h6 class="pc__title"><a href="product.php"><?= htmlspecialchars($p['name']) ?></a></h6>
+                <P> <?= htmlspecialchars($p['sku']) ?></P>
                 <div class="product-card__price d-flex">
-                  <span class="money price">$29</span>
+                  <span class="money price"><?= $symbol . price_display($converted) ?></span>
                 </div>
                 <div class="product-card__review d-flex align-items-center">
                   <div class="reviews-group d-flex">
@@ -90,6 +132,7 @@
               </div>
             </div>
           </div>
+        <?php endforeach; ?>
 
 
         </div><!-- /.products-grid row -->
@@ -110,6 +153,9 @@
             <svg width="7" height="11" viewbox="0 0 7 11" xmlns="http://www.w3.org/2000/svg"><use href="#icon_next_sm"></use></svg>
           </a>
         </nav>
+
+
+
       </div>
     </section><!-- /.shop-main container -->
 </main>

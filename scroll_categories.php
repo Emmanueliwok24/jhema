@@ -1,13 +1,12 @@
 <!-- Bootstrap CSS -->
 
 <style>
-  body{
-    overflow-x: hidden;
-  }
+
 
   .marquee-wrapper {
     background-color: #fff;
     position: sticky;
+
     width: 100%;
     z-index: 8;
     border-top:.5px solid #1b1b1b40;
@@ -46,8 +45,8 @@
       padding: 6px 14px;
       margin-right: 10px;
     }
- .marquee-wrapper{
-      position:static;
+    .marquee-wrapper{
+   overflow: hidden;
     }
 
   }

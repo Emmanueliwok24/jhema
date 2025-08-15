@@ -3,7 +3,7 @@
       <div class="row text-center">
         <div class="col-4">
           <a
-            href="/"
+            href="./"
             class="footer-mobile__link d-flex flex-column align-items-center"
           >
             <svg

@@ -1,4 +1,4 @@
-<?php include("includes/admin/head.php"); ?>
+<?php include("includes/head.php"); ?>
 
 
 
@@ -6,11 +6,11 @@
     <!-- page-wrapper Start-->
     <div class="page-wrapper compact-wrapper" id="pageWrapper">
       <!-- page header -->
-       <?php include("includes/admin/page-header.php"); ?>
+       <?php include("includes/page-header.php"); ?>
 
         <!-- Page Body Start-->
         <div class="page-body-wrapper">
-         <?php include("includes/admin/sidebar.php"); ?>
+         <?php include("includes/sidebar.php"); ?>
 
             <!-- index body start -->
             <div class="page-body">
@@ -279,5 +279,5 @@
     </div>
     <!-- page-wrapper End-->
 
-<?php include("includes/admin/logout.php"); ?>
-<?php include("includes/admin/script-js.php"); ?>
+<?php include("includes/logout.php"); ?>
+<?php include("includes/script-js.php"); ?>

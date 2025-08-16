@@ -23,10 +23,10 @@
                  <div class="list-group list-group-flush">
 
 
-            <a class="<?= !$category_slug ? 'active' : '' ?> list-group-item list-group-item-action border-0 p-2 filter-btn" href="shop.php?cur=<?= urlencode($display) ?>">All</a>
+            <a class="<?= !$category_slug ? 'active' : '' ?> list-group-item list-group-item-action border-0 p-2 filter-btn" href="shop/shop.php?cur=<?= urlencode($display) ?>">All</a>
           <?php foreach ($menu as $m): ?>
             <a class="<?= ($category_slug===$m['slug']) ? 'active' : '' ?> list-group-item list-group-item-action border-0 p-2 filter-btn"
-               href="shop.php?cat=<?= urlencode($m['slug']) ?>&cur=<?= urlencode($display) ?>">
+               href="shop/shop.php?cat=<?= urlencode($m['slug']) ?>&cur=<?= urlencode($display) ?>">
               <?= htmlspecialchars($m['name']) ?>
             </a>
           <?php endforeach; ?>
@@ -51,7 +51,7 @@
             <h4>Occasion</h4>
             <div class="chips">
               <?php foreach ($allowed['occasion'] as $o): ?>
-                <a class="chip" href="shop.php?cat=<?= urlencode($current['slug']) ?>&occasion=<?= urlencode($o['value']) ?>&length=<?= urlencode($length ?? '') ?>&style=<?= urlencode($style ?? '') ?>&cur=<?= urlencode($display) ?>">
+                <a class="chip" href="shop/shop.php?cat=<?= urlencode($current['slug']) ?>&occasion=<?= urlencode($o['value']) ?>&length=<?= urlencode($length ?? '') ?>&style=<?= urlencode($style ?? '') ?>&cur=<?= urlencode($display) ?>">
                   <?= htmlspecialchars($o['value']) ?>
                 </a>
               <?php endforeach; ?>
@@ -64,7 +64,7 @@
             <h4>Length</h4>
             <div class="chips">
               <?php foreach ($allowed['length'] as $l): ?>
-                <a class="chip" href="shop.php?cat=<?= urlencode($current['slug']) ?>&length=<?= urlencode($l['value']) ?>&occasion=<?= urlencode($occasion ?? '') ?>&style=<?= urlencode($style ?? '') ?>&cur=<?= urlencode($display) ?>">
+                <a class="chip" href="shop/shop.php?cat=<?= urlencode($current['slug']) ?>&length=<?= urlencode($l['value']) ?>&occasion=<?= urlencode($occasion ?? '') ?>&style=<?= urlencode($style ?? '') ?>&cur=<?= urlencode($display) ?>">
                   <?= htmlspecialchars($l['value']) ?>
                 </a>
               <?php endforeach; ?>
@@ -77,7 +77,7 @@
             <h4>Style</h4>
             <div class="chips">
               <?php foreach ($allowed['style'] as $s): ?>
-                <a class="chip" href="shop.php?cat=<?= urlencode($current['slug']) ?>&style=<?= urlencode($s['value']) ?>&occasion=<?= urlencode($occasion ?? '') ?>&length=<?= urlencode($length ?? '') ?>&cur=<?= urlencode($display) ?>">
+                <a class="chip" href="shop/shop.php?cat=<?= urlencode($current['slug']) ?>&style=<?= urlencode($s['value']) ?>&occasion=<?= urlencode($occasion ?? '') ?>&length=<?= urlencode($length ?? '') ?>&cur=<?= urlencode($display) ?>">
                   <?= htmlspecialchars($s['value']) ?>
                 </a>
               <?php endforeach; ?>

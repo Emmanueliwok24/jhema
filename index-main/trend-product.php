@@ -73,7 +73,7 @@
             <div class="text-center mt-2">
               <a
                 class="btn-link btn-link_lg default-underline text-uppercase fw-medium"
-                href="./shop.php"
+                href="<?= BASE_URL ?>shop/shop.php"
                 >Discover More</a
               >
             </div>

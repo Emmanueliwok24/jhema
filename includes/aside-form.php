@@ -12,24 +12,21 @@
           <!-- /.aside-header -->
 
           <form
-            action="./login_register.php"
+            action="<?= BASE_URL ?>account/login_register.php"
             method="POST"
             class="aside-content"
           >
-            <div class="form-floating mb-3">
-              <input
-                name="email"
-                type="email"
-                class="form-control form-control_gray"
-                id="customerNameEmailInput"
-                placeholder="name@example.com"
-              />
-              <label for="customerNameEmailInput"
-                >Username or email address *</label
-              >
-            </div>
+           <div class="form-floating mb-3">
+                <input name="register_username" type="text" class="form-control form-control_gray" id="customerNameRegisterInput" placeholder="Username" required="">
+                <label for="customerNameRegisterInput">First Name</label>
+              </div>
+              <div class="pb-3"></div>
+              <div class="form-floating mb-3">
+                <input name="register_username" type="text" class="form-control form-control_gray" id="customerNameRegisterInput" placeholder="Username" required="">
+                <label for="customerNameRegisterInput">Last Name</label>
+              </div>
 
-            <div class="pb-3"></div>
+              <div class="pb-3"></div>
 
             <div class="form-label-fixed mb-3">
               <label for="customerPasswordInput" class="form-label"
@@ -59,7 +56,7 @@
                   >Remember me</label
                 >
               </div>
-              <a href="./reset_password.php" class="btn-text ms-auto"
+              <a href="<?= BASE_URL ?>reset_password.php" class="btn-text ms-auto"
                 >Lost password?</a
               >
             </div>
@@ -71,7 +68,7 @@
             <div class="customer-option mt-4 text-center">
               <span class="text-secondary">No account yet?</span>
               <a
-                href="./login_register.php#register-tab"
+                href="<?= BASE_URL ?>account/login_register.php#register-tab"
                 class="btn-text js-show-register"
                 >Create Account</a
               >
@@ -90,7 +87,7 @@
           <!-- /.aside-header -->
 
           <form
-            action="./login_register.php"
+            action="<?= BASE_URL ?>account/login_register.php"
             method="POST"
             class="aside-content"
           >

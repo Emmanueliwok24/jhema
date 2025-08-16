@@ -69,7 +69,7 @@
                   Womens
                 </h2>
                 <a
-                  href="./shop.php"
+                  href="<?= BASE_URL ?>shop/shop.php"
                   class="btn-link btn-link_lg default-underline text-uppercase fw-medium animate animate_fade animate_btt animate_delay-7"
                   >Discover More</a
                 >
@@ -124,7 +124,7 @@
                   Limited Time Offer - Up to 60% off & Free Shipping
                 </h6>
                 <a
-                  href="./shop.php"
+                  href="<?= BASE_URL ?>shop/shop.php"
                   class="btn-link btn-link_lg default-underline text-uppercase fw-medium animate animate_fade animate_btt animate_delay-3"
                   >Discover More</a
                 >

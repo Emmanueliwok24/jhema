@@ -1,14 +1,14 @@
-﻿<?php include("includes/head.php"); ?>
-<?php include("includes/svg.php"); ?>
-<?php include("includes/mobile-header.php"); ?>
-<?php include("includes/header.php"); ?>
+﻿<?php include("../includes/head.php"); ?>
+<?php include("../includes/svg.php"); ?>
+<?php include("../includes/mobile-header.php"); ?>
+<?php include("../includes/header.php"); ?>
 
 
 
 
 
   <main class="position-relative">
-      <?php include("scroll_categories.php"); ?>
+      <?php include("../scroll_categories.php"); ?>
 
     <div class="mb-4 pb-4"></div>
     <section class="login-register container">
@@ -59,7 +59,12 @@
             <form name="register-form" class="needs-validation" novalidate="">
               <div class="form-floating mb-3">
                 <input name="register_username" type="text" class="form-control form-control_gray" id="customerNameRegisterInput" placeholder="Username" required="">
-                <label for="customerNameRegisterInput">Username</label>
+                <label for="customerNameRegisterInput">First Name</label>
+              </div>
+              <div class="pb-3"></div>
+              <div class="form-floating mb-3">
+                <input name="register_username" type="text" class="form-control form-control_gray" id="customerNameRegisterInput" placeholder="Username" required="">
+                <label for="customerNameRegisterInput">Last Name</label>
               </div>
 
               <div class="pb-3"></div>
@@ -90,29 +95,29 @@
   <div class="mb-5 pb-xl-5"></div>
 
 <!-- footer -->
-<?php include("includes/footer.php"); ?>
+<?php include("../includes/footer.php"); ?>
 
 <!-- End Footer Type 1 -->
-<?php include("includes/mobile-footer.php"); ?>
+<?php include("../includes/mobile-footer.php"); ?>
 
 <!-- form -->
-<?php include("includes/aside-form.php"); ?>
+<?php include("../includes/aside-form.php"); ?>
 
 
 
 <!-- aside cart -->
-<?php include("includes/cart-aside.php"); ?>
+<?php include("../includes/cart-aside.php"); ?>
 
 
 <!-- sitemap -->
-<?php include("includes/sitemap-nav.php"); ?>
+<?php include("../includes/sitemap-nav.php"); ?>
 
 
 
 
-<?php include("includes/scroll.php"); ?>
+<?php include("../includes/scroll.php"); ?>
 
 
 <!-- script footer -->
-<?php include("includes/script-footer.php"); ?>
+<?php include("../includes/script-footer.php"); ?>
 

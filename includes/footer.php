@@ -4,7 +4,7 @@
         <div class="row row-cols-lg-5 row-cols-2">
           <div class="footer-column footer-store-info col-12 mb-4 mb-lg-0">
             <div class="logo">
-              <a href="././">
+              <a href="<?= BASE_URL ?>./">
                 <img
                   src="./images/logo.svg"
                   alt="jhema"
@@ -115,27 +115,27 @@
             <h5 class="sub-menu__title text-uppercase">Company</h5>
             <ul class="sub-menu__list list-unstyled">
               <li class="sub-menu__item">
-                <a href="./about.php" class="menu-link menu-link_us-s"
+                <a href="<?= BASE_URL ?>about.php" class="menu-link menu-link_us-s"
                   >About Us</a
                 >
               </li>
               <li class="sub-menu__item">
-                <a href="./about.php" class="menu-link menu-link_us-s"
+                <a href="<?= BASE_URL ?>about.php" class="menu-link menu-link_us-s"
                   >Careers</a
                 >
               </li>
               <li class="sub-menu__item">
-                <a href="./about.php" class="menu-link menu-link_us-s"
+                <a href="<?= BASE_URL ?>about.php" class="menu-link menu-link_us-s"
                   >Affiliates</a
                 >
               </li>
               <li class="sub-menu__item">
-                <a href="./blog_list1.php" class="menu-link menu-link_us-s"
+                <a href="<?= BASE_URL ?>blog_list1.php" class="menu-link menu-link_us-s"
                   >Blog</a
                 >
               </li>
               <li class="sub-menu__item">
-                <a href="./contact.php" class="menu-link menu-link_us-s"
+                <a href="<?= BASE_URL ?>contact.php" class="menu-link menu-link_us-s"
                   >Contact Us</a
                 >
               </li>
@@ -146,25 +146,25 @@
             <h5 class="sub-menu__title text-uppercase">Shop</h5>
             <ul class="sub-menu__list list-unstyled">
               <li class="sub-menu__item">
-                <a href="./shop2.php" class="menu-link menu-link_us-s"
+                <a href="<?= BASE_URL ?>shop2.php" class="menu-link menu-link_us-s"
                   >New Arrivals</a
                 >
               </li>
               <li class="sub-menu__item">
-                <a href="./shop3.php" class="menu-link menu-link_us-s"
+                <a href="<?= BASE_URL ?>shop3.php" class="menu-link menu-link_us-s"
                   >Accessories</a
                 >
               </li>
               <li class="sub-menu__item">
-                <a href="./shop4.php" class="menu-link menu-link_us-s">Men</a>
+                <a href="<?= BASE_URL ?>shop4.php" class="menu-link menu-link_us-s">Men</a>
               </li>
               <li class="sub-menu__item">
-                <a href="./shop5.php" class="menu-link menu-link_us-s"
+                <a href="<?= BASE_URL ?>shop5.php" class="menu-link menu-link_us-s"
                   >Women</a
                 >
               </li>
               <li class="sub-menu__item">
-                <a href="./shop.php" class="menu-link menu-link_us-s"
+                <a href="<?= BASE_URL ?>shop/shop.php" class="menu-link menu-link_us-s"
                   >Shop All</a
                 >
               </li>
@@ -175,34 +175,34 @@
             <h5 class="sub-menu__title text-uppercase">Help</h5>
             <ul class="sub-menu__list list-unstyled">
               <li class="sub-menu__item">
-                <a href="./about.php" class="menu-link menu-link_us-s"
+                <a href="<?= BASE_URL ?>about.php" class="menu-link menu-link_us-s"
                   >Customer Service</a
                 >
               </li>
               <li class="sub-menu__item">
                 <a
-                  href="./account_dashboard.php"
+                  href="<?= BASE_URL ?>account_dashboard.php"
                   class="menu-link menu-link_us-s"
                   >My Account</a
                 >
               </li>
               <li class="sub-menu__item">
-                <a href="./store_location.php" class="menu-link menu-link_us-s"
+                <a href="<?= BASE_URL ?>store_location.php" class="menu-link menu-link_us-s"
                   >Find a Store</a
                 >
               </li>
               <li class="sub-menu__item">
-                <a href="./terms.php" class="menu-link menu-link_us-s"
+                <a href="<?= BASE_URL ?>terms.php" class="menu-link menu-link_us-s"
                   >Legal & Privacy</a
                 >
               </li>
               <li class="sub-menu__item">
-                <a href="./contact.php" class="menu-link menu-link_us-s"
+                <a href="<?= BASE_URL ?>contact.php" class="menu-link menu-link_us-s"
                   >Contact</a
                 >
               </li>
               <li class="sub-menu__item">
-                <a href="./about.php" class="menu-link menu-link_us-s"
+                <a href="<?= BASE_URL ?>about.php" class="menu-link menu-link_us-s"
                   >Gift Card</a
                 >
               </li>
@@ -253,7 +253,7 @@
       <div class="footer-bottom container">
         <div class="d-block d-md-flex align-items-center">
           <span class="footer-copyright me-auto">©2023 jhema</span>
-         
+
         </div>
         <!-- /.d-flex -->
       </div>

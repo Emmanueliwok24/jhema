@@ -11,7 +11,7 @@
    <?php include("scroll_categories.php"); ?>
 
   <!-- slide Show -->
-      <?php include("includes/index-main/slide-show.php"); ?>
+      <?php include("index-main/slide-show.php"); ?>
 
 
       <div class="mb-3 pb-3 mb-md-4 pb-md-4 mb-xl-5 pb-xl-5"></div>
@@ -40,7 +40,7 @@
                     <strong>Women</strong> Collection
                   </h3>
                   <a
-                    href="./shop.php"
+                    href="<?= BASE_URL ?>shop/shop.php"
                     class="btn-link default-underline text-uppercase fw-medium"
                     >Shop Now</a
                   >
@@ -68,7 +68,7 @@
                     <strong>Men</strong> Collection
                   </h3>
                   <a
-                    href="./shop.php"
+                    href="<?= BASE_URL ?>shop/shop.php"
                     class="btn-link default-underline text-uppercase fw-medium"
                     >Shop Now</a
                   >
@@ -95,7 +95,7 @@
                           <strong>Kids</strong> Collection
                         </h3>
                         <a
-                          href="./shop.php"
+                          href="<?= BASE_URL ?>shop/shop.php"
                           class="btn-link default-underline text-uppercase fw-medium"
                           >Shop Now</a
                         >
@@ -123,7 +123,7 @@
                           Surprise someone with the gift they<br />really want.
                         </p>
                         <a
-                          href="./shop.php"
+                          href="<?= BASE_URL ?>shop/shop.php"
                           class="btn-link default-underline text-uppercase fw-medium"
                           >Shop Now</a
                         >
@@ -146,7 +146,7 @@
       <div class="mb-4 pb-4 mb-xl-5 pb-xl-5"></div>
 
       <!-- Trending Products -->
-      <?php include("includes/index-main/trend-product.php"); ?>
+      <?php include("./index-main/trend-product.php"); ?>
 
 
 
@@ -171,7 +171,7 @@
               <strong>Spring</strong> Collection
             </h3>
             <a
-              href="./shop.php"
+              href="<?= BASE_URL ?>shop/shop.php"
               class="btn-link default-underline text-uppercase fw-medium mt-3"
               >Shop Now</a
             >
@@ -235,7 +235,7 @@
                 </h6>
                 <h3 class="text-white mb-3">Women's T-Shirts</h3>
                 <a
-                  href="./shop.php"
+                  href="<?= BASE_URL ?>shop/shop.php"
                   class="btn-link default-underline text-uppercase text-white fw-medium"
                   >Shop Now</a
                 >
@@ -259,7 +259,7 @@
                 <h6 class="text-uppercase fw-medium mb-3">Starting At $39</h6>
                 <h3 class="mb-3">Men's Sportswear</h3>
                 <a
-                  href="./shop.php"
+                  href="<?= BASE_URL ?>shop/shop.php"
                   class="btn-link default-underline text-uppercase fw-medium"
                   >Shop Now</a
                 >
@@ -277,7 +277,7 @@
 
 
       <!-- edition -->
-             <?php include("includes/index-main/edition.php"); ?>
+             <?php include("index-main/edition.php"); ?>
 <!-- /.edition -->
 
 

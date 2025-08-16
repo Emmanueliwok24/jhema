@@ -6,7 +6,7 @@
                     <div class="toggle-sidebar">
                         <i class="status_toggle middle sidebar-toggle" data-feather="align-center"></i>
                         <a href="admin-dashboard.php">
-                            <img src="admin/images/logo/1.png" class="img-fluid" alt="">
+                            <img src="images/logo/logo.svg" class="img-fluid" alt="">
                         </a>
                     </div>
                 </div>

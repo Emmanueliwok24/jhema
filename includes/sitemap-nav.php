@@ -271,7 +271,7 @@
                             </li>
                             <li class="sub-menu__item">
                               <a
-                                href="./shop3.php"
+                                href="<?= BASE_URL ?>shop3.php"
                                 class="menu-link menu-link_us-s"
                                 >Accessories</a
                               >
@@ -283,7 +283,7 @@
                             </li>
                             <li class="sub-menu__item">
                               <a
-                                href="./about.php"
+                                href="<?= BASE_URL ?>about.php"
                                 class="menu-link menu-link_us-s"
                                 >Gift Card</a
                               >
@@ -355,7 +355,7 @@
                             </li>
                             <li class="sub-menu__item">
                               <a
-                                href="./about.php"
+                                href="<?= BASE_URL ?>about.php"
                                 class="menu-link menu-link_us-s"
                                 >Gift Card</a
                               >
@@ -377,7 +377,7 @@
                             </li>
                             <li class="sub-menu__item">
                               <a
-                                href="./shop3.php"
+                                href="<?= BASE_URL ?>shop3.php"
                                 class="menu-link menu-link_us-s"
                                 >Accessories</a
                               >
@@ -404,7 +404,7 @@
                           <ul class="sub-menu list-unstyled">
                             <li class="sub-menu__item">
                               <a
-                                href="./about.php"
+                                href="<?= BASE_URL ?>about.php"
                                 class="menu-link menu-link_us-s"
                                 >Gift Card</a
                               >
@@ -466,7 +466,7 @@
                             </li>
                             <li class="sub-menu__item">
                               <a
-                                href="./shop3.php"
+                                href="<?= BASE_URL ?>shop3.php"
                                 class="menu-link menu-link_us-s"
                                 >Accessories</a
                               >

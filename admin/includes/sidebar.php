@@ -1,4 +1,6 @@
-   <!-- Page Sidebar Start-->
+<?php include __DIR__ .'/../../includes/config.php'; ?>
+
+  <!-- Page Sidebar Start-->
             <div class="sidebar-wrapper ">
                 <div>
                     <div class="logo-wrapper logo-wrapper-center">
@@ -23,7 +25,7 @@
                                 <li class="back-btn"></li>
 
                                 <li class="sidebar-list">
-                                    <a class="sidebar-link sidebar-title link-nav" href="admin-dashboard.php">
+                                    <a class="sidebar-link sidebar-title link-nav" href="<?= BASE_URL ?>admin/admin.php">
                                         <i class="ri-home-line"></i>
                                         <span>Dashboard</span>
                                     </a>
@@ -40,7 +42,7 @@
                                         </li>
 
                                         <li>
-                                            <a href="add-new-product.php">Add New Products</a>
+                                            <a href="<?= BASE_URL ?>admin/products/add.php">Add New Products</a>
                                         </li>
                                     </ul>
                                 </li>

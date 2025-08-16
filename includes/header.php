@@ -3,9 +3,9 @@
       <div class="container">
         <div class="header-desk header-desk_type_1">
           <div class="logo">
-            <a href="././">
+            <a href="<?= BASE_URL ?>./">
               <img
-                src="./images/logo.svg"
+                src="<?= BASE_URL ?>images/logo.svg"
                 alt="jhema"
                 class="logo__image d-block"
               />
@@ -16,7 +16,7 @@
           <nav class="navigation">
             <ul class="navigation__list list-unstyled d-flex">
               <li class="navigation__item">
-                <a href="./" class="navigation__link">Home</a>
+                <a href="<?= BASE_URL ?>index.php" class="navigation__link">Home</a>
 
                 <!-- /.box-menu -->
               </li>
@@ -27,21 +27,21 @@
                   <div class="col pe-4">
                     <a href="#" class="sub-menu__title">Shop List</a>
                     <ul class="sub-menu__list list-unstyled">
-                      <li class="sub-menu__item"><a href="./shop.php" class="menu-link menu-link_us-s">Shop </a></li>
+                      <li class="sub-menu__item"><a href="<?= BASE_URL ?>shop/shop.php" class="menu-link menu-link_us-s">Shop </a></li>
 
                     </ul>
                   </div>
                   <div class="col pe-4">
                     <a href="#" class="sub-menu__title">Shop List</a>
                     <ul class="sub-menu__list list-unstyled">
-                      <li class="sub-menu__item"><a href="./shop.php" class="menu-link menu-link_us-s">Shop </a></li>
+                      <li class="sub-menu__item"><a href="<?= BASE_URL ?>shop/shop.php" class="menu-link menu-link_us-s">Shop </a></li>
 
                     </ul>
                   </div>
                   <div class="col pe-4">
                     <a href="#" class="sub-menu__title">Shop List</a>
                     <ul class="sub-menu__list list-unstyled">
-                      <li class="sub-menu__item"><a href="./shop.php" class="menu-link menu-link_us-s">Shop </a></li>
+                      <li class="sub-menu__item"><a href="<?= BASE_URL ?>shop/shop.php" class="menu-link menu-link_us-s">Shop </a></li>
 
                     </ul>
                   </div>
@@ -50,7 +50,7 @@
 
                   <div class="mega-menu__media col">
                     <div class="position-relative">
-                      <img loading="lazy" class="mega-menu__img" src="./images/mega-menu-item.jpg" alt="New Horizons">
+                      <img loading="lazy" class="mega-menu__img" src="<?= BASE_URL ?>images/mega-menu-item.jpg" alt="New Horizons">
                       <div class="mega-menu__media-content content_abs content_left content_bottom">
                         <h3>NEW</h3>
                         <h3 class="mb-0">HORIZONS</h3>
@@ -65,13 +65,13 @@
 
 
               <li class="navigation__item">
-                <a href="./about.php" class="navigation__link">About</a>
+                <a href="<?= BASE_URL ?><?= BASE_URL ?>about.php" class="navigation__link">About</a>
               </li>
               <li class="navigation__item">
-                <a href="./contact.php" class="navigation__link">Contact</a>
+                <a href="<?= BASE_URL ?>contact.php" class="navigation__link">Contact</a>
               </li>
               <li class="navigation__item">
-                <a href="./faq.php" class="navigation__link">FAQ</a>
+                <a href="<?= BASE_URL ?>faq.php" class="navigation__link">FAQ</a>
               </li>
             </ul>
             <!-- /.navigation__list -->
@@ -98,7 +98,7 @@
 
               <div class="search-popup js-hidden-content">
                 <form
-                  action="./search_result.php"
+                  action="<?= BASE_URL ?>search_result.php"
                   method="GET"
                   class="search-field container"
                 >
@@ -136,7 +136,7 @@
                       <ul class="sub-menu__list list-unstyled">
                         <li class="sub-menu__item">
                           <a
-                            href="./shop.php"
+                            href="<?= BASE_URL ?>shop/shop.php"
                             class="menu-link menu-link_us-s"
                             >New Arrivals</a
                           >
@@ -148,7 +148,7 @@
                         </li>
                         <li class="sub-menu__item">
                           <a
-                            href="./shop.php"
+                            href="<?= BASE_URL ?>shop/shop.php"
                             class="menu-link menu-link_us-s"
                             >Accessories</a
                           >
@@ -193,7 +193,7 @@
               </a>
             </div>
 
-            <a class="header-tools__item" href="./account_wishlist.php">
+            <a class="header-tools__item" href="<?= BASE_URL ?>account_wishlist.php">
               <svg
                 width="20"
                 height="20"

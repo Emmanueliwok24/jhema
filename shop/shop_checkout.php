@@ -1,12 +1,12 @@
-﻿<?php include("includes/head.php"); ?>
-<?php include("includes/svg.php"); ?>
-<?php include("includes/mobile-header.php"); ?>
-<?php include("includes/header.php"); ?>
+﻿<?php include("../includes/head.php"); ?>
+<?php include("../includes/svg.php"); ?>
+<?php include("../includes/mobile-header.php"); ?>
+<?php include("../includes/header.php"); ?>
 
 
 
   <main class="position-relative">
-      <?php include("scroll_categories.php"); ?>
+      <?php include("../scroll_categories.php"); ?>
 
     <div class="mb-4 pb-4"></div>
     <section class="shop-checkout container">
@@ -237,29 +237,29 @@
   <div class="mb-5 pb-xl-5"></div>
 
 <!-- footer -->
-<?php include("includes/footer.php"); ?>
+<?php include("../includes/footer.php"); ?>
 
 <!-- End Footer Type 1 -->
-<?php include("includes/mobile-footer.php"); ?>
+<?php include("../includes/mobile-footer.php"); ?>
 
 <!-- form -->
-<?php include("includes/aside-form.php"); ?>
+<?php include("../includes/aside-form.php"); ?>
 
 
 
 <!-- aside cart -->
-<?php include("includes/cart-aside.php"); ?>
+<?php include("../includes/cart-aside.php"); ?>
 
 
 <!-- sitemap -->
-<?php include("includes/sitemap-nav.php"); ?>
+<?php include("../includes/sitemap-nav.php"); ?>
 
 
 
 
-<?php include("includes/scroll.php"); ?>
+<?php include("../includes/scroll.php"); ?>
 
 
 <!-- script footer -->
-<?php include("includes/script-footer.php"); ?>
+<?php include("../includes/script-footer.php"); ?>
 

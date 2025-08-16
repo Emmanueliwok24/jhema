@@ -17,7 +17,7 @@
         </a>
 
         <div class="logo">
-          <a href="./">
+          <a href="<?= BASE_URL ?>index.php">
             <img
               src="./images/logo.svg"
               alt="jhema"
@@ -106,7 +106,7 @@
             <ul class="navigation__list list-unstyled position-relative">
               <li class="navigation__item">
                 <a
-                  href="./"
+                  href="<?= BASE_URL ?>index.php"
                   class="navigation__link js-nav-right d-flex align-items-center"
                   >Home</a
                 >
@@ -120,7 +120,7 @@
                   <div class="sub-menu__wrapper position-absolute top-0 start-100 w-100 d-none">
                     <a href="#" class="navigation__link js-nav-left d-flex align-items-center border-bottom mb-2"><svg class="me-2" width="7" height="11" viewbox="0 0 7 11" xmlns="http://www.w3.org/2000/svg"><use href="#icon_prev_sm"></use></svg>Shop List</a>
                     <ul class="sub-menu__list list-unstyled">
-                      <li class="sub-menu__item"><a href="./shop.php" class="menu-link menu-link_us-s">Products </a></li>
+                      <li class="sub-menu__item"><a href="<?= BASE_URL ?>shop/shop.php" class="menu-link menu-link_us-s">Products </a></li>
 
                     </ul>
                   </div><!-- /.sub-menu__wrapper -->
@@ -135,14 +135,14 @@
 
 
               <li class="navigation__item">
-                <a href="./about.php" class="navigation__link">About</a>
+                <a href="<?= BASE_URL ?>about.php" class="navigation__link">About</a>
               </li>
 
               <li class="navigation__item">
-                <a href="./contact.php" class="navigation__link">Contact</a>
+                <a href="<?= BASE_URL ?>contact.php" class="navigation__link">Contact</a>
               </li>
               <li class="navigation__item">
-                <a href="./faq.php" class="navigation__link">FAQ</a>
+                <a href="<?= BASE_URL ?>faq.php" class="navigation__link">FAQ</a>
               </li>
             </ul>
             <!-- /.navigation__list -->

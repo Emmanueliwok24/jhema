@@ -68,10 +68,10 @@
           </span>
         </div>
         <!-- /.d-flex justify-content-between -->
-        <a href="<?= BASE_URL ?>shop_cart.php" class="btn btn-light mt-3 d-block"
+        <a href="<?= BASE_URL ?>shop/shop_cart.php" class="btn btn-light mt-3 d-block"
           >View Cart</a
         >
-        <a href="<?= BASE_URL ?>shop_checkout.php" class="btn btn-primary mt-3 d-block"
+        <a href="<?= BASE_URL ?>shop/shop_checkout.php" class="btn btn-primary mt-3 d-block"
           >Checkout</a
         >
       </div>

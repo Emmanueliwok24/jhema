@@ -152,12 +152,12 @@ $symbol = $curMap[$display]['symbol'] ?? '';
   <section class="shop-main container d-flex">
 
     <!-- shop sidebar -->
-    <?php include __DIR__ . '/../includes/shop/sidebar.php'; ?>
+    <?php include __DIR__ . '/./shop/sidebar.php'; ?>
 
     <div class="shop-list flex-grow-1">
 
       <!-- slide show -->
-      <?php include __DIR__ . '/../includes/shop/slideshow.php'; ?>
+      <?php include __DIR__ . '/./shop/slideshow.php'; ?>
 
       <!-- Active filter pills -->
       <div class="filters">
@@ -238,7 +238,7 @@ $symbol = $curMap[$display]['symbol'] ?? '';
                 <div class="swiper-container background-img js-swiper-slider" data-settings='{"resizeObserver": true}'>
                   <div class="swiper-wrapper">
                     <div class="swiper-slide">
-                      <a href="<?= BASE_URL ?>product.php?slug=<?= urlencode($p['slug']) ?>&cur=<?= urlencode($display) ?>">
+                      <a href="<?= BASE_URL ?>product-details.php?slug=<?= urlencode($p['slug']) ?>&cur=<?= urlencode($display) ?>">
                         <?php if ($imgUrl): ?>
                           <img src="<?= htmlspecialchars($imgUrl) ?>"
                                alt="<?= htmlspecialchars($p['name']) ?>"
@@ -262,7 +262,7 @@ $symbol = $curMap[$display]['symbol'] ?? '';
               <div class="pc__info position-relative px-2">
                 <p class="pc__category"><?= htmlspecialchars($p['cat_name'] ?? '') ?></p>
                 <h6 class="pc__title">
-                  <a href="<?= BASE_URL ?>product.php?slug=<?= urlencode($p['slug']) ?>&cur=<?= urlencode($display) ?>">
+                  <a href="<?= BASE_URL ?>product-details.php?slug=<?= urlencode($p['slug']) ?>&cur=<?= urlencode($display) ?>">
                     <?= htmlspecialchars($p['name']) ?>
                   </a>
                 </h6>

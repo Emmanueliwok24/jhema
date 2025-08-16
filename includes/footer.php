@@ -6,7 +6,7 @@
             <div class="logo">
               <a href="<?= BASE_URL ?>./">
                 <img
-                  src="./images/logo.svg"
+                  src="<?= BASE_URL ?>images/logo.svg"
                   alt="jhema"
                   class="logo__image d-block"
                 />

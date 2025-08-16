@@ -3,7 +3,7 @@
       <div class="container">
         <div class="header-desk header-desk_type_1">
           <div class="logo">
-            <a href="<?= BASE_URL ?>./">
+            <a href="<?= BASE_URL ?>">
               <img
                 src="<?= BASE_URL ?>images/logo.svg"
                 alt="jhema"
@@ -65,7 +65,7 @@
 
 
               <li class="navigation__item">
-                <a href="<?= BASE_URL ?><?= BASE_URL ?>about.php" class="navigation__link">About</a>
+                <a href="<?= BASE_URL ?>about.php" class="navigation__link">About</a>
               </li>
               <li class="navigation__item">
                 <a href="<?= BASE_URL ?>contact.php" class="navigation__link">Contact</a>

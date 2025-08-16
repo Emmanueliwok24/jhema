@@ -21,7 +21,7 @@
             <em>Manage Your Items List</em>
           </span>
         </a>
-        <a href="shop_checkout.php" class="checkout-steps__item active">
+        <a href="<?= BASE_URL ?>shop_checkout.php" class="checkout-steps__item active">
           <span class="checkout-steps__item-number">02</span>
           <span class="checkout-steps__item-title">
             <span>Shipping and Checkout</span>

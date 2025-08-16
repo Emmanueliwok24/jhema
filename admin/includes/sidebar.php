@@ -5,7 +5,7 @@
                 <div>
                     <div class="logo-wrapper logo-wrapper-center">
                         <a href="admin-dashboard.php" data-bs-original-title="" title="">
-                            <img class="img-fluid " style="max-width: 200px; filter: brightness(0) invert(1);" src="images/logo.svg" alt="logo">
+                            <img class="img-fluid " style="max-width: 100px; filter: brightness(0) invert(1);" src="../images/logo.svg" alt="logo">
                         </a>
                         <div class="back-btn">
                             <i class="fa fa-angle-left"></i>

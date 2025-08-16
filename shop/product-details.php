@@ -1,6 +1,6 @@
 ﻿<?php
-require_once __DIR__ . '/includes/config.php';
-require_once __DIR__ . '/includes/functions.php';
+require_once __DIR__ . '/../includes/config.php';
+require_once __DIR__ . '/../includes/functions.php';
 
 $slug = $_GET['slug'] ?? '';
 if ($slug === '') { header('Location: index.php'); exit; }
@@ -132,10 +132,10 @@ $hasColors = !empty($colors);
 
 
 
-<?php include("includes/head.php"); ?>
-<?php include("includes/svg.php"); ?>
-<?php include("includes/mobile-header.php"); ?>
-<?php include("includes/header.php"); ?>
+<?php include __DIR__ . '/../includes/head.php'; ?>
+<?php include __DIR__ . '/../includes/svg.php'; ?>
+<?php include __DIR__ . '/../includes/mobile-header.php'; ?>
+<?php include __DIR__ . '/../includes/header.php'; ?>
 
   <style>
     :root{ --lux-bg:#f6f3ee; --lux-card:#fff; --lux-ink:#0f0f0f; --lux-sub:#5b5b5b; --lux-line:#e7e1d8; }
@@ -173,7 +173,7 @@ $hasColors = !empty($colors);
 
 
   <main class="position-relative">
-      <?php include("scroll_categories.php"); ?>
+      <?php include("../scroll_categories.php"); ?>
 
     <div class="mb-md-1 pb-md-3"></div>
     <section class="product-single container">
@@ -185,7 +185,7 @@ $hasColors = !empty($colors);
                 <div class="swiper-wrapper">
                   <div class="swiper-slide product-single__image-item">
                      <?php if ($mainImage): ?>
-                      <img id="mainImage" loading="lazy" class="h-auto" src="<?= htmlspecialchars($mainImage) ?>" width="788" height="788" alt="<?= htmlspecialchars($product['name']) ?>">
+                      <img id="mainImage" loading="lazy" class="h-auto" src="<?= BASE_URL ?><?= htmlspecialchars($mainImage) ?>" width="788" height="788" alt="<?= htmlspecialchars($product['name']) ?>">
                       <?php else: ?>
                          <div class="text-center text-secondary">No Image</div>
             <?php endif; ?>
@@ -205,7 +205,7 @@ $hasColors = !empty($colors);
                   <!-- Add more swipes -->
               <div class="thumbrail border" id="thumbRail">
               <?php foreach ($thumbList as $i => $src): ?>
-                <img loading="lazy" class="h-auto" <?= $i===0?'class="active"':'' ?> src="<?= htmlspecialchars($src) ?>" data-src="<?= htmlspecialchars($src) ?>" height="104" alt="thumb">
+                <img loading="lazy" class="h-auto" <?= $i===0?'class="active"':'' ?> src="<?= BASE_URL ?><?= htmlspecialchars($src) ?>" data-src="<?= htmlspecialchars($src) ?>" height="104" alt="thumb">
               <?php endforeach; ?>
             </div>
           <?php endif; ?>
@@ -296,7 +296,7 @@ $hasColors = !empty($colors);
               <div id="sizeGrid" class="swatch-grid">
                 <?php foreach ($sizes as $s): $img = $sizeThumbs[$s] ?? $mainImage; ?>
                   <div class="swatch" data-size="<?= htmlspecialchars($s) ?>" data-image="<?= htmlspecialchars($img ?? '') ?>" role="button" aria-pressed="false">
-                    <?php if ($img): ?><img class="thumb" src="<?= htmlspecialchars($img) ?>" alt="<?= htmlspecialchars($s) ?>"><?php endif; ?>
+                    <?php if ($img): ?><img class="thumb" src="<?= BASE_URL ?><?= htmlspecialchars($img) ?>" alt="<?= htmlspecialchars($s) ?>"><?php endif; ?>
                     <span class="label"><?= htmlspecialchars($s) ?></span>
                   </div>
                 <?php endforeach; ?>
@@ -312,7 +312,7 @@ $hasColors = !empty($colors);
               <div id="colorGrid" class="swatch-grid">
                 <?php foreach ($colors as $c): $img = $colorThumbs[$c] ?? $mainImage; ?>
                   <div class="swatch" data-color="<?= htmlspecialchars($c) ?>" data-image="<?= htmlspecialchars($img ?? '') ?>" role="button" aria-pressed="false">
-                    <?php if ($img): ?><img class="thumb" src="<?= htmlspecialchars($img) ?>" alt="<?= htmlspecialchars($c) ?>" ><?php endif; ?>
+                    <?php if ($img): ?><img class="thumb" src="<?= BASE_URL ?><?= htmlspecialchars($img) ?>" alt="<?= htmlspecialchars($c) ?>" ><?php endif; ?>
                     <span class="label"><?= htmlspecialchars($c) ?></span>
                   </div>
                 <?php endforeach; ?>
@@ -562,46 +562,45 @@ $hasColors = !empty($colors);
 
 
     <!-- Related Product section -->
-    <?php include("includes/product/related-product.php"); ?>
+    <?php include("product/related-product.php"); ?>
 
-    <?php include("includes/product/size-guide.php"); ?>
+    <?php include("product/size-guide.php"); ?>
   </main>
 
   <div class="mb-5 pb-xl-5"></div>
   <!-- size guide MODAL -->
 
 <!-- footer -->
-<?php include("includes/footer.php"); ?>
+<?php include("../includes/footer.php"); ?>
 
 <!-- End Footer Type 1 -->
-<?php include("includes/mobile-footer.php"); ?>
+<?php include("../includes/mobile-footer.php"); ?>
 
 
 <!-- form -->
-<?php include("includes/aside-form.php"); ?>
+<?php include("../includes/aside-form.php"); ?>
 
 <!-- aside cart -->
-<?php include("includes/cart-aside.php"); ?>
+<?php include("../includes/cart-aside.php"); ?>
 
 
 
 <!-- sitemap -->
-<?php include("includes/sitemap-nav.php"); ?>
+<?php include("../includes/sitemap-nav.php"); ?>
 
 
 
 
-<?php include("includes/scroll.php"); ?>
+<?php include("../includes/scroll.php"); ?>
 
 
   <!-- Sizeguide -->
-<?php include("includes/product/sizeguide.php"); ?>
 
   <!-- Page Overlay -->
   <div class="page-overlay"></div><!-- /.page-overlay -->
 
 <!-- script footer -->
-<?php include("includes/script-footer.php"); ?>
+<?php include("../includes/script-footer.php"); ?>
 
 
   <script>

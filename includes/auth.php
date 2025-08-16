@@ -18,6 +18,7 @@ if (!function_exists('base_url')) {
         $base = rtrim((string)$base, '/');   // no trailing slash
         $path = ltrim($path, '/');           // no leading slash
         return $path === '' ? $base . '/' : $base . '/' . $path;
+        
     }
 }
 

@@ -1,0 +1,37 @@
+
+[2025-08-17T13:21:36+00:00] SAVE ERROR: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'type' in 'INSERT INTO'
+[2025-08-17T13:26:55+00:00] SAVE ERROR: Validation failed.
+[2025-08-17T14:22:53+00:00] PHP 2: include(C:\laragon\www\jhema\admin\products/../../includes/page-header.php): Failed to open stream: No such file or directory in C:\laragon\www\jhema\admin\products\add-product.php:349
+[17-Aug-2025 14:22:53 UTC] PHP Warning:  include(C:\laragon\www\jhema\admin\products/../../includes/page-header.php): Failed to open stream: No such file or directory in C:\laragon\www\jhema\admin\products\add-product.php on line 349
+[2025-08-17T14:22:53+00:00] PHP 2: include(): Failed opening 'C:\laragon\www\jhema\admin\products/../../includes/page-header.php' for inclusion (include_path='.;C:/laragon/etc/php/pear') in C:\laragon\www\jhema\admin\products\add-product.php:349
+[17-Aug-2025 14:22:53 UTC] PHP Warning:  include(): Failed opening 'C:\laragon\www\jhema\admin\products/../../includes/page-header.php' for inclusion (include_path='.;C:/laragon/etc/php/pear') in C:\laragon\www\jhema\admin\products\add-product.php on line 349
+[2025-08-17T14:22:53+00:00] PHP 2: include(C:\laragon\www\jhema\admin\products/../../includes/sidebar.php): Failed to open stream: No such file or directory in C:\laragon\www\jhema\admin\products\add-product.php:351
+[17-Aug-2025 14:22:53 UTC] PHP Warning:  include(C:\laragon\www\jhema\admin\products/../../includes/sidebar.php): Failed to open stream: No such file or directory in C:\laragon\www\jhema\admin\products\add-product.php on line 351
+[2025-08-17T14:22:53+00:00] PHP 2: include(): Failed opening 'C:\laragon\www\jhema\admin\products/../../includes/sidebar.php' for inclusion (include_path='.;C:/laragon/etc/php/pear') in C:\laragon\www\jhema\admin\products\add-product.php:351
+[17-Aug-2025 14:22:53 UTC] PHP Warning:  include(): Failed opening 'C:\laragon\www\jhema\admin\products/../../includes/sidebar.php' for inclusion (include_path='.;C:/laragon/etc/php/pear') in C:\laragon\www\jhema\admin\products\add-product.php on line 351
+[2025-08-17T14:22:53+00:00] PHP 2: include(C:\laragon\www\jhema\admin\products/../../includes/logout.php): Failed to open stream: No such file or directory in C:\laragon\www\jhema\admin\products\add-product.php:772
+[17-Aug-2025 14:22:53 UTC] PHP Warning:  include(C:\laragon\www\jhema\admin\products/../../includes/logout.php): Failed to open stream: No such file or directory in C:\laragon\www\jhema\admin\products\add-product.php on line 772
+[2025-08-17T14:22:53+00:00] PHP 2: include(): Failed opening 'C:\laragon\www\jhema\admin\products/../../includes/logout.php' for inclusion (include_path='.;C:/laragon/etc/php/pear') in C:\laragon\www\jhema\admin\products\add-product.php:772
+[17-Aug-2025 14:22:53 UTC] PHP Warning:  include(): Failed opening 'C:\laragon\www\jhema\admin\products/../../includes/logout.php' for inclusion (include_path='.;C:/laragon/etc/php/pear') in C:\laragon\www\jhema\admin\products\add-product.php on line 772
+[2025-08-17T14:22:53+00:00] PHP 2: include(C:\laragon\www\jhema\admin\products/../../includes/script-js.php): Failed to open stream: No such file or directory in C:\laragon\www\jhema\admin\products\add-product.php:773
+[17-Aug-2025 14:22:53 UTC] PHP Warning:  include(C:\laragon\www\jhema\admin\products/../../includes/script-js.php): Failed to open stream: No such file or directory in C:\laragon\www\jhema\admin\products\add-product.php on line 773
+[2025-08-17T14:22:53+00:00] PHP 2: include(): Failed opening 'C:\laragon\www\jhema\admin\products/../../includes/script-js.php' for inclusion (include_path='.;C:/laragon/etc/php/pear') in C:\laragon\www\jhema\admin\products\add-product.php:773
+[17-Aug-2025 14:22:53 UTC] PHP Warning:  include(): Failed opening 'C:\laragon\www\jhema\admin\products/../../includes/script-js.php' for inclusion (include_path='.;C:/laragon/etc/php/pear') in C:\laragon\www\jhema\admin\products\add-product.php on line 773
+[2025-08-17T14:26:25+00:00] PHP 2: include(C:\laragon\www\jhema\admin\products/../../includes/logout.php): Failed to open stream: No such file or directory in C:\laragon\www\jhema\admin\products\add-product.php:774
+[17-Aug-2025 14:26:25 UTC] PHP Warning:  include(C:\laragon\www\jhema\admin\products/../../includes/logout.php): Failed to open stream: No such file or directory in C:\laragon\www\jhema\admin\products\add-product.php on line 774
+[2025-08-17T14:26:25+00:00] PHP 2: include(): Failed opening 'C:\laragon\www\jhema\admin\products/../../includes/logout.php' for inclusion (include_path='.;C:/laragon/etc/php/pear') in C:\laragon\www\jhema\admin\products\add-product.php:774
+[17-Aug-2025 14:26:25 UTC] PHP Warning:  include(): Failed opening 'C:\laragon\www\jhema\admin\products/../../includes/logout.php' for inclusion (include_path='.;C:/laragon/etc/php/pear') in C:\laragon\www\jhema\admin\products\add-product.php on line 774
+[2025-08-17T14:26:25+00:00] PHP 2: include(C:\laragon\www\jhema\admin\products/../../includes/script-js.php): Failed to open stream: No such file or directory in C:\laragon\www\jhema\admin\products\add-product.php:775
+[17-Aug-2025 14:26:25 UTC] PHP Warning:  include(C:\laragon\www\jhema\admin\products/../../includes/script-js.php): Failed to open stream: No such file or directory in C:\laragon\www\jhema\admin\products\add-product.php on line 775
+[2025-08-17T14:26:25+00:00] PHP 2: include(): Failed opening 'C:\laragon\www\jhema\admin\products/../../includes/script-js.php' for inclusion (include_path='.;C:/laragon/etc/php/pear') in C:\laragon\www\jhema\admin\products\add-product.php:775
+[17-Aug-2025 14:26:25 UTC] PHP Warning:  include(): Failed opening 'C:\laragon\www\jhema\admin\products/../../includes/script-js.php' for inclusion (include_path='.;C:/laragon/etc/php/pear') in C:\laragon\www\jhema\admin\products\add-product.php on line 775
+[2025-08-17T15:10:52+00:00] SAVE ERROR: Validation failed.
+[2025-08-17T15:12:53+00:00] SAVE ERROR: SQLSTATE[23000]: Integrity constraint violation: 1062 Duplicate entry 'classicfit-premium-t-shirt-ja-001' for key 'slug'
+[2025-08-17T15:24:19+00:00] SAVE ERROR: SQLSTATE[23000]: Integrity constraint violation: 1062 Duplicate entry 'classicfit-premium-t-shirt-ja-001' for key 'slug'
+[2025-08-17T21:19:28+00:00] SAVE ERROR: Validation: Product Name is required. | SKU is required. | Valid Base Price is required. | Valid Weight (kg) is required. | Main product image is required.
+[2025-08-17T21:26:44+00:00] SAVE ERROR: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'updated_at' in 'INSERT INTO'
+[18-Aug-2025 22:10:26 UTC] Product update error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'updated_at' in 'INSERT INTO'
+[19-Aug-2025 18:33:27 UTC] Product creation error: Main product image is required.
+[19-Aug-2025 18:33:48 UTC] Product creation error: Main product image is required.
+[19-Aug-2025 20:27:11 UTC] Product creation error: SQLSTATE[23000]: Integrity constraint violation: 1062 Duplicate entry 'JA-009' for key 'sku'
+[19-Aug-2025 20:27:46 UTC] Product creation error: SQLSTATE[23000]: Integrity constraint violation: 1062 Duplicate entry 'JA-009' for key 'sku'

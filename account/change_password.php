@@ -1,10 +1,13 @@
 <?php
+// account/change_password.php
+// *** NO WHITESPACE OR BOM ABOVE THIS LINE ***
+
 require_once __DIR__ . '/../includes/config.php';
-require_once __DIR__ . '/../includes/db.php';
-require_once __DIR__ . '/../includes/auth.php';
+require_once __DIR__ . '/../includes/db.php';         // keep if you use it elsewhere
+require_once __DIR__ . '/../includes/auth.php';       // require_user(), csrf_*
 require_once __DIR__ . '/../includes/userfunctions.php';
 
-requireAuth();
+require_user();
 
 $notice = $error = null;
 

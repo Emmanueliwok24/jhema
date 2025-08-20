@@ -1,13 +1,17 @@
 ﻿<?php
 // account/auth.php
-require_once __DIR__ . '/../includes/config.php';
-require_once __DIR__ . '/../includes/auth.php';
-require_once __DIR__ . '/../includes/userfunctions.php';
+// *** NO WHITESPACE OR BOM ABOVE THIS LINE ***
 
-requireGuest(); // if already logged in, send them to dashboard
+require_once __DIR__ . '/../includes/config.php';
+require_once __DIR__ . '/../includes/auth.php';           // require_guest(), csrf_*
+require_once __DIR__ . '/../includes/userfunctions.php';
+require_once __DIR__ . '/../includes/mail.php';
+require_once __DIR__ . '/../includes/mail_templates.php';
+
+require_guest(); // if already logged in, send them to dashboard
 
 // Keep $baseUrl (with trailing slash) from config.php
-$baseUrl = rtrim($baseUrl ?? '', '/') . '/';
+$baseUrl = rtrim($baseUrl ?? (defined('BASE_URL') ? BASE_URL : ''), '/') . '/';
 
 // Set active tab from query (?tab=login|register), default login
 $activeTab = ($_GET['tab'] ?? 'login') === 'register' ? 'register' : 'login';
@@ -48,6 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (!$loginErrors) {
             $user = find_user_by_email($pdo, $email);
             if ($user && verify_password($pass, $user['password_hash'])) {
+                // this login_user() is from includes/userfunctions.php and sets session keys
                 login_user($user);
                 record_login_time($pdo, (int)$user['id']);
 
@@ -68,12 +73,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($first === '' || $last === '') $registerErrors[] = 'First and last name are required.';
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) $registerErrors[] = 'Enter a valid email.';
         if (strlen($pass) < 8) $registerErrors[] = 'Password must be at least 8 characters.';
-
         if (!$registerErrors) {
             if (find_user_by_email($pdo, $email)) {
                 $registerErrors[] = 'That email is already registered.';
             } else {
                 $userId = create_user($pdo, $first, $last, $email, $pass);
+
+                // Welcome email (non-blocking)
+                try {
+                    [$html, $alt] = jhema_welcome_email($first, $baseUrl);
+                    @send_mail($email, 'Welcome to Jhema ✨', $html, $alt);
+                } catch (Throwable $e) { error_log('[WELCOME_EMAIL] '.$e->getMessage()); }
+
                 header('Location: ' . $baseUrl . 'account/auth.php?tab=login&registered=1' . $redirectParam);
                 exit;
             }
@@ -148,7 +159,7 @@ function isShow($tab, $active)   { return $tab === $active ? 'show active' : '';
 
             <div class="customer-option mt-4 text-center">
               <span class="text-secondary">No account yet?</span>
-              <a href="#register-tab" class="btn-text" data-bs-toggle="tab" onclick="document.getElementById('register-tab').click();">Create Account</a>
+              <a href="#tab-item-register" class="btn-text" data-bs-toggle="tab" onclick="document.getElementById('register-tab').click();">Create Account</a>
             </div>
           </form>
         </div>

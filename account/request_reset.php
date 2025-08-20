@@ -1,7 +1,9 @@
 <?php
 // account/request_reset.php
+// *** NO WHITESPACE OR BOM ABOVE THIS LINE ***
+
 require_once __DIR__ . '/../includes/config.php';
-require_once __DIR__ . '/../includes/auth.php';          // gives base_url(), csrf_*
+require_once __DIR__ . '/../includes/auth.php';          // base_url(), csrf_*
 require_once __DIR__ . '/../includes/userfunctions.php';
 require_once __DIR__ . '/../includes/mail.php';
 
@@ -20,8 +22,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $user = find_user_by_email($pdo, $email);
         if ($user) {
             $token = create_password_reset($pdo, (int)$user['id']);
-
-            // Build absolute link using base_url() helper
             $link = base_url('account/reset_password.php') . '?token=' . urlencode($token);
 
             $html = "<p>Hello " . htmlspecialchars($user['first_name']) . ",</p>

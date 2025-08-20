@@ -1,773 +1,500 @@
 ﻿<?php
+// shop/product-details.php
+// *** NO WHITESPACE OR BOM ABOVE THIS LINE ***
+
 require_once __DIR__ . '/../includes/config.php';
 require_once __DIR__ . '/../includes/functions.php';
 
-$slug = $_GET['slug'] ?? '';
-if ($slug === '') { header('Location: index.php'); exit; }
+$slug = isset($_GET['slug']) ? (string)$_GET['slug'] : '';
+if ($slug === '') {
+    header('Location: ' . rtrim(BASE_URL, '/') . '/shop/shop.php');
+    exit;
+}
 
-/* Currencies */
-list($currencies, $baseCode) = get_currencies($pdo);
-$curMap = []; foreach ($currencies as $c) $curMap[$c['code']] = $c;
+/* ---- Currency context ---- */
+if (!function_exists('get_currencies')) {
+    function get_currencies(PDO $pdo): array {
+        try {
+            $rows = $pdo->query("
+                SELECT code, symbol, is_base, rate_to_base
+                FROM currencies
+            ")->fetchAll(PDO::FETCH_ASSOC) ?: [];
+        } catch (Throwable $e) {
+            $rows = $pdo->query("
+                SELECT code, is_base
+                FROM currencies
+            ")->fetchAll(PDO::FETCH_ASSOC) ?: [];
+            foreach ($rows as &$r) { $r['symbol']=null; $r['rate_to_base']=1; }
+        }
+        $base = null;
+        foreach ($rows as $r) { if (!empty($r['is_base'])) { $base=$r['code']; break; } }
+        if (!$base) { $base = $rows[0]['code'] ?? 'NGN'; }
+        if (!$rows) { $rows = [['code'=>'NGN','symbol'=>'₦','is_base'=>1,'rate_to_base'=>1]]; $base='NGN'; }
+        return [$rows, $base];
+    }
+}
+[$currencies, $baseCode] = get_currencies($pdo);
+$curMap = []; foreach ($currencies as $c) { $curMap[$c['code']] = $c; }
+$display = isset($_GET['cur']) ? strtoupper((string)$_GET['cur']) : $baseCode;
+if (empty($curMap[$display])) $display = $baseCode;
 
-$display = isset($_GET['cur']) ? strtoupper($_GET['cur']) : $baseCode;
-if (!isset($curMap[$display])) $display = $baseCode;
-
-/* Product */
+/* ---- Product + images/featured (include typed weight) ---- */
 $stmt = $pdo->prepare("
-  SELECT p.*, c.name AS cat_name, c.slug AS cat_slug
+  SELECT
+    p.*,
+    p.weight_kg_tmp,      -- exact text, show this every time
+    c.name AS cat_name,
+    c.slug AS cat_slug,
+    COALESCE(
+      (SELECT pv.image_path FROM product_variants pv WHERE pv.id = p.featured_variant_id AND pv.image_path IS NOT NULL LIMIT 1),
+      (SELECT pi.image_path FROM product_images pi  WHERE pi.id = p.featured_image_id  AND pi.image_path IS NOT NULL LIMIT 1),
+      NULLIF(p.image_path, ''),
+      (SELECT pi2.image_path FROM product_images pi2 WHERE pi2.product_id = p.id AND pi2.image_path IS NOT NULL ORDER BY pi2.is_main DESC, pi2.sort_order ASC, pi2.id ASC LIMIT 1)
+    ) AS featured_image
   FROM products p
   LEFT JOIN categories c ON c.id = p.category_id
   WHERE p.slug = ?
+  LIMIT 1
 ");
 $stmt->execute([$slug]);
-$product = $stmt->fetch();
-if (!$product) { header('Location: index.php'); exit; }
+$product = $stmt->fetch(PDO::FETCH_ASSOC);
+if (!$product) {
+    header('Location: ' . rtrim(BASE_URL, '/') . '/shop/shop.php');
+    exit;
+}
 $product_id = (int)$product['id'];
 
-/* Product attributes (JHEMA chips) */
+/* ---- Attributes (optional) ---- */
 $attrStmt = $pdo->prepare("
-  SELECT at.code, a.value
-  FROM product_attributes pa
-  JOIN attributes a ON a.id = pa.attribute_id
-  JOIN attribute_types at ON at.id = a.type_id
-  WHERE pa.product_id = ?
-  ORDER BY at.code, a.value
+    SELECT t.code AS type_code, a.value
+    FROM product_attributes pa
+    JOIN attributes a ON a.id = pa.attribute_id
+    JOIN attribute_types t ON t.id = a.type_id
+    WHERE pa.product_id = ?
+    ORDER BY t.code, a.value
 ");
 $attrStmt->execute([$product_id]);
 $attrRows = $attrStmt->fetchAll(PDO::FETCH_ASSOC);
 $attrByType = ['occasion'=>[], 'length'=>[], 'style'=>[]];
-foreach ($attrRows as $r) { $attrByType[$r['code']][] = $r['value']; }
-
-/* Variants (with image_path) */
-$stmt = $pdo->prepare("
-  SELECT size, color, price_override, stock, image_path
-  FROM product_variants
-  WHERE product_id = ?
-");
-$stmt->execute([$product_id]);
-$variants = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-/* Unique sizes/colors */
-$sizes = []; $colors = [];
-foreach ($variants as $v) {
-  if (!empty($v['size']))  $sizes[$v['size']]  = true;
-  if (!empty($v['color'])) $colors[$v['color']] = true;
+foreach ($attrRows as $r) {
+  $code = strtolower((string)$r['type_code']);
+  if (isset($attrByType[$code])) $attrByType[$code][] = (string)$r['value'];
 }
-$sizes  = array_values(array_keys($sizes));
-$colors = array_values(array_keys($colors));
 
-/* Price/stock/image map: keys "size|color", "size|", "|color" */
-$map = [];
+/* ---- Variants: SIZES ONLY (each with optional own price/image/stock) ---- */
+$vstmt = $pdo->prepare("
+  SELECT id, size, price, stock, image_path
+  FROM product_variants
+  WHERE product_id = ? AND (type = 'size' OR type IS NULL)
+  ORDER BY id ASC
+");
+$vstmt->execute([$product_id]);
+$variants = $vstmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
+
+/* Build size list and size->variant map */
+$sizes = [];
+$variantMap = []; // key: size string
 foreach ($variants as $v) {
-  $k = ($v['size'] ?? '') . '|' . ($v['color'] ?? '');
-  $map[$k] = [
-    'price' => (float)$v['price_override'],
+  $size = trim((string)($v['size'] ?? ''));
+  if ($size === '') continue;
+  $sizes[$size] = true;
+  $variantMap[$size] = [
+    'price' => ($v['price'] !== null && $v['price'] !== '') ? (float)$v['price'] : (float)($product['base_price'] ?? 0),
     'stock' => isset($v['stock']) ? (int)$v['stock'] : null,
-    'image' => $v['image_path'] ?: null
+    'image' => $v['image_path'] ?: null,
+    'id'    => (int)$v['id']
   ];
 }
+$sizes = array_keys($sizes);
 
-/* Main image & swatch thumbnails */
-$mainImage = $product['image_path'] ?: null;
-
-/* Build representative image per size/color for swatches */
-$sizeThumbs = [];
-foreach ($sizes as $s) {
-  $img = $map["{$s}|"]['image'] ?? null;
-  if (!$img) {
-    foreach ($colors as $c) {
-      if (!empty($map["{$s}|{$c}"]['image'])) { $img = $map["{$s}|{$c}"]['image']; break; }
-    }
+/* ---- Image list ---- */
+$mainRel = $product['featured_image'] ?: ($product['image_path'] ?: null);
+$gi = $pdo->prepare("SELECT id, image_path FROM product_images WHERE product_id = ? ORDER BY is_main DESC, sort_order ASC, id ASC");
+$gi->execute([$product_id]);
+$galleryRel = $gi->fetchAll(PDO::FETCH_ASSOC) ?: [];
+$mainAbs = $mainRel ? product_image_url($mainRel) : null;
+$galleryAbs = array_map(fn($img)=> product_image_url($img['image_path']), $galleryRel);
+$slideImages = [];
+if ($mainAbs) $slideImages[] = $mainAbs;
+foreach ($galleryAbs as $img) if ($img && !in_array($img, $slideImages, true)) $slideImages[] = $img;
+foreach ($variantMap as $variant) {
+  if ($variant['image']) {
+    $img = product_image_url($variant['image']);
+    if ($img && !in_array($img, $slideImages, true)) $slideImages[] = $img;
   }
-  $sizeThumbs[$s] = $img ?: $mainImage;
 }
 
-$colorThumbs = [];
-foreach ($colors as $c) {
-  $img = $map["|{$c}"]['image'] ?? null;
-  if (!$img) {
-    foreach ($sizes as $s) {
-      if (!empty($map["{$s}|{$c}"]['image'])) { $img = $map["{$s}|{$c}"]['image']; break; }
-    }
-  }
-  $colorThumbs[$c] = $img ?: $mainImage;
+/* ---- JS data (sizes only) ---- */
+$jsVariantMap = [];
+foreach ($variantMap as $size=>$variant) {
+  $jsVariantMap[$size] = [
+    'price'=>$variant['price'],
+    'stock'=>$variant['stock'],
+    'image'=>$variant['image'] ? product_image_url($variant['image']) : null,
+    'id'=>$variant['id']
+  ];
 }
-
-/* Thumb rail: main + any unique variant images */
-$thumbs = [];
-if ($mainImage) $thumbs[$mainImage] = true;
-foreach ($map as $info) {
-  if (!empty($info['image'])) $thumbs[$info['image']] = true;
-}
-$thumbList = array_keys($thumbs);
-
-/* JS payloads */
-$jsMap        = json_encode($map, JSON_UNESCAPED_UNICODE);
-$jsBasePrice  = (float)$product['base_price'];
-$jsDisplay    = $display;
-$jsBaseCode   = $product['base_currency_code'];
-$jsMainImage  = $mainImage ?: '';
-
-$rates = []; $symbols = [];
-foreach ($currencies as $c) { $rates[$c['code']] = (float)$c['rate_to_base']; $symbols[$c['code']] = $c['symbol']; }
-$jsRates   = json_encode($rates, JSON_UNESCAPED_UNICODE);
-$jsSymbols = json_encode($symbols, JSON_UNESCAPED_UNICODE);
-$jsThumbs  = json_encode($thumbList, JSON_UNESCAPED_UNICODE);
-
-/* Optional default size chart (CM) */
-$sizeChart = [
-  ['label'=>'XS','bust'=>80,'waist'=>62,'hips'=>86],
-  ['label'=>'S', 'bust'=>84,'waist'=>66,'hips'=>90],
-  ['label'=>'M', 'bust'=>88,'waist'=>70,'hips'=>94],
-  ['label'=>'L', 'bust'=>94,'waist'=>76,'hips'=>100],
-  ['label'=>'XL','bust'=>100,'waist'=>82,'hips'=>106],
-  ['label'=>'XXL','bust'=>106,'waist'=>88,'hips'=>112],
+$jsData = [
+  'variantMap'      => $jsVariantMap,
+  'basePrice'       => (float)($product['base_price'] ?? 0),
+  'baseCurrency'    => (string)($product['base_currency_code'] ?? 'NGN'),
+  'displayCurrency' => $display,
+  'currencies'      => $curMap,
+  'slides'          => $slideImages,
+  'hasSizes'        => !empty($sizes),
 ];
-$jsSizeChart = json_encode($sizeChart, JSON_UNESCAPED_UNICODE);
 
-/* Has dimensions? */
-$hasSizes  = !empty($sizes);
-$hasColors = !empty($colors);
+include __DIR__ . '/../includes/head.php';
+include __DIR__ . '/../includes/svg.php';
+include __DIR__ . '/../includes/mobile-header.php';
+include __DIR__ . '/../includes/header.php';
+
+/* helper: show minimal numeric string (fallback when no typed weight) */
+$min_num_str = function($n): string {
+  $s = rtrim(rtrim(number_format((float)$n, 6, '.', ''), '0'), '.');
+  return ($s === '') ? '0' : $s;
+};
 ?>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightslider@1.1.6/dist/css/lightslider.min.css"/>
 
+<style>
+  :root { --lux-bg:#f6f3ee; --lux-card:#fff; --lux-ink:#0f0f0f; --lux-sub:#5b5b5b; --lux-line:#e7e1d8; }
+  body { color: var(--lux-ink); -webkit-font-smoothing: antialiased; }
+  .lux-hr { border-top:1px solid var(--lux-line); opacity:1; }
+  .muted { color:var(--lux-sub); }
+  .price { font-size:2rem; font-weight:800; }
+  .imgbox { background:#faf7f2; border:1px solid var(--lux-line); border-radius:16px; overflow:hidden; }
+  .imgbox .lslide img { width:100%; height:auto; object-fit:contain; }
+  .lSSlideOuter { border-radius:16px; }
+  .lSSlideOuter .lSPager.lSGallery li { border:1px solid var(--lux-line); border-radius:12px; overflow:hidden; background:#fff; }
+  .lSSlideOuter .lSPager.lSGallery li.active { outline:2px solid #111; }
+  .swatch-grid { display:flex; flex-wrap:wrap; gap:.75rem; }
+  .swatch { display:flex; align-items:center; gap:.5rem; padding:.4rem .55rem; border:1px solid var(--lux-line); border-radius:9999px; background:#fff; cursor:pointer; }
+  .swatch.active { border-color:#111; box-shadow:0 0 0 2px rgba(17,17,17,.08) inset; }
+  .swatch.disabled { opacity:.45; filter:grayscale(30%); pointer-events:none; }
+  .swatch .thumb { width:34px; height:34px; border-radius:8px; border:1px solid var(--lux-line); object-fit:cover; flex-shrink:0; }
+  .chips { display:flex; gap:8px; flex-wrap:wrap; }
+  .chip { background:#f1f1f1; border-radius:9999px; padding:4px 10px; font-size:.8rem; }
+</style>
 
+<main class="position-relative product-details">
+  <?php include __DIR__ . '/../scroll_categories.php'; ?>
 
-<?php include __DIR__ . '/../includes/head.php'; ?>
-<?php include __DIR__ . '/../includes/svg.php'; ?>
-<?php include __DIR__ . '/../includes/mobile-header.php'; ?>
-<?php include __DIR__ . '/../includes/header.php'; ?>
+  <div class="mb-md-1 pb-md-3"></div>
 
-  <style>
-    :root{ --lux-bg:#f6f3ee; --lux-card:#fff; --lux-ink:#0f0f0f; --lux-sub:#5b5b5b; --lux-line:#e7e1d8; }
-    body{color:var(--lux-ink);-webkit-font-smoothing:antialiased}
-    .lux-card{background:var(--lux-card);border:1px solid var(--lux-line);border-radius:18px;box-shadow:0 6px 24px rgba(17,17,17,.04)}
-    .lux-hr{border-top:1px solid var(--lux-line);opacity:1}
-    .lux-brand{letter-spacing:.06em;text-transform:uppercase;font-weight:700}
-    .btn-ghost{background:#fff;color:#111;border:1px solid var(--lux-line);border-radius:9999px}
-    .btn-lux{background:#111;color:#fff;border:1px solid #111;border-radius:9999px}
-    .btn-lux:hover{background:#000}
-    .muted{color:var(--lux-sub)}
-    .price{font-size:2rem;font-weight:800}
-    .imgbox{background:#faf7f2;border:1px solid var(--lux-line);border-radius:16px;display:flex;align-items:center;justify-content:center;aspect-ratio:1/1}
-    .imgbox img{max-width:100%;max-height:100%;object-fit:contain}
-    .thumbrail img{width:72px;height:72px;object-fit:cover;border-radius:12px;border:1px solid var(--lux-line);cursor:pointer;background:#fff}
-    .thumbrail .active{outline:2px solid #111}
-    .swatch-grid{display:flex;flex-wrap:wrap;gap:.75rem}
-    .swatch{
-      display:flex; align-items:center; gap:.5rem; padding:.4rem .55rem;
-      border:1px solid var(--lux-line); border-radius:9999px; background:#fff;
-      cursor:pointer; transition: box-shadow .12s ease, border-color .12s ease; user-select:none;
-    }
-    .swatch:hover{box-shadow:0 6px 18px rgba(17,17,17,.06)}
-    .swatch.active{border-color:#111; box-shadow:0 0 0 2px rgba(17,17,17,.08) inset}
-    .swatch.disabled{opacity:.45;filter:grayscale(30%);pointer-events:none}
-    .swatch .thumb{width:34px;height:34px;border-radius:8px;border:1px solid var(--lux-line);background:#fff;object-fit:cover;flex-shrink:0}
-    .swatch .label{font-weight:600;letter-spacing:.02em}
-    .chips{display:flex;gap:8px;flex-wrap:wrap}
-    .chip{background:#f1f1f1;border-radius:9999px;padding:4px 10px;font-size:.8rem}
-    .pill{display:inline-block;padding:.35rem .75rem;border:1px solid var(--lux-line);border-radius:9999px}
-    .chart-table thead th{background:#faf7f2;border-bottom:1px solid var(--lux-line);text-transform:uppercase;font-size:.78rem;letter-spacing:.06em;color:#3a3a3a}
-    .chart-table td, .chart-table th{border-color:var(--lux-line)}
-    .unit-toggle .btn{border-radius:9999px}
-  </style>
-
-
-  <main class="position-relative">
-      <?php include("../scroll_categories.php"); ?>
-
-    <div class="mb-md-1 pb-md-3"></div>
-    <section class="product-single container">
-      <div class="row">
-        <div class="col-lg-7">
-          <div class="product-single__media" data-media-type="horizontal-thumbnail">
-            <div class="product-single__image">
-              <div class="swiper-container">
-                <div class="swiper-wrapper">
-                  <div class="swiper-slide product-single__image-item">
-                     <?php if ($mainImage): ?>
-                      <img id="mainImage" loading="lazy" class="h-auto" src="<?= BASE_URL ?><?= htmlspecialchars($mainImage) ?>" width="788" height="788" alt="<?= htmlspecialchars($product['name']) ?>">
-                      <?php else: ?>
-                         <div class="text-center text-secondary">No Image</div>
-            <?php endif; ?>
-
-                  </div>
-                 <!-- ADD more swipe -->
-
-                </div>
-
-              </div>
+  <section class="product-single container">
+    <div class="row">
+      <!-- Product Images -->
+      <div class="col-lg-7">
+        <div class="product-single__media">
+          <?php if (!empty($slideImages)): ?>
+            <ul id="productGallery" class="imgbox lightSlider">
+              <?php foreach ($slideImages as $img): ?>
+                <li data-thumb="<?= htmlspecialchars($img) ?>">
+                  <img loading="lazy" src="<?= htmlspecialchars($img) ?>" alt="<?= htmlspecialchars($product['name'] ?? '') ?>">
+                </li>
+              <?php endforeach; ?>
+            </ul>
+          <?php else: ?>
+            <div class="imgbox d-flex align-items-center justify-content-center" style="aspect-ratio:1/1">
+              <span class="text-secondary">No Image</span>
             </div>
-            <div class="product-single__thumbnail">
-              <div class="swiper-container">
-                <?php if ($thumbList): ?>
+          <?php endif; ?>
+        </div>
+      </div>
 
+      <!-- Product Info -->
+      <div class="col-lg-5">
+        <div class="d-flex justify-content-between mb-4 pb-md-2">
+          <div class="breadcrumb mb-0 d-none d-md-block flex-grow-1">
+            <a href="<?= htmlspecialchars(BASE_URL) ?>" class="menu-link menu-link_us-s text-uppercase fw-medium">Home</a>
+            <span class="breadcrumb-separator menu-link fw-medium ps-1 pe-1">/</span>
+            <a href="<?= htmlspecialchars(BASE_URL . 'shop/shop.php?cur=' . rawurlencode($display)) ?>" class="menu-link menu-link_us-s text-uppercase fw-medium">Shop</a>
+          </div>
+        </div>
 
-                  <!-- Add more swipes -->
-              <div class="thumbrail border" id="thumbRail">
-              <?php foreach ($thumbList as $i => $src): ?>
-                <img loading="lazy" class="h-auto" <?= $i===0?'class="active"':'' ?> src="<?= BASE_URL ?><?= htmlspecialchars($src) ?>" data-src="<?= htmlspecialchars($src) ?>" height="104" alt="thumb">
+        <div class="muted mb-1"><?= htmlspecialchars($product['cat_name'] ?? '') ?></div>
+        <h1 class="product-single__name"><?= htmlspecialchars($product['name'] ?? '') ?></h1>
+        <div class="muted">SKU: <?= htmlspecialchars($product['sku'] ?? '') ?></div>
+
+        <div class="row g-3 mt-3">
+          <div class="col-md-6">
+            <label class="form-label">Display Currency</label>
+            <select id="curSelect" class="form-select">
+              <?php foreach ($currencies as $c): ?>
+                <option value="<?= htmlspecialchars($c['code']) ?>" <?= $display === $c['code'] ? 'selected' : '' ?>>
+                  <?= htmlspecialchars($c['code']) ?>
+                </option>
+              <?php endforeach; ?>
+            </select>
+          </div>
+          <div class="col-md-6 d-flex align-items-end">
+            <div>
+              <div id="mainPrice" class="price"></div>
+              <div id="stockNote" class="muted small mt-1"></div>
+              <div class="muted small">Auto-updates with size &amp; currency.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="product-single__short-desc mt-3">
+          <?php if (!empty($attrByType['occasion'])): ?>
+            <div class="mt-2"><strong>Occasion:</strong> <span class="chips"><?php foreach ($attrByType['occasion'] as $v) echo '<span class="chip">' . htmlspecialchars($v) . '</span>'; ?></span></div>
+          <?php endif; ?>
+          <?php if (!empty($attrByType['length'])): ?>
+            <div class="mt-1"><strong>Length:</strong> <span class="chips"><?php foreach ($attrByType['length'] as $v) echo '<span class="chip">' . htmlspecialchars($v) . '</span>'; ?></span></div>
+          <?php endif; ?>
+          <?php if (!empty($attrByType['style'])): ?>
+            <div class="mt-1"><strong>Style:</strong> <span class="chips"><?php foreach ($attrByType['style'] as $v) echo '<span class="chip">' . htmlspecialchars($v) . '</span>'; ?></span></div>
+          <?php endif; ?>
+        </div>
+
+        <hr class="lux-hr my-4">
+
+        <?php if (!empty($sizes)): ?>
+          <div class="mb-3">
+            <div class="d-flex align-items-center justify-content-between mb-2">
+              <label class="form-label mb-0">Available Sizes</label>
+              <button type="button" class="btn btn-sizeguide-link text-decoration-underline" data-bs-toggle="modal" data-bs-target="#sizeGuide">Size Guide</button>
+            </div>
+            <div id="sizeGrid" class="swatch-grid">
+              <?php foreach ($sizes as $size):
+                  $v = $variantMap[$size] ?? null;
+                  $imgUrl = $v && $v['image'] ? product_image_url($v['image']) : $mainAbs;
+              ?>
+                <div class="swatch" data-size="<?= htmlspecialchars($size) ?>" data-image="<?= htmlspecialchars((string)$imgUrl) ?>" role="button" aria-pressed="false">
+                  <?php if ($imgUrl): ?><img class="thumb" src="<?= htmlspecialchars($imgUrl) ?>" alt="<?= htmlspecialchars($size) ?>"><?php endif; ?>
+                  <span class="label"><?= htmlspecialchars($size) ?></span>
+                </div>
               <?php endforeach; ?>
             </div>
-          <?php endif; ?>
-              </div>
-            </div>
           </div>
+        <?php endif; ?>
+
+        <!-- Add to cart area -->
+        <div class="product-single__addtocart d-flex align-items-center gap-3 mt-3">
+          <div class="qty-control position-relative">
+            <input type="number" name="quantity" value="1" min="1" step="1" class="qty-control__number js-qty text-center">
+            <div class="qty-control__reduce">-</div>
+            <div class="qty-control__increase">+</div>
+          </div>
+          <button type="button" class="btn btn-primary btn-addtocart js-open-aside" data-aside="cartDrawer">Add to Cart</button>
         </div>
-        <div class="col-lg-5">
-          <div class="d-flex justify-content-between mb-4 pb-md-2">
-            <div class="breadcrumb mb-0 d-none d-md-block flex-grow-1">
-              <a href="<?= BASE_URL ?>index.php" class="menu-link menu-link_us-s text-uppercase fw-medium">Home</a>
-              <span class="breadcrumb-separator menu-link fw-medium ps-1 pe-1">/</span>
-              <a href="#" class="menu-link menu-link_us-s text-uppercase fw-medium">The Shop</a>
-            </div><!-- /.breadcrumb -->
 
+        <div class="product-single__addtolinks mt-3">
+          <a href="#" class="menu-link menu-link_us-s add-to-wishlist">
+            <svg width="16" height="16" viewBox="0 0 20 20" fill="none"><use href="#icon_heart"></use></svg>
+            <span>Add to Wishlist</span>
+          </a>
+        </div>
 
-          </div>
-          <div class="muted mb-1"><?= htmlspecialchars($product['cat_name'] ?? '') ?></div>
-
-          <h1 class="product-single__name"><?= htmlspecialchars($product['name'] ?? '') ?></h1>
-          <div class="muted">SKU: <?= htmlspecialchars($product['sku']) ?></div>
-
-
-
-
-
-          <div class="row g-3 mt-3">
-            <div class="col-md-6">
-              <label class="form-label">Display Currency</label>
-              <select id="curSelect" class="form-select">
-                <?php foreach ($currencies as $c): ?>
-                  <option value="<?= htmlspecialchars($c['code']) ?>" <?= $display===$c['code']?'selected':'' ?>>
-                    <?= htmlspecialchars($c['code']) ?>
-                  </option>
-                <?php endforeach; ?>
-              </select>
-            </div>
-            <div class="col-md-6 d-flex align-items-end">
-              <div>
-                <div id="mainPrice" class="price"></div>
-                <div class="muted small">Auto-updates with selection & currency.</div>
-              </div>
-            </div>
-          </div>
-
-          <div class="product-single__short-desc">
-
-
-                              <!-- JHEMA chips -->
-          <?php if ($attrByType['occasion']): ?>
-            <div class="mt-2"><strong>Occasion:</strong> <span class="chips"><?php foreach ($attrByType['occasion'] as $v) echo '<span class="chip">'.htmlspecialchars($v).'</span>'; ?></span></div>
-          <?php endif; ?>
-          <?php if ($attrByType['length']): ?>
-            <div class="mt-1"><strong>Length:</strong> <span class="chips"><?php foreach ($attrByType['length'] as $v) echo '<span class="chip">'.htmlspecialchars($v).'</span>'; ?></span></div>
-          <?php endif; ?>
-          <?php if ($attrByType['style']): ?>
-            <div class="mt-1"><strong>Style:</strong> <span class="chips"><?php foreach ($attrByType['style'] as $v) echo '<span class="chip">'.htmlspecialchars($v).'</span>'; ?></span></div>
-          <?php endif; ?>
-          </div>
-
-
-          <!-- CART FORM AND COLOR/SIZE SELECTION -->
-          <form>
-            <!-- Product Details -->
-
-          <hr class="lux-hr my-4">
-
-
-      <div class="">
-
-
-
-
-
-
-
-
-          <!-- Available Sizes -->
-                    <?php $hasSizesBool = !empty($sizes); $hasColorsBool = !empty($colors); ?>
-
-          <?php if ($hasSizesBool): ?>
-            <div class="mb-3">
-              <div class="d-flex align-items-center justify-content-between mb-2">
-                <label class="form-label mb-0">Available Sizes</label>
-
-                <button type="button" class="btn btn-sizeguide-link text-decoration-underline" data-bs-toggle="modal" data-bs-target="#sizeGuide">Size Guide</button>
-              </div>
-              <div id="sizeGrid" class="swatch-grid">
-                <?php foreach ($sizes as $s): $img = $sizeThumbs[$s] ?? $mainImage; ?>
-                  <div class="swatch" data-size="<?= htmlspecialchars($s) ?>" data-image="<?= htmlspecialchars($img ?? '') ?>" role="button" aria-pressed="false">
-                    <?php if ($img): ?><img class="thumb" src="<?= BASE_URL ?><?= htmlspecialchars($img) ?>" alt="<?= htmlspecialchars($s) ?>"><?php endif; ?>
-                    <span class="label"><?= htmlspecialchars($s) ?></span>
-                  </div>
-                <?php endforeach; ?>
-              </div>
-            </div>
-          <?php endif; ?>
-
-          <!-- Available Colors -->
-          <div class="colors-section my-3">
-            <?php if ($hasColorsBool): ?>
-              <div class="mb-3">
-                <label class="form-label mb-2 section-title">Available Colors</label>
-              <div id="colorGrid" class="swatch-grid">
-                <?php foreach ($colors as $c): $img = $colorThumbs[$c] ?? $mainImage; ?>
-                  <div class="swatch" data-color="<?= htmlspecialchars($c) ?>" data-image="<?= htmlspecialchars($img ?? '') ?>" role="button" aria-pressed="false">
-                    <?php if ($img): ?><img class="thumb" src="<?= BASE_URL ?><?= htmlspecialchars($img) ?>" alt="<?= htmlspecialchars($c) ?>" ><?php endif; ?>
-                    <span class="label"><?= htmlspecialchars($c) ?></span>
-                  </div>
-                <?php endforeach; ?>
-              </div>
-            </div>
-          <?php endif; ?>
-          </div>
-<!-- ADD to cart section -->
-<div class="product-single__addtocart">
-      <div class="qty-control position-relative">
-        <input type="number" name="quantity" value="1" min="1" class="qty-control__number text-center">
-        <div class="qty-control__reduce">-</div>
-        <div class="qty-control__increase">+</div>
-      </div><!-- .qty-control -->
-      <button type="submit" class="btn btn-primary btn-addtocart js-open-aside" data-aside="cartDrawer">Add to Cart</button></div>
-
-            </div>
-            <div class="product-single__addtolinks">
-            <a href="#" class="menu-link menu-link_us-s add-to-wishlist"><svg width="16" height="16" viewbox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><use href="#icon_heart"></use></svg><span>Add to Wishlist</span></a>
-            <share-button class="share-button">
-              <button class="menu-link menu-link_us-s to-share border-0 bg-transparent d-flex align-items-center">
-                <svg width="16" height="19" viewbox="0 0 16 19" fill="none" xmlns="http://www.w3.org/2000/svg"><use href="#icon_sharing"></use></svg>
-                <span>Share</span>
-              </button>
-              <details id="Details-share-template__main" class="m-1 xl:m-1.5" hidden="">
-                <summary class="btn-solid m-1 xl:m-1.5 pt-3.5 pb-3 px-5">+</summary>
-                <div id="Article-share-template__main" class="share-button__fallback flex items-center absolute top-full left-0 w-full px-2 py-4 bg-container shadow-theme border-t z-10">
-                  <div class="field grow mr-4">
-                    <label class="field__label sr-only" for="url">Link</label>
-                    <input type="text" class="field__input w-full" id="url" value="https://uomo-crystal.myshopify.com/blogs/news/go-to-wellness-tips-for-mental-health" placeholder="Link" onclick="this.select();" readonly="">
-                  </div>
-                  <button class="share-button__copy no-js-hidden">
-                    <svg class="icon icon-clipboard inline-block mr-1" width="11" height="13" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" viewbox="0 0 11 13">
-                      <path fill-rule="evenodd" clip-rule="evenodd" d="M2 1a1 1 0 011-1h7a1 1 0 011 1v9a1 1 0 01-1 1V1H2zM1 2a1 1 0 00-1 1v9a1 1 0 001 1h7a1 1 0 001-1V3a1 1 0 00-1-1H1zm0 10V3h7v9H1z" fill="currentColor"></path>
-                    </svg>
-                    <span class="sr-only">Copy link</span>
-                  </button>
-                </div>
-              </details>
-            </share-button>
-            <script src="js/details-disclosure.js" defer="defer"></script>
-            <script src="js/share.js" defer="defer"></script>
-          </div>
-          <div class="product-single__meta-info">
-            <div class="meta-item">
-              <label>SKU:</label>
-              <span>N/A</span>
-            </div>
-            <div class="meta-item">
-              <label>Categories:</label>
-              <span>Casual & Urban Wear, Jackets, Men</span>
-            </div>
-            <div class="meta-item">
-              <label>Tags:</label>
-              <span>biker, black, bomber, leather</span>
-            </div>
-          </div>
-
+        <div class="product-single__meta-info mt-3">
+          <div class="meta-item"><label>SKU:</label> <span><?= htmlspecialchars($product['sku'] ?? 'N/A') ?></span></div>
+          <div class="meta-item"><label>Category:</label> <span><?= htmlspecialchars($product['cat_name'] ?? '') ?></span></div>
         </div>
       </div>
+    </div>
 
+    <!-- Tabs -->
+    <div class="product-single__details-tab mt-5">
+      <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item" role="presentation">
+          <a class="nav-link nav-link_underscore active" id="tab-description-tab" data-bs-toggle="tab" href="#tab-description" role="tab" aria-controls="tab-description" aria-selected="true">Description</a>
+        </li>
+        <li class="nav-item" role="presentation">
+          <a class="nav-link nav-link_underscore" id="tab-additional-info-tab" data-bs-toggle="tab" href="#tab-additional-info" role="tab" aria-controls="tab-additional-info" aria-selected="false">Additional Information</a>
+        </li>
+        <li class="nav-item" role="presentation">
+          <a class="nav-link nav-link_underscore" id="tab-reviews-tab" data-bs-toggle="tab" href="#tab-reviews" role="tab" aria-controls="tab-reviews" aria-selected="false">Reviews</a>
+        </li>
+      </ul>
 
-        </div>
-      </div>
-
-
-
-
-
-
-
-
-
-              <!-- cart and checkout -->
-
-
-          </form>
-
-
-
-      <div class="product-single__details-tab">
-        <ul class="nav nav-tabs" id="myTab" role="tablist">
-          <li class="nav-item" role="presentation">
-            <a class="nav-link nav-link_underscore active" id="tab-description-tab" data-bs-toggle="tab" href="#tab-description" role="tab" aria-controls="tab-description" aria-selected="true">Description</a>
-          </li>
-          <li class="nav-item" role="presentation">
-            <a class="nav-link nav-link_underscore" id="tab-additional-info-tab" data-bs-toggle="tab" href="#tab-additional-info" role="tab" aria-controls="tab-additional-info" aria-selected="false">Additional Information</a>
-          </li>
-          <li class="nav-item" role="presentation">
-            <a class="nav-link nav-link_underscore" id="tab-reviews-tab" data-bs-toggle="tab" href="#tab-reviews" role="tab" aria-controls="tab-reviews" aria-selected="false">Reviews (2)</a>
-          </li>
-        </ul>
-
-
-
-
-
-        <div class="tab-content">
-          <div class="tab-pane fade show active" id="tab-description" role="tabpanel" aria-labelledby="tab-description-tab">
-            <div class="product-single__description">
-              <h3 class="block-title mb-4">Sed do eiusmod tempor incididunt ut labore</h3>
-              <p class="content">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
-              <div class="row">
-                <div class="col-lg-6">
-                  <h3 class="block-title">Why choose product?</h3>
-                  <ul class="list text-list">
-                    <li>Creat by cotton fibric with soft and smooth</li>
-                    <li>Simple, Configurable (e.g. size, color, etc.), bundled</li>
-                    <li>Downloadable/Digital Products, Virtual Products</li>
-                  </ul>
-                </div>
-                <div class="col-lg-6">
-                  <h3 class="block-title">Sample Number List</h3>
-                  <ol class="list text-list">
-                    <li>Create Store-specific attrittbutes on the fly</li>
-                    <li>Simple, Configurable (e.g. size, color, etc.), bundled</li>
-                    <li>Downloadable/Digital Products, Virtual Products</li>
-                  </ol>
-                </div>
-              </div>
-              <h3 class="block-title mb-0">Lining</h3>
-              <p class="content">100% Polyester, Main: 100% Polyester.</p>
-            </div>
-          </div>
-          <div class="tab-pane fade" id="tab-additional-info" role="tabpanel" aria-labelledby="tab-additional-info-tab">
-            <div class="product-single__addtional-info">
-              <div class="item">
-                <label class="h6">Weight</label>
-                <span>1.25 kg</span>
-              </div>
-              <div class="item">
-                <label class="h6">Dimensions</label>
-                <span>90 x 60 x 90 cm</span>
-              </div>
-              <div class="item">
-                <label class="h6">Size</label>
-                <span>XS, S, M, L, XL</span>
-              </div>
-              <div class="item">
-                <label class="h6">Color</label>
-                <span>Black, Orange, White</span>
-              </div>
-              <div class="item">
-                <label class="h6">Storage</label>
-                <span>Relaxed fit shirt-style dress with a rugged</span>
-              </div>
-            </div>
-          </div>
-          <div class="tab-pane fade" id="tab-reviews" role="tabpanel" aria-labelledby="tab-reviews-tab">
-            <h2 class="product-single__reviews-title">Reviews</h2>
-            <div class="product-single__reviews-list">
-              <div class="product-single__reviews-item">
-                <div class="customer-avatar">
-                  <img loading="lazy" src="./images/avatar.jpg" alt="">
-                </div>
-                <div class="customer-review">
-                  <div class="customer-name">
-                    <h6>Janice Miller</h6>
-                    <div class="reviews-group d-flex">
-                      <svg class="review-star" viewbox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><use href="#icon_star"></use></svg>
-                      <svg class="review-star" viewbox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><use href="#icon_star"></use></svg>
-                      <svg class="review-star" viewbox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><use href="#icon_star"></use></svg>
-                      <svg class="review-star" viewbox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><use href="#icon_star"></use></svg>
-                      <svg class="review-star" viewbox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><use href="#icon_star"></use></svg>
-                    </div>
-                  </div>
-                  <div class="review-date">April 06, 2023</div>
-                  <div class="review-text">
-                    <p>Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus, omnis voluptas assumenda est…</p>
-                  </div>
-                </div>
-              </div>
-              <div class="product-single__reviews-item">
-                <div class="customer-avatar">
-                  <img loading="lazy" src="./images/avatar.jpg" alt="">
-                </div>
-                <div class="customer-review">
-                  <div class="customer-name">
-                    <h6>Benjam Porter</h6>
-                    <div class="reviews-group d-flex">
-                      <svg class="review-star" viewbox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><use href="#icon_star"></use></svg>
-                      <svg class="review-star" viewbox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><use href="#icon_star"></use></svg>
-                      <svg class="review-star" viewbox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><use href="#icon_star"></use></svg>
-                      <svg class="review-star" viewbox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><use href="#icon_star"></use></svg>
-                      <svg class="review-star" viewbox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><use href="#icon_star"></use></svg>
-                    </div>
-                  </div>
-                  <div class="review-date">April 06, 2023</div>
-                  <div class="review-text">
-                    <p>Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus, omnis voluptas assumenda est…</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="product-single__review-form">
-              <form name="customer-review-form">
-                <h5>Be the first to review “Message Cotton T-Shirt”</h5>
-                <p>Your email address will not be published. Required fields are marked *</p>
-                <div class="select-star-rating">
-                  <label>Your rating *</label>
-                  <span class="star-rating">
-                    <svg class="star-rating__star-icon" width="12" height="12" fill="#ccc" viewbox="0 0 12 12" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M11.1429 5.04687C11.1429 4.84598 10.9286 4.76562 10.7679 4.73884L7.40625 4.25L5.89955 1.20312C5.83929 1.07589 5.72545 0.928571 5.57143 0.928571C5.41741 0.928571 5.30357 1.07589 5.2433 1.20312L3.73661 4.25L0.375 4.73884C0.207589 4.76562 0 4.84598 0 5.04687C0 5.16741 0.0870536 5.28125 0.167411 5.3683L2.60491 7.73884L2.02902 11.0871C2.02232 11.1339 2.01563 11.1741 2.01563 11.221C2.01563 11.3951 2.10268 11.5558 2.29688 11.5558C2.39063 11.5558 2.47768 11.5223 2.56473 11.4754L5.57143 9.89509L8.57813 11.4754C8.65848 11.5223 8.75223 11.5558 8.84598 11.5558C9.04018 11.5558 9.12054 11.3951 9.12054 11.221C9.12054 11.1741 9.12054 11.1339 9.11384 11.0871L8.53795 7.73884L10.9688 5.3683C11.0558 5.28125 11.1429 5.16741 11.1429 5.04687Z"></path>
-                    </svg>
-                    <svg class="star-rating__star-icon" width="12" height="12" fill="#ccc" viewbox="0 0 12 12" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M11.1429 5.04687C11.1429 4.84598 10.9286 4.76562 10.7679 4.73884L7.40625 4.25L5.89955 1.20312C5.83929 1.07589 5.72545 0.928571 5.57143 0.928571C5.41741 0.928571 5.30357 1.07589 5.2433 1.20312L3.73661 4.25L0.375 4.73884C0.207589 4.76562 0 4.84598 0 5.04687C0 5.16741 0.0870536 5.28125 0.167411 5.3683L2.60491 7.73884L2.02902 11.0871C2.02232 11.1339 2.01563 11.1741 2.01563 11.221C2.01563 11.3951 2.10268 11.5558 2.29688 11.5558C2.39063 11.5558 2.47768 11.5223 2.56473 11.4754L5.57143 9.89509L8.57813 11.4754C8.65848 11.5223 8.75223 11.5558 8.84598 11.5558C9.04018 11.5558 9.12054 11.3951 9.12054 11.221C9.12054 11.1741 9.12054 11.1339 9.11384 11.0871L8.53795 7.73884L10.9688 5.3683C11.0558 5.28125 11.1429 5.16741 11.1429 5.04687Z"></path>
-                    </svg>
-                    <svg class="star-rating__star-icon" width="12" height="12" fill="#ccc" viewbox="0 0 12 12" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M11.1429 5.04687C11.1429 4.84598 10.9286 4.76562 10.7679 4.73884L7.40625 4.25L5.89955 1.20312C5.83929 1.07589 5.72545 0.928571 5.57143 0.928571C5.41741 0.928571 5.30357 1.07589 5.2433 1.20312L3.73661 4.25L0.375 4.73884C0.207589 4.76562 0 4.84598 0 5.04687C0 5.16741 0.0870536 5.28125 0.167411 5.3683L2.60491 7.73884L2.02902 11.0871C2.02232 11.1339 2.01563 11.1741 2.01563 11.221C2.01563 11.3951 2.10268 11.5558 2.29688 11.5558C2.39063 11.5558 2.47768 11.5223 2.56473 11.4754L5.57143 9.89509L8.57813 11.4754C8.65848 11.5223 8.75223 11.5558 8.84598 11.5558C9.04018 11.5558 9.12054 11.3951 9.12054 11.221C9.12054 11.1741 9.12054 11.1339 9.11384 11.0871L8.53795 7.73884L10.9688 5.3683C11.0558 5.28125 11.1429 5.16741 11.1429 5.04687Z"></path>
-                    </svg>
-                    <svg class="star-rating__star-icon" width="12" height="12" fill="#ccc" viewbox="0 0 12 12" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M11.1429 5.04687C11.1429 4.84598 10.9286 4.76562 10.7679 4.73884L7.40625 4.25L5.89955 1.20312C5.83929 1.07589 5.72545 0.928571 5.57143 0.928571C5.41741 0.928571 5.30357 1.07589 5.2433 1.20312L3.73661 4.25L0.375 4.73884C0.207589 4.76562 0 4.84598 0 5.04687C0 5.16741 0.0870536 5.28125 0.167411 5.3683L2.60491 7.73884L2.02902 11.0871C2.02232 11.1339 2.01563 11.1741 2.01563 11.221C2.01563 11.3951 2.10268 11.5558 2.29688 11.5558C2.39063 11.5558 2.47768 11.5223 2.56473 11.4754L5.57143 9.89509L8.57813 11.4754C8.65848 11.5223 8.75223 11.5558 8.84598 11.5558C9.04018 11.5558 9.12054 11.3951 9.12054 11.221C9.12054 11.1741 9.12054 11.1339 9.11384 11.0871L8.53795 7.73884L10.9688 5.3683C11.0558 5.28125 11.1429 5.16741 11.1429 5.04687Z"></path>
-                    </svg>
-                    <svg class="star-rating__star-icon" width="12" height="12" fill="#ccc" viewbox="0 0 12 12" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M11.1429 5.04687C11.1429 4.84598 10.9286 4.76562 10.7679 4.73884L7.40625 4.25L5.89955 1.20312C5.83929 1.07589 5.72545 0.928571 5.57143 0.928571C5.41741 0.928571 5.30357 1.07589 5.2433 1.20312L3.73661 4.25L0.375 4.73884C0.207589 4.76562 0 4.84598 0 5.04687C0 5.16741 0.0870536 5.28125 0.167411 5.3683L2.60491 7.73884L2.02902 11.0871C2.02232 11.1339 2.01563 11.1741 2.01563 11.221C2.01563 11.3951 2.10268 11.5558 2.29688 11.5558C2.39063 11.5558 2.47768 11.5223 2.56473 11.4754L5.57143 9.89509L8.57813 11.4754C8.65848 11.5223 8.75223 11.5558 8.84598 11.5558C9.04018 11.5558 9.12054 11.3951 9.12054 11.221C9.12054 11.1741 9.12054 11.1339 9.11384 11.0871L8.53795 7.73884L10.9688 5.3683C11.0558 5.28125 11.1429 5.16741 11.1429 5.04687Z"></path>
-                    </svg>
-                  </span>
-                  <input type="hidden" id="form-input-rating" value="">
-                </div>
-                <div class="mb-4">
-                  <textarea id="form-input-review" class="form-control form-control_gray" placeholder="Your Review" cols="30" rows="8"></textarea>
-                </div>
-                <div class="form-label-fixed mb-4">
-                  <label for="form-input-name" class="form-label">Name *</label>
-                  <input id="form-input-name" class="form-control form-control-md form-control_gray">
-                </div>
-                <div class="form-label-fixed mb-4">
-                  <label for="form-input-email" class="form-label">Email address *</label>
-                  <input id="form-input-email" class="form-control form-control-md form-control_gray">
-                </div>
-                <div class="form-check mb-4">
-                  <input class="form-check-input form-check-input_fill" type="checkbox" value="" id="remember_checkbox">
-                  <label class="form-check-label" for="remember_checkbox">
-                    Save my name, email, and website in this browser for the next time I comment.
-                  </label>
-                </div>
-                <div class="form-action">
-                  <button type="submit" class="btn btn-primary">Submit</button>
-                </div>
-              </form>
-            </div>
+      <div class="tab-content">
+        <div class="tab-pane fade show active" id="tab-description" role="tabpanel" aria-labelledby="tab-description-tab">
+          <div class="product-single__description">
+            <p class="content"><?= nl2br(htmlspecialchars($product['description'] ?? '')) ?></p>
           </div>
         </div>
+        <div class="tab-pane fade" id="tab-additional-info" role="tabpanel" aria-labelledby="tab-additional-info-tab">
+          <div class="product-single__addtional-info">
+            <?php
+              $typedWeight = trim((string)($product['weight_kg_tmp'] ?? ''));
+              $weightOut = $typedWeight !== '' ? $typedWeight : $min_num_str($product['weight_kg'] ?? 0);
+            ?>
+            <div class="item"><label class="h6">Weight</label> <span><?= htmlspecialchars($weightOut) ?> kg</span></div>
+            <?php if (!empty($sizes)): ?><div class="item"><label class="h6">Size</label><span><?= htmlspecialchars(implode(', ', $sizes)) ?></span></div><?php endif; ?>
+          </div>
+        </div>
+        <div class="tab-pane fade" id="tab-reviews" role="tabpanel" aria-labelledby="tab-reviews-tab">
+          <h2 class="product-single__reviews-title">Reviews</h2>
+        </div>
       </div>
-    </section>
+    </div>
+  </section>
 
+  <?php include __DIR__ . '/related-product.php'; ?>
+  <?php include __DIR__ . '/size-guide.php'; ?>
+</main>
 
+<div class="mb-5 pb-xl-5"></div>
 
-    <!-- Related Product section -->
-    <?php include("product/related-product.php"); ?>
+<?php include __DIR__ . '/../includes/footer.php'; ?>
+<?php include __DIR__ . '/../includes/mobile-footer.php'; ?>
+<?php include __DIR__ . '/../includes/aside-form.php'; ?>
+<?php include __DIR__ . '/../includes/cart-aside.php'; ?>
+<?php include __DIR__ . '/../includes/sitemap-nav.php'; ?>
+<?php include __DIR__ . '/../includes/scroll.php'; ?>
+<?php include __DIR__ . '/../includes/script-footer.php'; ?>
 
-    <?php include("product/size-guide.php"); ?>
-  </main>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lightslider@1.1.6/dist/js/lightslider.min.js"></script>
 
-  <div class="mb-5 pb-xl-5"></div>
-  <!-- size guide MODAL -->
+<script>
+  // ===== Server Data =====
+  const productData = <?= json_encode($jsData, JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES) ?>;
 
-<!-- footer -->
-<?php include("../includes/footer.php"); ?>
+  // ===== Elements =====
+  const mainPrice = document.getElementById('mainPrice');
+  const stockNote = document.getElementById('stockNote');
+  const curSel    = document.getElementById('curSelect');
+  const sizeGrid  = document.getElementById('sizeGrid');
 
-<!-- End Footer Type 1 -->
-<?php include("../includes/mobile-footer.php"); ?>
+  // ===== Helpers =====
+  const convertPrice = (amount, fromCurrency, toCurrency) => {
+    if (fromCurrency === toCurrency) return amount;
+    const fromRate = productData.currencies[fromCurrency]?.rate_to_base || 1;
+    const toRate   = productData.currencies[toCurrency]?.rate_to_base || 1;
+    return (amount * fromRate) / toRate;
+  };
 
+  const getVariant = (size = '') => {
+    if (size && productData.variantMap[size]) return productData.variantMap[size];
+    return { price: productData.basePrice, stock: null, image: null, id: null };
+  };
 
-<!-- form -->
-<?php include("../includes/aside-form.php"); ?>
+  let selectedSize  = '';
+  let slider = null;
 
-<!-- aside cart -->
-<?php include("../includes/cart-aside.php"); ?>
-
-
-
-<!-- sitemap -->
-<?php include("../includes/sitemap-nav.php"); ?>
-
-
-
-
-<?php include("../includes/scroll.php"); ?>
-
-
-  <!-- Sizeguide -->
-
-  <!-- Page Overlay -->
-  <div class="page-overlay"></div><!-- /.page-overlay -->
-
-<!-- script footer -->
-<?php include("../includes/script-footer.php"); ?>
-
-
-  <script>
-    // ===== Server data =====
-    const priceMap   = <?= $jsMap ?: '{}' ?>;       // base currency
-    const basePrice  = <?= json_encode($jsBasePrice) ?>;
-    const rates      = <?= $jsRates ?>;             // code -> rate_to_base
-    const symbols    = <?= $jsSymbols ?>;           // code -> symbol
-    let baseCode     = <?= json_encode($jsBaseCode) ?>;
-    let displayCode  = <?= json_encode($jsDisplay) ?>;
-    const mainFallback = <?= json_encode($jsMainImage) ?>;
-    const chartRows  = <?= $jsSizeChart ?>;         // CM by default
-    const thumbs     = <?= $jsThumbs ?>;
-
-    const HAS_SIZES  = <?= $hasSizes ? 'true' : 'false' ?>;
-    const HAS_COLORS = <?= $hasColors ? 'true' : 'false' ?>;
-
-    // ===== Elements =====
-    const mainImg    = document.getElementById('mainImage');
-    const mainPrice  = document.getElementById('mainPrice');
-    const stockNote  = document.getElementById('stockNote');
-    const curSel     = document.getElementById('curSelect');
-    const sizeGrid   = document.getElementById('sizeGrid');
-    const colorGrid  = document.getElementById('colorGrid');
-    const thumbRail  = document.getElementById('thumbRail');
-
-    const chartTableBody = document.querySelector('#chartTable tbody');
-
-    let selectedSize  = '';
-    let selectedColor = '';
-
-    // ===== Helpers =====
-    const fmt = n => new Intl.NumberFormat('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}).format(n);
-    function convert(amount, fromCode, toCode){
-      if (fromCode === toCode) return amount;
-      const base = amount * (rates[fromCode] ?? 1);    // to base
-      return base / (rates[toCode] ?? 1);              // base -> to
-    }
-
-    function comboValid(sz, col){
-      if (!HAS_SIZES && HAS_COLORS) return !!priceMap[`|${col}`];
-      if (HAS_SIZES && !HAS_COLORS) return !!priceMap[`${sz}|`];
-      return !!(priceMap[`${sz}|${col}`] || priceMap[`${sz}|`] || priceMap[`|${col}`]);
-    }
-
-    function refreshDisables(){
-      if (sizeGrid){
-        sizeGrid.querySelectorAll('.swatch').forEach(s => {
-          const sz = s.dataset.size || '';
-          const ok = !HAS_COLORS ? !!priceMap[`${sz}|`] : (selectedColor ? comboValid(sz, selectedColor) : true);
-          s.classList.toggle('disabled', !ok);
-          s.setAttribute('aria-disabled', !ok ? 'true' : 'false');
-        });
-      }
-      if (colorGrid){
-        colorGrid.querySelectorAll('.swatch').forEach(s => {
-          const col = s.dataset.color || '';
-          const ok = !HAS_SIZES ? !!priceMap[`|${col}`] : (selectedSize ? comboValid(selectedSize, col) : true);
-          s.classList.toggle('disabled', !ok);
-          s.setAttribute('aria-disabled', !ok ? 'true' : 'false');
-        });
-      }
-    }
-
-    function resolveVariant(){
-      let k = `${selectedSize}|${selectedColor}`;
-      if (priceMap[k]) return priceMap[k];
-      k = `${selectedSize}|`; if (selectedSize && priceMap[k]) return priceMap[k];
-      k = `|${selectedColor}`; if (selectedColor && priceMap[k]) return priceMap[k];
-      return { price: basePrice, stock: null, image: null };
-    }
-
-    function setActive(container, el){
-      if (!container) return;
-      container.querySelectorAll('.swatch').forEach(s => { s.classList.remove('active'); s.setAttribute('aria-pressed','false'); });
-      if (el){ el.classList.add('active'); el.setAttribute('aria-pressed','true'); }
-    }
-    function clearActive(container){
-      if (!container) return;
-      container.querySelectorAll('.swatch').forEach(s => { s.classList.remove('active'); s.setAttribute('aria-pressed','false'); });
-    }
-
-    function updateUI(){
-      const { price, stock, image } = resolveVariant();
-      const disp = convert(price, baseCode, displayCode);
-      const sym  = symbols[displayCode] || '';
-      mainPrice.textContent = `${sym}${fmt(disp)}`;
-      stockNote.textContent = (stock !== null && stock !== undefined) ? `Stock for selection: ${stock}` : '';
-      const target = image || mainFallback || '';
-      if (mainImg) {
-        if (target) mainImg.src = target;
-        else mainImg.removeAttribute('src');
-      }
-      refreshDisables();
-    }
-
-    // Size swatches
-    sizeGrid?.addEventListener('click', e => {
-      const sw = e.target.closest('.swatch');
-      if (!sw || sw.classList.contains('disabled')) return;
-      const val = sw.dataset.size || '';
-      if (sw.classList.contains('active')) {
-        selectedSize = '';
-        clearActive(sizeGrid);
-        refreshDisables();
-        updateUI();
-        return;
-      }
-      selectedSize = val;
-      setActive(sizeGrid, sw);
-      if (sw.dataset.image && mainImg) mainImg.src = sw.dataset.image;
-      updateUI();
-    });
-
-    // Color swatches
-    colorGrid?.addEventListener('click', e => {
-      const sw = e.target.closest('.swatch');
-      if (!sw || sw.classList.contains('disabled')) return;
-      const val = sw.dataset.color || '';
-      if (sw.classList.contains('active')) {
-        selectedColor = '';
-        clearActive(colorGrid);
-        refreshDisables();
-        updateUI();
-        return;
-      }
-      selectedColor = val;
-      setActive(colorGrid, sw);
-      if (sw.dataset.image && mainImg) mainImg.src = sw.dataset.image;
-      updateUI();
-    });
-
-    // Currency
-    curSel?.addEventListener('change', () => {
-      displayCode = curSel.value;
-      updateUI();
-      const url = new URL(window.location.href);
-      url.searchParams.set('cur', displayCode);
-      window.history.replaceState({}, '', url);
-    });
-
-    // Thumb rail
-    thumbRail?.addEventListener('click', (e) => {
-      const img = e.target.closest('img[data-src]');
-      if (!img) return;
-      thumbRail.querySelectorAll('img').forEach(i => i.classList.remove('active'));
-      img.classList.add('active');
-      if (mainImg) mainImg.src = img.dataset.src;
-    });
-
-    // Size chart (CM)
-    function renderChartCM(){
-      chartTableBody.innerHTML = '';
-      chartRows.forEach(row => {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td><strong>${row.label}</strong></td>
-          <td>${Math.round(row.bust)} CM</td>
-          <td>${Math.round(row.waist)} CM</td>
-          <td>${Math.round(row.hips)} CM</td>
-        `;
-        chartTableBody.appendChild(tr);
+  jQuery(function($) {
+    if ($('#productGallery').length) {
+      slider = $('#productGallery').lightSlider({
+        gallery: true, item: 1, loop: true, slideMargin: 0, thumbItem: 6, enableDrag: true,
+        currentPagerPosition: 'left',
+        responsive: [
+          { breakpoint: 992, settings: { thumbItem: 6 } },
+          { breakpoint: 768, settings: { thumbItem: 5 } },
+          { breakpoint: 576, settings: { thumbItem: 4 } }
+        ]
       });
     }
-
-    // Init
-    renderChartCM();
-    refreshDisables();
     updateUI();
-  </script>
+  });
+
+  const updateUI = () => {
+    const variant = getVariant(selectedSize);
+    const displayPrice = convertPrice(variant.price, productData.baseCurrency, productData.displayCurrency);
+    const currencySymbol = productData.currencies[productData.displayCurrency]?.symbol || '';
+    if (mainPrice) mainPrice.textContent = `${currencySymbol}${displayPrice.toFixed(2)}`;
+    if (stockNote) stockNote.textContent = variant.stock !== null ? `Stock: ${variant.stock}` : '';
+
+    if (variant.image && slider) {
+      const slideIndex = productData.slides.indexOf(variant.image);
+      if (slideIndex >= 0) slider.goToSlide(slideIndex + 1);
+    }
+    updateSwatchStates();
+  };
+
+  const updateSwatchStates = () => {
+    if (!sizeGrid) return;
+    sizeGrid.querySelectorAll('.swatch').forEach(swatch => {
+      const size = swatch.dataset.size || '';
+      const isValid = !!getVariant(size).id || !!productData.variantMap[size];
+      swatch.classList.toggle('disabled', !isValid);
+    });
+  };
+
+  // Swatches
+  sizeGrid?.addEventListener('click', e => {
+    const swatch = e.target.closest('.swatch'); if (!swatch || swatch.classList.contains('disabled')) return;
+    const size = swatch.dataset.size || '';
+    if (selectedSize === size) {
+      selectedSize = ''; sizeGrid.querySelectorAll('.swatch').forEach(s => s.classList.remove('active'));
+    } else {
+      selectedSize = size; sizeGrid.querySelectorAll('.swatch').forEach(s => s.classList.remove('active')); swatch.classList.add('active');
+      if (swatch.dataset.image && slider) {
+        const idx = productData.slides.indexOf(swatch.dataset.image);
+        if (idx >= 0) slider.goToSlide(idx + 1);
+      }
+    }
+    updateUI();
+  });
+
+  // Currency
+  curSel?.addEventListener('change', () => {
+    productData.displayCurrency = curSel.value;
+    updateUI();
+    const url = new URL(window.location.href);
+    url.searchParams.set('cur', productData.displayCurrency);
+    window.history.replaceState({}, '', url);
+  });
+
+  // Quantity local guard
+  const qtyWrap = document.querySelector('.product-single .qty-control');
+  qtyWrap?.addEventListener('change', (e) => {
+    const input = e.target.closest('.qty-control__number, .js-qty');
+    if (!input) return;
+    let v = parseInt(input.value || '1', 10); if (!Number.isFinite(v) || v < 1) v = 1; input.value = v;
+  });
+
+  // Add to Cart (variant-aware)
+  document.querySelector('.btn-addtocart')?.addEventListener('click', async (e) => {
+    e.preventDefault();
+
+    const qtyInput = document.querySelector('.product-single .qty-control__number');
+    const quantity = Math.max(1, parseInt(qtyInput?.value || '1', 10));
+
+    // If product has sizes, require one
+    if (productData.hasSizes && !selectedSize) {
+      alert('Please select a size.');
+      return;
+    }
+
+    const chosen = getVariant(selectedSize);
+    const fd = new FormData();
+    fd.append('slug', <?= json_encode($slug) ?>);
+    fd.append('quantity', String(quantity));
+    if (chosen.id) {
+      fd.append('variant_id', String(chosen.id));
+      fd.append('variant_label', `Size: ${selectedSize}`);
+    }
+
+    try {
+      const r = await fetch(<?= json_encode(rtrim(BASE_URL,'/').'/api/cart/add.php') ?>, {
+        method:'POST',
+        body: fd,
+        credentials:'same-origin'
+      });
+      const j = await r.json();
+
+      if (!j.success) {
+        if (j.login === true && j.loginUrl) {
+          window.location.href = j.loginUrl;
+          return;
+        }
+        throw new Error(j.message || 'Failed to add to cart');
+      }
+
+      // If your theme exposes a helper, refresh the drawer using server truth:
+      if (typeof window.refreshCartDrawer === 'function') {
+        await window.refreshCartDrawer(j);
+      }
+
+      // Open drawer via theme trigger:
+      const opener = document.querySelector('.js-open-aside[data-aside="cartDrawer"]');
+      opener?.click();
+
+    } catch (err) {
+      alert(err.message || 'Unable to add to cart');
+    }
+  });
+</script>

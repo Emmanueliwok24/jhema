@@ -24,8 +24,16 @@ require_once __DIR__ . '/userfunctions.php';    // preferred source of hash/veri
 /* ---------------- base_url helper ---------------- */
 if (!function_exists('base_url')) {
     function base_url(string $path = ''): string {
+<<<<<<< HEAD
         $base = defined('BASE_URL') ? rtrim((string)BASE_URL, '/') . '/' : '/';
         return $base . ltrim($path, '/');
+=======
+        $base = defined('BASE_URL') ? BASE_URL : ($GLOBALS['baseUrl'] ?? '');
+        $base = rtrim((string)$base, '/');   // no trailing slash
+        $path = ltrim($path, '/');           // no leading slash
+        return $path === '' ? $base . '/' : $base . '/' . $path;
+        
+>>>>>>> 401487e218495406067ed3b23b85daf781e40d01
     }
 }
 
